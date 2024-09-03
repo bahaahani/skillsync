@@ -1,80 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SkillSync - Employee Skill Tracking</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div id="loadingSpinner"></div>
     <header>
+      <div class="header-content">
         <h1>SkillSync</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html" class="active">Dashboard</a></li>
-                <li><a href="employees.html">Employees</a></li>
-                <li><a href="courses.html">Courses</a></li>
-                <li><a href="assessments.html">Assessments</a></li>
-                <li><a href="reports.html">Reports</a></li>
-            </ul>
+        <nav aria-label="Main Navigation">
+          <ul>
+            <li><a href="index.html" class="active">Dashboard</a></li>
+            <li><a href="employees.html">Employees</a></li>
+            <li><a href="courses.html">Courses</a></li>
+            <li><a href="assessments.html">Assessments</a></li>
+            <li><a href="reports.html">Reports</a></li>
+          </ul>
         </nav>
+        <div class="header-actions">
+          <div class="notification-bell">
+            <span class="notification-count">3</span>
+            <div class="notification-dropdown">
+              <a href="#">New course available</a>
+              <a href="#">Your assessment is due</a>
+              <a href="#">Congratulations on skill acquisition!</a>
+            </div>
+          </div>
+          <button id="darkModeToggle">Toggle Dark Mode</button>
+        </div>
+      </div>
     </header>
-    
+
     <main>
-        <section id="dashboard">
-            <h2>Dashboard Overview</h2>
-            <div class="dashboard-grid">
-                <div class="card">
-                    <h3>Skill Map</h3>
-                    <div id="skillMap" class="chart"></div>
-                </div>
-                <div class="card">
-                    <h3>Course Completion Status</h3>
-                    <div id="courseStatus" class="chart"></div>
-                </div>
-                <div class="card">
-                    <h3>Top Performers</h3>
-                    <ul id="topPerformers"></ul>
-                </div>
-                <div class="card">
-                    <h3>Recent Activities</h3>
-                    <ul id="recentActivities"></ul>
-                </div>
+      <input type="text" id="searchBar" placeholder="Search..." />
+
+      <section id="userProfile">
+        <h2>Your Profile</h2>
+        <div class="profile-info">
+          <img src="avatar-placeholder.png" alt="User Avatar" id="userAvatar" />
+          <div>
+            <h3 id="userName">John Doe</h3>
+            <p>Level: <span id="userLevel">1</span></p>
+            <div class="xp-bar">
+              <div id="xpProgress"></div>
             </div>
-        </section>
-        <section id="quickStats">
-            <h2>Quick Stats</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Total Employees</h3>
-                    <p id="totalEmployees"></p>
-                    <a href="employees.html" class="btn">View Employees</a>
-                </div>
-                <div class="stat-card">
-                    <h3>Active Courses</h3>
-                    <p id="activeCourses"></p>
-                    <a href="courses.html" class="btn">View Courses</a>
-                </div>
-                <div class="stat-card">
-                    <h3>Skills Acquired</h3>
-                    <p id="skillsAcquired"></p>
-                    <a href="assessments.html" class="btn">View Assessments</a>
-                </div>
-                <div class="stat-card">
-                    <h3>Avg. Completion Rate</h3>
-                    <p id="avgCompletionRate"></p>
-                    <a href="reports.html" class="btn">View Reports</a>
-                </div>
-            </div>
-        </section>
+            <p>
+              XP: <span id="currentXP">0</span> /
+              <span id="xpToNextLevel">1000</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard">
+        <h2>Dashboard Overview</h2>
+        <div class="dashboard-grid">
+          <div class="card">
+            <h3>Skill Distribution</h3>
+            <div id="skillDistribution" class="chart-container"></div>
+          </div>
+          <div class="card">
+            <h3>Course Completion Trends</h3>
+            <div id="completionTrends" class="chart-container"></div>
+          </div>
+          <div class="card">
+            <h3>Your Skill Radar</h3>
+            <div id="skillRadar" class="chart-container"></div>
+          </div>
+          <div class="card">
+            <h3>Learning Streak</h3>
+            <p>You're on a <span id="streakCount">0</span> day streak!</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="quickStats">
+        <h2>Quick Stats</h2>
+        <div class="stats-grid">
+          <div class="stat-card tooltip">
+            <h3>Total Employees</h3>
+            <p id="totalEmployees"></p>
+            <a href="employees.html" class="btn">View Employees</a>
+            <span class="tooltiptext">Total number of employees</span>
+          </div>
+          <div class="stat-card tooltip">
+            <h3>Active Courses</h3>
+            <p id="activeCourses"></p>
+            <a href="courses.html" class="btn">View Courses</a>
+            <span class="tooltiptext">Number of active courses</span>
+          </div>
+          <div class="stat-card tooltip">
+            <h3>Skills Acquired</h3>
+            <p id="skillsAcquired"></p>
+            <a href="assessments.html" class="btn">View Assessments</a>
+            <span class="tooltiptext">Total skills acquired</span>
+          </div>
+          <div class="stat-card tooltip">
+            <h3>Avg. Completion Rate</h3>
+            <p id="avgCompletionRate"></p>
+            <a href="reports.html" class="btn">View Reports</a>
+            <span class="tooltiptext">Average course completion rate</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="learningPathRecommendations">
+        <h2>Recommended Learning Path</h2>
+        <div id="recommendationsList"></div>
+      </section>
+
+      <section id="dailyChallenge">
+        <h2>Daily Challenge</h2>
+        <div id="challengeCard" class="challenge-card">
+          <h3 id="challengeTitle">Loading challenge...</h3>
+          <p id="challengeDescription"></p>
+          <button id="completeChallenge">Complete Challenge</button>
+        </div>
+      </section>
+
+      <section id="achievements">
+        <h2>Achievements</h2>
+        <div id="badgeContainer" class="badge-container"></div>
+      </section>
+
+      <section id="leaderboard">
+        <h2>Leaderboard</h2>
+        <table id="leaderboardTable">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Name</th>
+              <th>Level</th>
+              <th>XP</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </section>
     </main>
 
     <footer>
-        <p>&copy; 2023 SkillSync. All rights reserved.</p>
+      <p>&copy; 2023 SkillSync. All rights reserved.</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
-    <script src="dashboard.js"></script>
-</body>
+    <button id="backToTop">Back to Top</button>
+
+    <script src="app.js"></script>
+  </body>
 </html>

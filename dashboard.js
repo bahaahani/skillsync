@@ -104,6 +104,52 @@ function createDashboard() {
     document.getElementById('activeCourses').textContent = dashboardData.quickStats.activeCourses;
     document.getElementById('skillsAcquired').textContent = dashboardData.quickStats.skillsAcquired;
     document.getElementById('avgCompletionRate').textContent = `${dashboardData.quickStats.avgCompletionRate}%`;
+
+    // Populate assessment history
+    const assessmentHistory = document.getElementById('assessmentHistory');
+    assessmentHistory.innerHTML = '';
+
+    // Fetch the user's assessment data from the employees.js file
+    const user = employees.find(e => e.name === 'John Doe'); // Assuming 'John Doe' is the current user
+    user.assessments.forEach(assessment => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <strong>${assessment.title}</strong>: ${assessment.score}%
+        `;
+        assessmentHistory.appendChild(div);
+    });
+
+    // Populate course recommendations
+    const courseRecommendations = document.getElementById('courseRecommendations');
+    courseRecommendations.innerHTML = '';
+
+    // Fetch the user's data and recommend courses
+    const userSkills = user.skills;
+    const userJobRole = user.jobRole;
+    const recommendedCourses = getCourseRecommendations(userSkills, userJobRole);
+
+    recommendedCourses.forEach(course => {
+        const div = document.createElement('div');
+        div.className = 'course-recommendation';
+        div.innerHTML = `
+            <h3>${course.title}</h3>
+            <p><strong>Category:</strong> ${course.category}</p>
+            <p><strong>Duration:</strong> ${course.duration}</p>
+            <button onclick="enrollInCourse(${course.id})">Enroll</button>
+        `;
+        courseRecommendations.appendChild(div);
+    });
+}
+
+// Function to get course recommendations based on user skills and job role
+function getCourseRecommendations(userSkills, userJobRole) {
+    // Implement your course recommendation logic here
+    // For now, we'll return a sample set of courses
+    return [
+        { id: 1, title: "Advanced JavaScript", category: "Programming", duration: "4 weeks" },
+        { id: 2, title: "Leadership Essentials", category: "Management", duration: "2 weeks" },
+        { id: 4, title: "Financial Planning and Analysis", category: "Finance", duration: "5 weeks" }
+    ];
 }
 
 // Event listeners

@@ -143,68 +143,6 @@ function viewAssessment(courseId, assessmentId) {
     modal.style.display = 'block';
 }
 
-// Function to take an assessment
-function takeAssessment(courseId, assessmentId) {
-    const course = courses.find(c => c.id === courseId);
-    const assessment = course.assessments.find(a => a.id === assessmentId);
-    if (!course || !assessment) return;
-
-    const modal = document.getElementById('takeAssessmentModal');
-    const titleElement = document.getElementById('activeAssessmentTitle');
-    const questionContainer = document.getElementById('questionContainer');
-
-    titleElement.textContent = assessment.title;
-    questionContainer.innerHTML = '';
-
-    assessment.questions.forEach((q, index) => {
-        const questionElement = document.createElement('div');
-        questionElement.className = 'question';
-        questionElement.innerHTML = `
-            <p><strong>Question ${index + 1}:</strong> ${q.question}</p>
-            ${q.options.map((option, i) => `
-                <label>
-                    <input type="radio" name="question${index}" value="${i}">
-                    ${option}
-                </label>
-            `).join('')}
-        `;
-        questionContainer.appendChild(questionElement);
-    });
-
-    modal.style.display = 'block';
-    showAlert("You are now taking an assessment. Good luck!", "info");
-}
-
-// Function to submit an assessment
-function submitAssessment() {
-    // Get the user's answers
-    const userAnswers = [];
-    const questions = document.querySelectorAll('#questionContainer .question');
-    questions.forEach((question, index) => {
-        const selectedOption = question.querySelector(`input[name="question${index}"]:checked`);
-        userAnswers.push(selectedOption ? parseInt(selectedOption.value) : null);
-    });
-
-    // Find the current assessment being taken
-    const modal = document.getElementById('takeAssessmentModal');
-    const activeAssessmentTitle = document.getElementById('activeAssessmentTitle').textContent;
-    const course = courses.find(c => c.assessments.some(a => a.title === activeAssessmentTitle));
-    const assessment = course.assessments.find(a => a.title === activeAssessmentTitle);
-
-    // Calculate the score and update the assessment data
-    const correctAnswers = assessment.questions.map(q => q.correctAnswer);
-    const numCorrect = userAnswers.reduce((correct, userAnswer, index) => {
-        return userAnswer === correctAnswers[index] ? correct + 1 : correct;
-    }, 0);
-    const score = Math.round((numCorrect / assessment.questions.length) * 100);
-    assessment.userScore = score;
-    assessment.userAnswers = userAnswers;
-
-    closeAllModals();
-    hideAlert();
-    showNotification("Assessment submitted successfully!", "success");
-}
-
 // Function to search courses
 function searchCourses() {
     const searchTerm = document.getElementById('courseSearch').value.toLowerCase();
