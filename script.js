@@ -33,7 +33,23 @@ function showNotification(message, type = "info") {
     document.body.appendChild(notification);
     setTimeout(() => {
         notification.remove();
-    }, 3000);
+    }, 5000);
+}
+
+// Function to show an alert
+function showAlert(message, type = "info") {
+    const alert = document.createElement("div");
+    alert.className = `alert ${type}`;
+    alert.textContent = message;
+    document.body.appendChild(alert);
+}
+
+// Function to hide an alert
+function hideAlert() {
+    const alerts = document.getElementsByClassName("alert");
+    for (let alert of alerts) {
+        alert.remove();
+    }
 }
 
 // Function to format date
@@ -45,4 +61,6 @@ function formatDate(date) {
 window.toggleModal = toggleModal;
 window.closeAllModals = closeAllModals;
 window.showNotification = showNotification;
+window.showAlert = showAlert;
+window.hideAlert = hideAlert;
 window.formatDate = formatDate;

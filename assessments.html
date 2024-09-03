@@ -14,8 +14,8 @@
                 <li><a href="index.html">Dashboard</a></li>
                 <li><a href="employees.html">Employees</a></li>
                 <li><a href="courses.html">Courses</a></li>
-                <li><a href="reports.html">Reports</a></li>
                 <li><a href="assessments.html" class="active">Assessments</a></li>
+                <li><a href="reports.html">Reports</a></li>
             </ul>
         </nav>
     </header>
@@ -26,6 +26,12 @@
             <button onclick="toggleModal('createAssessmentModal')" class="btn">Create New Assessment</button>
             <div id="assessmentList" class="assessment-grid">
                 <!-- Assessment cards will be populated here by JavaScript -->
+            </div>
+        </section>
+        <section id="certifications">
+            <h2>Certifications</h2>
+            <div class="certification-grid" id="certificationGrid">
+                <!-- Certification cards will be populated here by JavaScript -->
             </div>
         </section>
     </main>
@@ -53,6 +59,16 @@
             <h2 id="activeAssessmentTitle"></h2>
             <div id="questionContainer"></div>
             <button onclick="submitAssessment()" class="btn">Submit Assessment</button>
+        </div>
+    </div>
+
+    <!-- Certification Details Modal -->
+    <div id="certificationModal" class="modal">
+        <div class="modal-content">
+            <h2 id="certificationTitle"></h2>
+            <p id="certificationDescription"></p>
+            <p id="certificationRequirements"></p>
+            <button onclick="applyCertification()" class="btn">Apply for Certification</button>
         </div>
     </div>
 

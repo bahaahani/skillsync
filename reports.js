@@ -157,8 +157,10 @@ function createReport(event) {
     event.preventDefault();
     const title = document.getElementById('reportTitle').value;
     const type = document.getElementById('reportType').value;
+    const metric = type === 'custom' ? document.getElementById('customReportMetric').value : null;
+    const dimension = type === 'custom' ? document.getElementById('customReportDimension').value : null;
 
-    const newReport = { id: customReports.length + 1, title, type };
+    const newReport = { id: customReports.length + 1, title, type, metric, dimension };
     customReports.push(newReport);
     populateCustomReportList();
     closeAllModals();
@@ -171,41 +173,99 @@ function populateCustomReportList() {
     customReportList.innerHTML = '';
 
     customReports.forEach(report => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-            <h3>${report.title}</h3>
-            <p><strong>Type:</strong> ${report.type}</p>
-            <button onclick="generateCustomReport(${report.id})" class="btn">View Report</button>
-            <button onclick="editReport(${report.id})" class="btn">Edit</button>
-            <button onclick="deleteReport(${report.id})" class="btn">Delete</button>
-        `;
-        customReportList.appendChild(card);
+        const option = document.createElement('option');
+        option.value = report.id;
+        option.textContent = report.title;
+        customReportList.appendChild(option);
     });
 }
 
-function generateCustomReport(id) {
-    const report = customReports.find(r => r.id === id);
+function generateCustomReport() {
+    const reportId = document.getElementById('customReportList').value;
+    const report = customReports.find(r => r.id === parseInt(reportId));
     if (!report) return;
-    document.getElementById('reportType').value = report.type;
-    generateReport();
-    showNotification(`Generating report: "${report.title}"`, "info");
-}
 
-function editReport(id) {
-    const report = customReports.find(r => r.id === id);
-    if (!report) return;
-    showNotification(`Editing report: "${report.title}"`, "info");
-    // TODO: Implement report editing functionality
-}
+    const customReportContainer = document.getElementById('customReportContainer');
+    const customReportSummary = document.getElementById('customReportSummary');
+    const ctx = document.getElementById('customReportChart').getContext('2d');
 
-function deleteReport(id) {
-    const report = customReports.find(r => r.id === id);
-    if (!report) return;
-    if (confirm(`Are you sure you want to delete "${report.title}"?`)) {
-        customReports = customReports.filter(r => r.id !== id);
-        populateCustomReportList();
-        showNotification(`Report "${report.title}" deleted successfully!`, "success");
+    // Destroy previous chart if it exists
+    if (currentChart) {
+        currentChart.destroy();
+    }
+
+    switch (report.type) {
+        case 'skillDistribution':
+            currentChart = new Chart(ctx, {
+                type: 'pie',
+                data: reportData.skillDistribution,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: report.title
+                        }
+                    }
+                }
+            });
+            customReportSummary.innerHTML = generateSkillDistributionSummary();
+            break;
+        case 'courseCompletion':
+            currentChart = new Chart(ctx, {
+                type: 'line',
+                data: reportData.courseCompletion,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: report.title
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            customReportSummary.innerHTML = generateCourseCompletionSummary();
+            break;
+        case 'departmentPerformance':
+            currentChart = new Chart(ctx, {
+                type: 'bar',
+                data: reportData.departmentPerformance,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: report.title
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            customReportSummary.innerHTML = generateDepartmentPerformanceSummary();
+            break;
+        case 'custom':
+            // TODO: Implement custom report generation based on selected metric and dimension
+            customReportSummary.innerHTML = 'Custom report generation coming soon!';
+            break;
     }
 }
 
@@ -213,4 +273,8 @@ function deleteReport(id) {
 window.onload = function() {
     generateReport();
     document.getElementById('createReportForm').addEventListener('submit', createReport);
+    document.getElementById('reportType').addEventListener('change', () => {
+        const customReportOptions = document.getElementById('customReportOptions');
+        customReportOptions.style.display = document.getElementById('reportType').value === 'custom' ? 'block' : 'none';
+    });
 };

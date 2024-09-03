@@ -38,10 +38,15 @@
         </section>
         <section id="customReports">
             <h2>Custom Reports</h2>
-            <button onclick="toggleModal('createReportModal')" class="btn">Create New Report</button>
-            <div id="customReportList" class="report-grid">
-                <!-- Custom report cards will be populated here by JavaScript -->
+            <div class="report-controls">
+                <button onclick="toggleModal('createReportModal')" class="btn">Create New Report</button>
+                <select id="customReportList"></select>
+                <button onclick="generateCustomReport()" class="btn">Generate Report</button>
             </div>
+            <div id="customReportContainer" class="report-container">
+                <canvas id="customReportChart"></canvas>
+            </div>
+            <div id="customReportSummary" class="report-summary"></div>
         </section>
     </main>
 
@@ -56,7 +61,23 @@
                     <option value="skillDistribution">Skill Distribution</option>
                     <option value="courseCompletion">Course Completion</option>
                     <option value="departmentPerformance">Department Performance</option>
+                    <option value="custom">Custom Report</option>
                 </select>
+                <div id="customReportOptions" style="display: none;">
+                    <label for="customReportMetric">Metric:</label>
+                    <select id="customReportMetric">
+                        <option value="skillsAcquired">Skills Acquired</option>
+                        <option value="courseCompletionRate">Course Completion Rate</option>
+                        <option value="assessmentScores">Assessment Scores</option>
+                        <option value="employeeEngagement">Employee Engagement</option>
+                    </select>
+                    <label for="customReportDimension">Dimension:</label>
+                    <select id="customReportDimension">
+                        <option value="department">Department</option>
+                        <option value="jobRole">Job Role</option>
+                        <option value="tenure">Tenure</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn">Create Report</button>
             </form>
         </div>
