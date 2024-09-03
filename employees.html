@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSync - Employees</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>SkillSync</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="employees.html" class="active">Employees</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="reports.html">Reports</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="employees">
+            <h2>Employee Management</h2>
+            <button onclick="toggleModal('addEmployeeModal')" class="btn">Add New Employee</button>
+            <input type="text" id="employeeSearch" placeholder="Search employees..." onkeyup="searchEmployees()">
+            <table id="employeeTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Skills</th>
+                        <th>Courses Completed</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Employee data will be populated here by JavaScript -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Add Employee Modal -->
+    <div id="addEmployeeModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Employee</h2>
+            <form id="addEmployeeForm">
+                <input type="text" id="newEmployeeName" placeholder="Name" required>
+                <input type="text" id="newEmployeeDepartment" placeholder="Department" required>
+                <input type="text" id="newEmployeeSkills" placeholder="Skills (comma-separated)" required>
+                <input type="number" id="newEmployeeCoursesCompleted" placeholder="Courses Completed" required>
+                <button type="submit" class="btn">Add Employee</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 SkillSync. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="employees.js"></script>
+</body>
+</html>

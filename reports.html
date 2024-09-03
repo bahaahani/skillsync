@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSync - Reports</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>SkillSync</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="employees.html">Employees</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="reports.html" class="active">Reports</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="reports">
+            <h2>Reports</h2>
+            <div class="report-controls">
+                <select id="reportType">
+                    <option value="skillDistribution">Skill Distribution</option>
+                    <option value="courseCompletion">Course Completion</option>
+                    <option value="departmentPerformance">Department Performance</option>
+                </select>
+                <button onclick="generateReport()" class="btn">Generate Report</button>
+            </div>
+            <div id="reportContainer" class="report-container">
+                <canvas id="reportChart"></canvas>
+            </div>
+            <div id="reportSummary" class="report-summary"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 SkillSync. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+    <script src="reports.js"></script>
+</body>
+</html>

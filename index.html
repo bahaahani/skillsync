@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSync - Employee Skill Tracking</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>SkillSync</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Dashboard</a></li>
+                <li><a href="employees.html">Employees</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="reports.html">Reports</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="dashboard">
+            <h2>Dashboard Overview</h2>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>Skill Map</h3>
+                    <div id="skillMap" class="chart"></div>
+                </div>
+                <div class="card">
+                    <h3>Course Completion Status</h3>
+                    <div id="courseStatus" class="chart"></div>
+                </div>
+                <div class="card">
+                    <h3>Top Performers</h3>
+                    <ul id="topPerformers"></ul>
+                </div>
+                <div class="card">
+                    <h3>Recent Activities</h3>
+                    <ul id="recentActivities"></ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 SkillSync. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
