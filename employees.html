@@ -14,6 +14,7 @@
                 <li><a href="index.html">Dashboard</a></li>
                 <li><a href="employees.html" class="active">Employees</a></li>
                 <li><a href="courses.html">Courses</a></li>
+                <li><a href="assessments.html">Assessments</a></li>
                 <li><a href="reports.html">Reports</a></li>
             </ul>
         </nav>
@@ -29,8 +30,10 @@
                     <tr>
                         <th>Name</th>
                         <th>Department</th>
+                        <th>Job Role</th>
                         <th>Skills</th>
-                        <th>Courses Completed</th>
+                        <th>Assessments</th>
+                        <th>Development Plan</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -48,10 +51,40 @@
             <form id="addEmployeeForm">
                 <input type="text" id="newEmployeeName" placeholder="Name" required>
                 <input type="text" id="newEmployeeDepartment" placeholder="Department" required>
+                <input type="text" id="newEmployeeJobRole" placeholder="Job Role" required>
                 <input type="text" id="newEmployeeSkills" placeholder="Skills (comma-separated)" required>
-                <input type="number" id="newEmployeeCoursesCompleted" placeholder="Courses Completed" required>
+                <textarea id="newEmployeeDevelopmentPlan" placeholder="Development Plan" required></textarea>
                 <button type="submit" class="btn">Add Employee</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Employee Profile Modal -->
+    <div id="employeeProfileModal" class="modal">
+        <div class="modal-content">
+            <h2 id="employeeProfileName"></h2>
+            <div class="employee-profile">
+                <div class="profile-section">
+                    <h3>Department</h3>
+                    <p id="employeeProfileDepartment"></p>
+                </div>
+                <div class="profile-section">
+                    <h3>Job Role</h3>
+                    <p id="employeeProfileJobRole"></p>
+                </div>
+                <div class="profile-section">
+                    <h3>Skills</h3>
+                    <ul id="employeeProfileSkills"></ul>
+                </div>
+                <div class="profile-section">
+                    <h3>Assessments</h3>
+                    <div id="employeeProfileAssessments"></div>
+                </div>
+                <div class="profile-section">
+                    <h3>Development Plan</h3>
+                    <p id="employeeProfileDevelopmentPlan"></p>
+                </div>
+            </div>
         </div>
     </div>
 

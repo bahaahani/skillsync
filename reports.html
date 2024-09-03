@@ -14,6 +14,7 @@
                 <li><a href="index.html">Dashboard</a></li>
                 <li><a href="employees.html">Employees</a></li>
                 <li><a href="courses.html">Courses</a></li>
+                <li><a href="assessments.html">Assessments</a></li>
                 <li><a href="reports.html" class="active">Reports</a></li>
             </ul>
         </nav>
@@ -35,7 +36,31 @@
             </div>
             <div id="reportSummary" class="report-summary"></div>
         </section>
+        <section id="customReports">
+            <h2>Custom Reports</h2>
+            <button onclick="toggleModal('createReportModal')" class="btn">Create New Report</button>
+            <div id="customReportList" class="report-grid">
+                <!-- Custom report cards will be populated here by JavaScript -->
+            </div>
+        </section>
     </main>
+
+    <!-- Create Report Modal -->
+    <div id="createReportModal" class="modal">
+        <div class="modal-content">
+            <h2>Create New Report</h2>
+            <form id="createReportForm">
+                <input type="text" id="reportTitle" placeholder="Report Title" required>
+                <select id="reportType" required>
+                    <option value="">Select Report Type</option>
+                    <option value="skillDistribution">Skill Distribution</option>
+                    <option value="courseCompletion">Course Completion</option>
+                    <option value="departmentPerformance">Department Performance</option>
+                </select>
+                <button type="submit" class="btn">Create Report</button>
+            </form>
+        </div>
+    </div>
 
     <footer>
         <p>&copy; 2023 SkillSync. All rights reserved.</p>

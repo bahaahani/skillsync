@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSync - Skill Assessments</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>SkillSync</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="employees.html">Employees</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="reports.html">Reports</a></li>
+                <li><a href="assessments.html" class="active">Assessments</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="assessments">
+            <h2>Skill Assessments</h2>
+            <button onclick="toggleModal('createAssessmentModal')" class="btn">Create New Assessment</button>
+            <div id="assessmentList" class="assessment-grid">
+                <!-- Assessment cards will be populated here by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Create Assessment Modal -->
+    <div id="createAssessmentModal" class="modal">
+        <div class="modal-content">
+            <h2>Create New Assessment</h2>
+            <form id="createAssessmentForm">
+                <input type="text" id="assessmentTitle" placeholder="Assessment Title" required>
+                <select id="assessmentSkill" required>
+                    <option value="">Select Skill</option>
+                    <!-- Skill options will be populated by JavaScript -->
+                </select>
+                <input type="number" id="assessmentQuestions" placeholder="Number of Questions" required min="1">
+                <input type="date" id="assessmentDueDate" required>
+                <button type="submit" class="btn">Create Assessment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Take Assessment Modal -->
+    <div id="takeAssessmentModal" class="modal">
+        <div class="modal-content">
+            <h2 id="activeAssessmentTitle"></h2>
+            <div id="questionContainer"></div>
+            <button onclick="submitAssessment()" class="btn">Submit Assessment</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 SkillSync. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="assessments.js"></script>
+</body>
+</html>

@@ -14,6 +14,7 @@
                 <li><a href="index.html" class="active">Dashboard</a></li>
                 <li><a href="employees.html">Employees</a></li>
                 <li><a href="courses.html">Courses</a></li>
+                <li><a href="assessments.html">Assessments</a></li>
                 <li><a href="reports.html">Reports</a></li>
             </ul>
         </nav>
@@ -41,6 +42,31 @@
                 </div>
             </div>
         </section>
+        <section id="quickStats">
+            <h2>Quick Stats</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Employees</h3>
+                    <p id="totalEmployees"></p>
+                    <a href="employees.html" class="btn">View Employees</a>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Courses</h3>
+                    <p id="activeCourses"></p>
+                    <a href="courses.html" class="btn">View Courses</a>
+                </div>
+                <div class="stat-card">
+                    <h3>Skills Acquired</h3>
+                    <p id="skillsAcquired"></p>
+                    <a href="assessments.html" class="btn">View Assessments</a>
+                </div>
+                <div class="stat-card">
+                    <h3>Avg. Completion Rate</h3>
+                    <p id="avgCompletionRate"></p>
+                    <a href="reports.html" class="btn">View Reports</a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -49,5 +75,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 </html>

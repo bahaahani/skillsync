@@ -1,10 +1,22 @@
 // Sample employee data
 let employees = [
-    { name: "John Doe", department: "IT", skills: ["JavaScript", "Python", "React"], coursesCompleted: 5 },
-    { name: "Jane Smith", department: "HR", skills: ["Leadership", "Communication", "Conflict Resolution"], coursesCompleted: 3 },
-    { name: "Mike Johnson", department: "Marketing", skills: ["SEO", "Content Writing", "Social Media Management"], coursesCompleted: 4 },
-    { name: "Emily Brown", department: "Finance", skills: ["Financial Analysis", "Budgeting", "Excel"], coursesCompleted: 6 },
-    { name: "Chris Lee", department: "IT", skills: ["Java", "SQL", "Machine Learning"], coursesCompleted: 7 }
+    { id: 1, name: "John Doe", department: "IT", jobRole: "Software Engineer", skills: ["JavaScript", "Python", "React"], assessments: [
+        { id: 1, title: "JavaScript Basics", score: 85 },
+        { id: 3, title: "React Components", score: 92 }
+    ], developmentPlan: "John needs to improve his Python skills and learn more about cloud technologies." },
+    { id: 2, name: "Jane Smith", department: "HR", jobRole: "HR Specialist", skills: ["Leadership", "Communication", "Conflict Resolution"], assessments: [
+        { id: 2, title: "Python Data Structures", score: 78 }
+    ], developmentPlan: "Jane should attend a communication skills workshop and get certified in HR management." },
+    { id: 3, name: "Mike Johnson", department: "Marketing", jobRole: "Digital Marketing Specialist", skills: ["SEO", "Content Writing", "Social Media Management"], assessments: [], developmentPlan: "Mike needs to expand his knowledge of data analytics and improve his content strategy." },
+    { id: 4, name: "Emily Brown", department: "Finance", jobRole: "Financial Analyst", skills: ["Financial Analysis", "Budgeting", "Excel"], assessments: [
+        { id: 1, title: "JavaScript Basics", score: 90 },
+        { id: 2, title: "Python Data Structures", score: 85 }
+    ], developmentPlan: "Emily should take a course on advanced financial modeling and get certified in financial planning." },
+    { id: 5, name: "Chris Lee", department: "IT", jobRole: "DevOps Engineer", skills: ["Java", "SQL", "Machine Learning"], assessments: [
+        { id: 1, title: "JavaScript Basics", score: 80 },
+        { id: 2, title: "Python Data Structures", score: 92 },
+        { id: 3, title: "React Components", score: 88 }
+    ], developmentPlan: "Chris should focus on improving his cloud infrastructure skills and get hands-on experience with Kubernetes." }
 ];
 
 // Function to populate the employee table
@@ -15,14 +27,21 @@ function populateEmployeeTable(employeesToShow = employees) {
     employeesToShow.forEach(employee => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${employee.name}</td>
+            <td><a href="#" onclick="viewEmployeeProfile(${employee.id})">${employee.name}</a></td>
             <td>${employee.department}</td>
+            <td>${employee.jobRole}</td>
             <td>${employee.skills.join(", ")}</td>
-            <td>${employee.coursesCompleted}</td>
             <td>
-                <button onclick="viewEmployee('${employee.name}')" class="btn">View</button>
-                <button onclick="editEmployee('${employee.name}')" class="btn">Edit</button>
-                <button onclick="deleteEmployee('${employee.name}')" class="btn">Delete</button>
+                ${employee.assessments.map(assessment => `
+                    <div>
+                        <strong>${assessment.title}</strong>: ${assessment.score}
+                    </div>
+                `).join('')}
+            </td>
+            <td>${employee.developmentPlan}</td>
+            <td>
+                <button onclick="editEmployee(${employee.id})" class="btn">Edit</button>
+                <button onclick="deleteEmployee(${employee.id})" class="btn">Delete</button>
             </td>
         `;
         tableBody.appendChild(row);
@@ -34,15 +53,71 @@ function addEmployee(event) {
     event.preventDefault();
     const name = document.getElementById('newEmployeeName').value;
     const department = document.getElementById('newEmployeeDepartment').value;
+    const jobRole = document.getElementById('newEmployeeJobRole').value;
     const skills = document.getElementById('newEmployeeSkills').value.split(',').map(skill => skill.trim());
-    const coursesCompleted = parseInt(document.getElementById('newEmployeeCoursesCompleted').value);
+    const developmentPlan = document.getElementById('newEmployeeDevelopmentPlan').value;
 
-    const newEmployee = { name, department, skills, coursesCompleted };
+    const newEmployee = { id: employees.length + 1, name, department, jobRole, skills, assessments: [], developmentPlan };
     employees.push(newEmployee);
     populateEmployeeTable();
     closeAllModals();
     showNotification(`Employee ${name} added successfully!`, "success");
     event.target.reset();
+}
+
+// Function to view employee profile
+function viewEmployeeProfile(id) {
+    const employee = employees.find(e => e.id === id);
+    if (!employee) return;
+
+    const profileNameElement = document.getElementById('employeeProfileName');
+    const profileDepartmentElement = document.getElementById('employeeProfileDepartment');
+    const profileJobRoleElement = document.getElementById('employeeProfileJobRole');
+    const profileSkillsElement = document.getElementById('employeeProfileSkills');
+    const profileAssessmentsElement = document.getElementById('employeeProfileAssessments');
+    const profileDevelopmentPlanElement = document.getElementById('employeeProfileDevelopmentPlan');
+
+    profileNameElement.textContent = employee.name;
+    profileDepartmentElement.textContent = employee.department;
+    profileJobRoleElement.textContent = employee.jobRole;
+
+    profileSkillsElement.innerHTML = '';
+    employee.skills.forEach(skill => {
+        const li = document.createElement('li');
+        li.textContent = skill;
+        profileSkillsElement.appendChild(li);
+    });
+
+    profileAssessmentsElement.innerHTML = '';
+    employee.assessments.forEach(assessment => {
+        const div = document.createElement('div');
+        div.textContent = `${assessment.title}: ${assessment.score}`;
+        profileAssessmentsElement.appendChild(div);
+    });
+
+    profileDevelopmentPlanElement.textContent = employee.developmentPlan;
+
+    const modal = document.getElementById('employeeProfileModal');
+    modal.style.display = 'block';
+}
+
+// Function to edit employee (placeholder)
+function editEmployee(id) {
+    const employee = employees.find(e => e.id === id);
+    if (!employee) return;
+    showNotification(`Editing ${employee.name}`, "info");
+    // TODO: Implement employee editing functionality
+}
+
+// Function to delete employee
+function deleteEmployee(id) {
+    const employee = employees.find(e => e.id === id);
+    if (!employee) return;
+    if (confirm(`Are you sure you want to delete ${employee.name}?`)) {
+        employees = employees.filter(e => e.id !== id);
+        populateEmployeeTable();
+        showNotification(`Employee ${employee.name} deleted successfully!`, "success");
+    }
 }
 
 // Function to search employees
@@ -51,28 +126,10 @@ function searchEmployees() {
     const filteredEmployees = employees.filter(employee => 
         employee.name.toLowerCase().includes(searchTerm) ||
         employee.department.toLowerCase().includes(searchTerm) ||
+        employee.jobRole.toLowerCase().includes(searchTerm) ||
         employee.skills.some(skill => skill.toLowerCase().includes(searchTerm))
     );
     populateEmployeeTable(filteredEmployees);
-}
-
-// Function to view employee details (placeholder)
-function viewEmployee(name) {
-    showNotification(`Viewing details for ${name}`, "info");
-}
-
-// Function to edit employee (placeholder)
-function editEmployee(name) {
-    showNotification(`Editing ${name}`, "info");
-}
-
-// Function to delete employee
-function deleteEmployee(name) {
-    if (confirm(`Are you sure you want to delete ${name}?`)) {
-        employees = employees.filter(employee => employee.name !== name);
-        populateEmployeeTable();
-        showNotification(`Employee ${name} deleted successfully!`, "success");
-    }
 }
 
 // Event listeners

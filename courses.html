@@ -14,6 +14,7 @@
                 <li><a href="index.html">Dashboard</a></li>
                 <li><a href="employees.html">Employees</a></li>
                 <li><a href="courses.html" class="active">Courses</a></li>
+                <li><a href="assessments.html">Assessments</a></li>
                 <li><a href="reports.html">Reports</a></li>
             </ul>
         </nav>
@@ -28,6 +29,12 @@
                 <!-- Course cards will be populated here by JavaScript -->
             </div>
         </section>
+        <section id="enrolledCourses">
+            <h2>My Courses</h2>
+            <div class="course-grid" id="enrolledCourseGrid">
+                <!-- Enrolled course cards will be populated here by JavaScript -->
+            </div>
+        </section>
     </main>
 
     <!-- Add Course Modal -->
@@ -40,6 +47,20 @@
                 <input type="text" id="newCourseDuration" placeholder="Duration" required>
                 <input type="number" id="newCourseEnrolled" placeholder="Enrolled" required>
                 <button type="submit" class="btn">Add Course</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Enroll in Course Modal -->
+    <div id="enrollCourseModal" class="modal">
+        <div class="modal-content">
+            <h2>Enroll in Course</h2>
+            <form id="enrollCourseForm">
+                <select id="courseToEnroll" required>
+                    <option value="">Select Course</option>
+                    <!-- Course options will be populated by JavaScript -->
+                </select>
+                <button type="submit" class="btn">Enroll</button>
             </form>
         </div>
     </div>
