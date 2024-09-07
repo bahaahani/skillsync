@@ -1,45 +1,36 @@
-const app = require("./app");
+const app = require("./app"); // Importing the Express app
 const mongoose = require("mongoose");
-const https = require("https");
-const fs = require("fs");
+const http = require("http");
 const socketIo = require("socket.io");
-const jwt = require('jsonwebtoken');
-const cron = require('node-cron');
-const { generateDailyAnalytics } = require('./controllers/analyticsController');
-const Message = require('./models/Message');
-const User = require('./models/User');
+const jwt = require("jsonwebtoken");
+const cron = require("node-cron");
+const { generateDailyAnalytics } = require("./controllers/analyticsController");
+const Message = require("./models/Message");
+const User = require("./models/User");
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-// SSL certificate configuration
-const options = {
-  key: fs.readFileSync('path/to/your/private-key.pem'),
-  cert: fs.readFileSync('path/to/your/certificate.pem')
-};
+// Create HTTP server
+const server = http.createServer(app);
 
-const server = https.createServer(options, app);
+// Set up Socket.IO
 const io = socketIo(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "https://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   },
 });
 
+// MongoDB connection
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("Connected to MongoDB"))
+  .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/skillsync")
+  .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Socket.IO connection handling
 io.on("connection", (socket) => {
-  console.log("New client connected");
-
-  socket.on("join", (userId) => {
-    socket.join(userId);
-  });
+  console.log("A user connected");
 
   socket.on("joinCourse", (courseId) => {
     socket.join(`course:${courseId}`);
@@ -50,13 +41,13 @@ io.on("connection", (socket) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const userId = decoded.id;
       User.findById(userId, (err, user) => {
-        if (user && user.role === 'admin') {
-          socket.join('admin');
-          console.log('Admin joined the admin room');
+        if (user && user.role === "admin") {
+          socket.join("admin");
+          console.log("Admin joined the admin room");
         }
       });
     } catch (error) {
-      console.error('Error joining admin room:', error);
+      console.error("Error joining admin room:", error);
     }
   });
 
@@ -65,13 +56,13 @@ io.on("connection", (socket) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const userId = decoded.id;
       User.findById(userId, (err, user) => {
-        if (user && user.role === 'instructor') {
+        if (user && user.role === "instructor") {
           socket.join(`instructor:${userId}`);
-          console.log('Instructor joined their room');
+          console.log("Instructor joined their room");
         }
       });
     } catch (error) {
-      console.error('Error joining instructor room:', error);
+      console.error("Error joining instructor room:", error);
     }
   });
 
@@ -91,18 +82,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("Client disconnected");
+    console.log("User disconnected");
   });
+
+  // Add more socket event handlers as needed
 });
 
-// Set up cron job for daily analytics
-cron.schedule('0 0 * * *', () => {
-  console.log('Generating daily analytics');
-  generateDailyAnalytics();
+// Schedule daily analytics generation
+cron.schedule("0 0 * * *", generateDailyAnalytics);
+
+server.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
 });
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-module.exports = { app, io };
+// Export server and io for use in other files if needed
+module.exports = { app, server, io };
