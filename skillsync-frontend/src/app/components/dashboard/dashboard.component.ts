@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -16,11 +16,15 @@ Chart.register(...registerables);
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  @ViewChild('skillProgressChart') skillProgressChart!: ElementRef;
+  @ViewChild('courseCompletionChart') courseCompletionChart!: ElementRef;
+
   user: any;
   courseStats: any;
   assessmentStats: any;
   recentActivities: any[] = [];
-  skillProgressChart: Chart | null = null;
+  skillProgress: any;
+  courseCompletion: any;
 
   constructor(
     private userService: UserService,
@@ -34,6 +38,7 @@ export class DashboardComponent implements OnInit {
     this.loadAssessmentStats();
     this.loadRecentActivities();
     this.loadSkillProgress();
+    this.loadCourseCompletion();
   }
 
   loadUserData() {
@@ -74,22 +79,33 @@ export class DashboardComponent implements OnInit {
 
   loadSkillProgress() {
     this.userService.getSkillProgress().subscribe(
-      (skillProgress) => {
-        this.createSkillProgressChart(skillProgress);
+      (progress) => {
+        this.skillProgress = progress;
+        this.createSkillProgressChart();
       },
       (error) => console.error('Error loading skill progress', error)
     );
   }
 
-  createSkillProgressChart(skillProgress: any) {
-    const ctx = document.getElementById('skillProgressChart') as HTMLCanvasElement;
-    this.skillProgressChart = new Chart(ctx, {
+  loadCourseCompletion() {
+    this.courseService.getCourseCompletion().subscribe(
+      (completion) => {
+        this.courseCompletion = completion;
+        this.createCourseCompletionChart();
+      },
+      (error) => console.error('Error loading course completion', error)
+    );
+  }
+
+  createSkillProgressChart() {
+    const ctx = this.skillProgressChart.nativeElement.getContext('2d');
+    new Chart(ctx, {
       type: 'radar',
       data: {
-        labels: Object.keys(skillProgress),
+        labels: Object.keys(this.skillProgress),
         datasets: [{
           label: 'Skill Progress',
-          data: Object.values(skillProgress),
+          data: Object.values(this.skillProgress),
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 1
@@ -100,6 +116,40 @@ export class DashboardComponent implements OnInit {
           r: {
             beginAtZero: true,
             max: 100
+          }
+        }
+      }
+    });
+  }
+
+  createCourseCompletionChart() {
+    const ctx = this.courseCompletionChart.nativeElement.getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Completed', 'In Progress', 'Not Started'],
+        datasets: [{
+          data: [
+            this.courseCompletion.completed,
+            this.courseCompletion.inProgress,
+            this.courseCompletion.notStarted
+          ],
+          backgroundColor: [
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            'rgba(255, 99, 132, 0.8)'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+          },
+          title: {
+            display: true,
+            text: 'Course Completion'
           }
         }
       }

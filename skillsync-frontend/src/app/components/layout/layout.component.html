@@ -1,54 +1,49 @@
 <div class="min-h-screen bg-gray-100">
   <nav class="bg-white shadow-sm">
-    <!-- ... (existing navigation code) ... -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex">
+          <div class="flex-shrink-0 flex items-center">
+            <img class="h-8 w-auto" src="assets/logo.png" alt="SkillSync">
+          </div>
+          <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+            <a routerLink="/dashboard" routerLinkActive="border-indigo-500 text-gray-900" [routerLinkActiveOptions]="{exact: true}" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+              Dashboard
+            </a>
+            <a routerLink="/courses" routerLinkActive="border-indigo-500 text-gray-900" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+              Courses
+            </a>
+            <a routerLink="/assessments" routerLinkActive="border-indigo-500 text-gray-900" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+              Assessments
+            </a>
+            <a routerLink="/employees" routerLinkActive="border-indigo-500 text-gray-900" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+              Employees
+            </a>
+            <a routerLink="/reports" routerLinkActive="border-indigo-500 text-gray-900" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+              Reports
+            </a>
+            <a routerLink="/learning-path" routerLinkActive="border-indigo-500 text-gray-900" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+              Learning Path
+            </a>
+            <a routerLink="/mentorship" routerLinkActive="border-indigo-500 text-gray-900" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+              Mentorship
+            </a>
+            <a routerLink="/notifications" routerLinkActive="border-indigo-500 text-gray-900" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+              Notifications
+            </a>
+          </div>
+        </div>
+        <div class="hidden sm:ml-6 sm:flex sm:items-center">
+          <a routerLink="/profile" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">Profile</a>
+        </div>
+      </div>
+    </div>
   </nav>
 
   <div class="py-10">
     <main>
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <router-outlet></router-outlet>
-
-        <!-- Reports section -->
-        <div class="mt-8">
-          <h2 class="text-2xl font-semibold text-gray-900 mb-4">Reports</h2>
-          <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-            <div class="px-4 py-5 sm:px-6">
-              <h3 class="text-lg leading-6 font-medium text-gray-900">Generate Report</h3>
-              <p class="mt-1 max-w-2xl text-sm text-gray-500">Select a report type and generate a report.</p>
-            </div>
-            <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
-              <form [formGroup]="reportForm" (ngSubmit)="generateReport()">
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  <div>
-                    <label for="reportType" class="block text-sm font-medium text-gray-700">Report Type</label>
-                    <select id="reportType" formControlName="reportType" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                      <option value="">Select a report type</option>
-                      <option *ngFor="let type of reportTypes" [value]="type">{{ type }}</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label for="dateRange" class="block text-sm font-medium text-gray-700">Date Range</label>
-                    <input type="text" id="dateRange" formControlName="dateRange" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                  </div>
-                </div>
-                <div class="mt-6">
-                  <button type="submit" [disabled]="reportForm.invalid" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Generate Report
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <div *ngIf="reportData" class="mt-8">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Report Data</h3>
-            <div class="mt-2 bg-white shadow overflow-hidden sm:rounded-lg">
-              <div class="px-4 py-5 sm:px-6">
-                <pre>{{ reportData | json }}</pre>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   </div>

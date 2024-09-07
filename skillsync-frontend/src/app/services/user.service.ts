@@ -57,4 +57,8 @@ export class UserService {
   getSkillProgress(): Observable<any> {
     return this.http.get(`${this.apiUrl}/users/skill-progress`);
   }
+
+  updateUserProfile(profile: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/profile`, profile);
+  }
 }

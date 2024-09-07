@@ -23,11 +23,6 @@
           </div>
         </div>
       </div>
-      <div class="bg-gray-50 px-5 py-3">
-        <div class="text-sm">
-          <a routerLink="/courses" class="font-medium text-indigo-600 hover:text-indigo-900">View all courses</a>
-        </div>
-      </div>
     </div>
 
     <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -50,11 +45,6 @@
               </dd>
             </dl>
           </div>
-        </div>
-      </div>
-      <div class="bg-gray-50 px-5 py-3">
-        <div class="text-sm">
-          <a routerLink="/assessments" class="font-medium text-indigo-600 hover:text-indigo-900">View all assessments</a>
         </div>
       </div>
     </div>
@@ -81,44 +71,48 @@
           </div>
         </div>
       </div>
-      <div class="bg-gray-50 px-5 py-3">
-        <div class="text-sm">
-          <a routerLink="/profile" class="font-medium text-indigo-600 hover:text-indigo-900">View skill details</a>
-        </div>
-      </div>
     </div>
   </div>
 
   <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
     <div class="bg-white overflow-hidden shadow rounded-lg">
       <div class="p-5">
-        <h2 class="text-lg leading-6 font-medium text-gray-900">Recent Activity</h2>
-        <ul class="mt-3 divide-y divide-gray-200">
-          <li *ngFor="let activity of recentActivities" class="py-3">
-            <div class="flex space-x-3">
-              <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-              </svg>
-              <div class="flex-1 space-y-1">
-                <div class="flex items-center justify-between">
-                  <h3 class="text-sm font-medium">{{ activity.title }}</h3>
-                  <p class="text-sm text-gray-500">{{ activity.date | date:'short' }}</p>
-                </div>
-                <p class="text-sm text-gray-500">{{ activity.description }}</p>
-              </div>
-            </div>
-          </li>
-        </ul>
+        <h2 class="text-lg leading-6 font-medium text-gray-900">Skill Progress</h2>
+        <div class="mt-2">
+          <canvas #skillProgressChart></canvas>
+        </div>
       </div>
     </div>
 
     <div class="bg-white overflow-hidden shadow rounded-lg">
       <div class="p-5">
-        <h2 class="text-lg leading-6 font-medium text-gray-900">Skill Progress</h2>
-        <div class="mt-3">
-          <canvas id="skillProgressChart"></canvas>
+        <h2 class="text-lg leading-6 font-medium text-gray-900">Course Completion</h2>
+        <div class="mt-2">
+          <canvas #courseCompletionChart></canvas>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <h2 class="text-lg leading-6 font-medium text-gray-900">Recent Activity</h2>
+    <div class="mt-2 overflow-hidden sm:rounded-lg">
+      <ul role="list" class="divide-y divide-gray-200">
+        <li *ngFor="let activity of recentActivities" class="py-4">
+          <div class="flex space-x-3">
+            <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            <div class="flex-1 space-y-1">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-medium">{{ activity.title }}</h3>
+                <p class="text-sm text-gray-500">{{ activity.date | date:'short' }}</p>
+              </div>
+              <p class="text-sm text-gray-500">{{ activity.description }}</p>
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

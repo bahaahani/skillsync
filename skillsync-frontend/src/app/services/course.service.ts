@@ -33,4 +33,8 @@ export class CourseService {
   getCourseStats(): Observable<any> {
     return this.http.get(`${this.apiUrl}/courses/stats`);
   }
+
+  getCourseCompletion(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/courses/completion`);
+  }
 }
