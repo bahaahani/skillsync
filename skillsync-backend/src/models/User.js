@@ -19,6 +19,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  firstName: {
+    type: String,
+    trim: true,
+  },
+  lastName: {
+    type: String,
+    trim: true,
+  },
+  bio: {
+    type: String,
+    maxlength: 500,
+  },
   skills: [{
     name: String,
     level: Number,
@@ -27,10 +39,74 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  coursesEnrolled: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+  }],
+  coursesCompleted: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+  }],
+  assessmentsTaken: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Assessment',
+  }],
+  achievements: [{
+    type: {
+      type: String,
+      enum: ['course_completion', 'assessment_ace', 'forum_contributor', 'quick_learner', 'social_butterfly'],
+    },
+    name: String,
+    description: String,
+    dateEarned: {
+      type: Date,
+      default: Date.now,
+    },
+  }],
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  avatar: {
+    type: String,
+    default: 'https://example.com/default-avatar.png' // Replace with your default avatar URL
+  },
+  interests: [{
+    type: String,
+    trim: true,
+  }],
+  courseProgress: [{
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course'
+    },
+    completedContent: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course.content'
+    }],
+    quizResults: [{
+      quiz: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course.content'
+      },
+      score: Number,
+      percentage: Number,
+      completedAt: Date
+    }],
+    assignmentSubmissions: [{
+      assignment: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course.content'
+      },
+      submissionText: String,
+      submittedAt: Date
+    }]
+  }],
+  role: {
+    type: String,
+    enum: ['student', 'instructor', 'admin'],
+    default: 'student'
+  }
 });
 
 userSchema.pre('save', async function (next) {

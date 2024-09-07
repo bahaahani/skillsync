@@ -1,6 +1,8 @@
 const Assessment = require('../models/Assessment');
 const Course = require('../models/Course');
 const User = require('../models/User');
+const createNotification = require('../utils/createNotification');
+const { achievementTypes, checkAndAwardAchievement } = require('../utils/achievements');
 
 exports.getAllAssessments = async (req, res, next) => {
   try {
@@ -90,10 +92,25 @@ exports.takeAssessment = async (req, res, next) => {
     }
     const percentage = (score / assessment.questions.length) * 100;
     
-    // Update user's score
+    // Update user's score and assessments taken
     const user = await User.findById(req.user.id);
     user.score += score;
+    user.assessmentsTaken.push(assessment._id);
     await user.save();
+
+    // Check for assessment ace achievement
+    if (percentage === 100) {
+      await checkAndAwardAchievement(user._id, achievementTypes.ASSESSMENT_ACE);
+    }
+
+    // Create a notification for assessment completion
+    await createNotification(
+      req.user.id,
+      'assessment_completed',
+      `You have completed the assessment: ${assessment.title}`,
+      assessment._id,
+      'Assessment'
+    );
 
     res.json({
       message: 'Assessment completed',

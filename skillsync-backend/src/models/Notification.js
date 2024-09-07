@@ -9,7 +9,7 @@ const notificationSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ['course_enrollment', 'assessment_completed', 'forum_reply', 'achievement'],
+    enum: ['course_enrollment', 'assessment_completed', 'forum_reply', 'achievement', 'new_feedback', 'feedback_response'],
   },
   content: {
     type: String,
@@ -21,7 +21,7 @@ const notificationSchema = new mongoose.Schema({
   },
   itemModel: {
     type: String,
-    enum: ['Course', 'Assessment', 'ForumTopic'],
+    enum: ['Course', 'Assessment', 'ForumTopic', 'CourseFeedback'],
   },
   read: {
     type: Boolean,

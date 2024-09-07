@@ -1,5 +1,6 @@
 const ForumTopic = require('../models/ForumTopic');
 const Course = require('../models/Course');
+const { emitForumUpdate } = require('../utils/socketEvents');
 
 exports.createTopic = async (req, res, next) => {
   try {
@@ -56,11 +57,16 @@ exports.addReply = async (req, res, next) => {
     if (!topic) {
       return res.status(404).json({ message: 'Topic not found' });
     }
-    topic.replies.push({
+    const newReply = {
       content,
       author: req.user.id,
-    });
+    };
+    topic.replies.push(newReply);
     await topic.save();
+
+    // Emit real-time forum update
+    emitForumUpdate(topic.course, { type: 'newReply', topicId: topic._id, reply: newReply });
+
     res.status(201).json({ message: 'Reply added successfully' });
   } catch (error) {
     next(error);

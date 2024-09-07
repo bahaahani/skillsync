@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const { updateRealTimeAnalytics } = require('./analyticsController');
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -20,6 +21,9 @@ exports.register = async (req, res, next) => {
     await user.save();
 
     const token = generateToken(user._id);
+
+    // Trigger real-time analytics update
+    await updateRealTimeAnalytics();
 
     res.status(201).json({
       message: 'User registered successfully',
@@ -50,6 +54,9 @@ exports.login = async (req, res, next) => {
     }
 
     const token = generateToken(user._id);
+
+    // Trigger real-time analytics update
+    await updateRealTimeAnalytics();
 
     res.json({
       message: 'Login successful',

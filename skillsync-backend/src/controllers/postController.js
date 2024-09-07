@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const { emitSocialFeedUpdate } = require('../utils/socketEvents');
 
 exports.createPost = async (req, res, next) => {
   try {
@@ -8,6 +9,10 @@ exports.createPost = async (req, res, next) => {
       content,
     });
     await post.save();
+
+    // Emit real-time social feed update
+    emitSocialFeedUpdate({ type: 'newPost', post });
+
     res.status(201).json({ message: 'Post created successfully', post });
   } catch (error) {
     next(error);

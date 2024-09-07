@@ -1,4 +1,5 @@
 const Notification = require('../models/Notification');
+const { emitNotification } = require('../utils/socketEvents');
 
 exports.getUserNotifications = async (req, res, next) => {
   try {
@@ -39,5 +40,25 @@ exports.deleteNotification = async (req, res, next) => {
     res.json({ message: 'Notification deleted successfully' });
   } catch (error) {
     next(error);
+  }
+};
+
+exports.createNotification = async (recipientId, type, content, relatedItem, itemModel) => {
+  try {
+    const notification = new Notification({
+      recipient: recipientId,
+      type,
+      content,
+      relatedItem,
+      itemModel,
+    });
+    await notification.save();
+    
+    // Emit real-time notification
+    emitNotification(recipientId, notification);
+
+    return notification;
+  } catch (error) {
+    console.error('Error creating notification:', error);
   }
 };
