@@ -1,6 +1,7 @@
 const app = require("./app");
 const mongoose = require("mongoose");
-const http = require("http");
+const https = require("https");
+const fs = require("fs");
 const socketIo = require("socket.io");
 const jwt = require('jsonwebtoken');
 const cron = require('node-cron');
@@ -10,10 +11,16 @@ const User = require('./models/User');
 
 const PORT = process.env.PORT || 3000;
 
-const server = http.createServer(app);
+// SSL certificate configuration
+const options = {
+  key: fs.readFileSync('path/to/your/private-key.pem'),
+  cert: fs.readFileSync('path/to/your/certificate.pem')
+};
+
+const server = https.createServer(options, app);
 const io = socketIo(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    origin: process.env.FRONTEND_URL || "https://localhost:3000",
     methods: ["GET", "POST"],
   },
 });

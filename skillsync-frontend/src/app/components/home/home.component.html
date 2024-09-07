@@ -1,0 +1,79 @@
+<header>
+  <h1>SkillSync</h1>
+  <nav>
+    <ul>
+      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <li><a routerLink="/employees" routerLinkActive="active">Employees</a></li>
+      <li><a routerLink="/courses" routerLinkActive="active">Courses</a></li>
+      <li><a routerLink="/assessments" routerLinkActive="active">Assessments</a></li>
+    </ul>
+  </nav>
+  <div class="header-actions">
+    <button *ngIf="!isLoggedIn()" routerLink="/login">Login</button>
+    <button *ngIf="isLoggedIn()" (click)="logout()">Logout</button>
+  </div>
+</header>
+
+<main>
+  <section id="userProfile" *ngIf="user">
+    <h2>Welcome, {{ user.name }}!</h2>
+    <div id="userStats">
+      <p>Completed Courses: {{ user.completedCourses }}</p>
+      <p>Current Skill Level: {{ user.skillLevel }}</p>
+      <p>Goals Achieved: {{ user.goalsAchieved }}</p>
+    </div>
+  </section>
+
+  <section id="socialFeed">
+    <h2>Social Feed</h2>
+    <form [formGroup]="postForm" (ngSubmit)="createPost()">
+      <textarea formControlName="content" placeholder="Share your thoughts or achievements..."></textarea>
+      <button type="submit" [disabled]="postForm.invalid">Post</button>
+    </form>
+    <div id="feedContent">
+      <div *ngFor="let post of socialFeed" class="post">
+        <p><strong>{{ post.author }}</strong></p>
+        <p>{{ post.content }}</p>
+        <small>{{ post.createdAt | date:'short' }}</small>
+      </div>
+    </div>
+  </section>
+
+  <app-leaderboard></app-leaderboard>
+
+  <section id="discussionForum">
+    <h2>Discussion Forum</h2>
+    <form [formGroup]="forumForm" (ngSubmit)="createForumTopic()">
+      <input type="text" formControlName="title" placeholder="Topic Title">
+      <textarea formControlName="content" placeholder="Topic Content"></textarea>
+      <button type="submit" [disabled]="forumForm.invalid">Create Topic</button>
+    </form>
+    <div id="forumTopics">
+      <div *ngFor="let topic of forumTopics" class="forum-topic">
+        <h3>{{ topic.title }}</h3>
+        <p>{{ topic.content }}</p>
+        <small>Posted by {{ topic.author }} on {{ topic.createdAt | date:'short' }}</small>
+      </div>
+    </div>
+  </section>
+
+  <section id="goals" *ngIf="user">
+    <h2>Personal Goals</h2>
+    <form [formGroup]="goalForm" (ngSubmit)="addGoal()">
+      <input type="text" formControlName="title" placeholder="Goal Title">
+      <input type="date" formControlName="dueDate">
+      <button type="submit" [disabled]="goalForm.invalid">Add Goal</button>
+    </form>
+    <div id="goalsList">
+      <div *ngFor="let goal of userGoals" class="goal">
+        <h3>{{ goal.title }}</h3>
+        <p>Due Date: {{ goal.dueDate | date:'mediumDate' }}</p>
+        <p>Status: {{ goal.status }}</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2023 SkillSync. All rights reserved.</p>
+</footer>

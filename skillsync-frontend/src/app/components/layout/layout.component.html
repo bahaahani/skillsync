@@ -1,0 +1,26 @@
+<div class="app-container">
+  <header>
+    <h1>SkillSync</h1>
+    <nav>
+      <ul>
+        <li><a [routerLink]="['/dashboard']" [class.active]="navigationService.isRouteActive('/dashboard')">Dashboard</a></li>
+        <li><a [routerLink]="['/employees']" [class.active]="navigationService.isRouteActive('/employees')">Employees</a></li>
+        <li><a [routerLink]="['/courses']" [class.active]="navigationService.isRouteActive('/courses')">Courses</a></li>
+        <li><a [routerLink]="['/assessments']" [class.active]="navigationService.isRouteActive('/assessments')">Assessments</a></li>
+        <li><a [routerLink]="['/reports']" [class.active]="navigationService.isRouteActive('/reports')">Reports</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-notification></app-notification>
+
+  <app-loading-indicator></app-loading-indicator>
+
+  <footer>
+    <p>&copy; 2023 SkillSync. All rights reserved.</p>
+  </footer>
+</div>

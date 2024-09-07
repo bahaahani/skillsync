@@ -109,6 +109,13 @@ const userSchema = new mongoose.Schema({
   }
 });
 
+// Add indexes
+userSchema.index({ username: 1 });
+userSchema.index({ email: 1 });
+userSchema.index({ role: 1 });
+userSchema.index({ 'coursesEnrolled': 1 });
+userSchema.index({ 'coursesCompleted': 1 });
+
 userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);

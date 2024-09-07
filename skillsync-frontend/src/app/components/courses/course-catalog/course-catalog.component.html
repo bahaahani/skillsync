@@ -1,0 +1,11 @@
+<div class="course-catalog">
+  <h1>Course Catalog</h1>
+  <input type="text" [(ngModel)]="searchTerm" (input)="searchCourses()" placeholder="Search courses...">
+  <div class="course-list">
+    <div *ngFor="let course of filteredCourses" class="course-item">
+      <h2>{{ course.title }}</h2>
+      <p>Category: {{ course.category }}</p>
+      <button>Enroll</button>
+    </div>
+  </div>
+</div>

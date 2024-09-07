@@ -1,0 +1,19 @@
+<div class="assessment-container">
+  <h2>Skill Assessment</h2>
+  <div *ngIf="!assessmentCompleted">
+    <p>Question {{ currentQuestion + 1 }} of {{ questions.length }}</p>
+    <p>{{ questions[currentQuestion]?.question }}</p>
+    <form [formGroup]="assessmentForm" (ngSubmit)="submitAnswer()">
+      <div *ngFor="let option of questions[currentQuestion]?.options; let i = index">
+        <input type="radio" [id]="'option' + i" formControlName="answer" [value]="option">
+        <label [for]="'option' + i">{{ option }}</label>
+      </div>
+      <button type="submit" [disabled]="assessmentForm.invalid">Next</button>
+    </form>
+  </div>
+  <div *ngIf="assessmentCompleted">
+    <h3>Assessment Completed</h3>
+    <p>Your score: {{ score }} / {{ questions.length }}</p>
+    <button (click)="restartAssessment()">Take Another Assessment</button>
+  </div>
+</div>

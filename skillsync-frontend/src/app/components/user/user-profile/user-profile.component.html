@@ -1,0 +1,18 @@
+<div class="user-profile">
+  <h2>User Profile</h2>
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" formControlName="name">
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" formControlName="email">
+    </div>
+    <div class="form-group">
+      <label for="bio">Bio:</label>
+      <textarea id="bio" formControlName="bio"></textarea>
+    </div>
+    <button type="submit" [disabled]="profileForm.invalid">Update Profile</button>
+  </form>
+</div>

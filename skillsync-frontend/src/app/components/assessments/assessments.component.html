@@ -1,0 +1,60 @@
+<section id="personalizedAssessments">
+  <h2>Personalized Assessments</h2>
+  <div class="assessment-grid">
+    <div *ngFor="let assessment of personalizedAssessments" class="assessment-card">
+      <h3>{{ assessment.title }}</h3>
+      <p>Skill: {{ assessment.skill }}</p>
+      <button (click)="takeAssessment(assessment.id)" class="btn">Take Assessment</button>
+    </div>
+  </div>
+</section>
+
+<section id="assessments">
+  <h2>All Skill Assessments</h2>
+  <button (click)="assessmentForm.reset()" class="btn">Create New Assessment</button>
+  <div class="assessment-grid">
+    <div *ngFor="let assessment of allAssessments" class="assessment-card">
+      <h3>{{ assessment.title }}</h3>
+      <p>Skill: {{ assessment.skill }}</p>
+      <p>Questions: {{ assessment.questions }}</p>
+      <p>Due Date: {{ assessment.dueDate | date:'mediumDate' }}</p>
+      <button (click)="takeAssessment(assessment.id)" class="btn">Take Assessment</button>
+    </div>
+  </div>
+</section>
+
+<section id="assessmentHistory">
+  <h2>Assessment History</h2>
+  <div *ngFor="let assessment of assessmentHistory" class="history-item">
+    <h3>{{ assessment.title }}</h3>
+    <p>Date Taken: {{ assessment.dateTaken | date:'medium' }}</p>
+    <p>Score: {{ assessment.score }}%</p>
+  </div>
+</section>
+
+<section id="certifications">
+  <h2>Certifications</h2>
+  <div class="certification-grid">
+    <div *ngFor="let certification of certifications" class="certification-card">
+      <h3>{{ certification.title }}</h3>
+      <p>{{ certification.description }}</p>
+      <button (click)="applyCertification(certification.id)" class="btn">Apply for Certification</button>
+    </div>
+  </div>
+</section>
+
+<!-- Assessment Form Modal -->
+<div id="assessmentFormModal" [style.display]="assessmentForm.dirty ? 'block' : 'none'">
+  <div class="modal-content">
+    <h2>Create New Assessment</h2>
+    <form [formGroup]="assessmentForm" (ngSubmit)="createAssessment()">
+      <input type="text" formControlName="title" placeholder="Assessment Title" required>
+      <input type="text" formControlName="skill" placeholder="Skill" required>
+      <input type="number" formControlName="questions" placeholder="Number of Questions" required>
+      <input type="date" formControlName="dueDate" required>
+      <input type="number" formControlName="passingGrade" placeholder="Passing Grade (%)" required>
+      <button type="submit" [disabled]="assessmentForm.invalid">Create Assessment</button>
+      <button type="button" (click)="assessmentForm.reset()">Cancel</button>
+    </form>
+  </div>
+</div>

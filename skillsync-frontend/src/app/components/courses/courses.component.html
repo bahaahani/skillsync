@@ -1,0 +1,51 @@
+<section id="courses">
+  <h2>Course Management</h2>
+  <input type="text" [(ngModel)]="searchTerm" (keyup)="searchCourses()" placeholder="Search courses...">
+  <div class="course-grid">
+    <div *ngFor="let course of filteredCourses" class="course-card">
+      <h3>{{ course.title }}</h3>
+      <p>Category: {{ course.category }}</p>
+      <p>Duration: {{ course.duration }}</p>
+      <p>Enrolled: {{ course.enrolled }}</p>
+      <button (click)="enrollInCourse(course.id)" class="btn">Enroll</button>
+    </div>
+  </div>
+</section>
+
+<section id="enrolledCourses">
+  <h2>My Courses</h2>
+  <div class="course-grid">
+    <div *ngFor="let course of enrolledCourses" class="course-card">
+      <h3>{{ course.title }}</h3>
+      <p>Category: {{ course.category }}</p>
+      <p>Progress: {{ course.progress }}%</p>
+    </div>
+  </div>
+</section>
+
+<section id="recommendedCourses">
+  <h2>Recommended Courses</h2>
+  <div class="course-grid">
+    <div *ngFor="let course of recommendedCourses" class="course-card">
+      <h3>{{ course.title }}</h3>
+      <p>Category: {{ course.category }}</p>
+      <p>Duration: {{ course.duration }}</p>
+      <button (click)="enrollInCourse(course.id)" class="btn">Enroll</button>
+    </div>
+  </div>
+</section>
+
+<!-- Course Form Modal -->
+<div id="courseFormModal" [style.display]="courseForm.dirty ? 'block' : 'none'">
+  <div class="modal-content">
+    <h2>Add New Course</h2>
+    <form [formGroup]="courseForm" (ngSubmit)="addCourse()">
+      <input type="text" formControlName="title" placeholder="Title" required>
+      <input type="text" formControlName="category" placeholder="Category" required>
+      <input type="text" formControlName="duration" placeholder="Duration" required>
+      <input type="text" formControlName="skills" placeholder="Skills (comma-separated)" required>
+      <button type="submit" [disabled]="courseForm.invalid">Add Course</button>
+      <button type="button" (click)="courseForm.reset()">Cancel</button>
+    </form>
+  </div>
+</div>
