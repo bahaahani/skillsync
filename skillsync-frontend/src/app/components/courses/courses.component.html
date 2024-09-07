@@ -1,13 +1,70 @@
 <section id="courses">
-  <h2>Course Management</h2>
-  <input type="text" [(ngModel)]="searchTerm" (keyup)="searchCourses()" placeholder="Search courses...">
-  <div class="course-grid">
-    <div *ngFor="let course of filteredCourses" class="course-card">
-      <h3>{{ course.title }}</h3>
-      <p>Category: {{ course.category }}</p>
-      <p>Duration: {{ course.duration }}</p>
-      <p>Enrolled: {{ course.enrolled }}</p>
-      <button (click)="enrollInCourse(course.id)" class="btn">Enroll</button>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl font-semibold text-gray-900 mb-4">Course Management</h2>
+    <div class="mb-4">
+      <input type="text" [(ngModel)]="searchTerm" (keyup)="searchCourses()" placeholder="Search courses..." class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+    </div>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div *ngFor="let course of filteredCourses" class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg font-medium text-gray-900">{{ course.title }}</h3>
+          <p class="mt-1 text-sm text-gray-500">Category: {{ course.category }}</p>
+          <p class="mt-1 text-sm text-gray-500">Duration: {{ course.duration }}</p>
+          <p class="mt-1 text-sm text-gray-500">Enrolled: {{ course.enrolled }}</p>
+          <button (click)="enrollInCourse(course.id)" class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Enroll</button>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="text-2xl font-semibold text-gray-900 mt-8 mb-4">My Courses</h2>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div *ngFor="let course of enrolledCourses" class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg font-medium text-gray-900">{{ course.title }}</h3>
+          <p class="mt-1 text-sm text-gray-500">Category: {{ course.category }}</p>
+          <p class="mt-1 text-sm text-gray-500">Progress: {{ course.progress }}%</p>
+          <div class="mt-2 w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-indigo-600 h-2.5 rounded-full" [style.width]="course.progress + '%'"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="text-2xl font-semibold text-gray-900 mt-8 mb-4">Recommended Courses</h2>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div *ngFor="let course of recommendedCourses" class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg font-medium text-gray-900">{{ course.title }}</h3>
+          <p class="mt-1 text-sm text-gray-500">Category: {{ course.category }}</p>
+          <p class="mt-1 text-sm text-gray-500">Duration: {{ course.duration }}</p>
+          <button (click)="enrollInCourse(course.id)" class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Enroll</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Course Form Modal -->
+  <div *ngIf="courseForm.dirty" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+        <form [formGroup]="courseForm" (ngSubmit)="addCourse()">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Add New Course</h3>
+            <div class="mt-2">
+              <input type="text" formControlName="title" placeholder="Title" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+              <input type="text" formControlName="category" placeholder="Category" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+              <input type="text" formControlName="duration" placeholder="Duration" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+              <input type="text" formControlName="skills" placeholder="Skills (comma-separated)" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button type="submit" [disabled]="courseForm.invalid" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">Add Course</button>
+            <button type="button" (click)="courseForm.reset()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </section>
@@ -34,18 +91,3 @@
     </div>
   </div>
 </section>
-
-<!-- Course Form Modal -->
-<div id="courseFormModal" [style.display]="courseForm.dirty ? 'block' : 'none'">
-  <div class="modal-content">
-    <h2>Add New Course</h2>
-    <form [formGroup]="courseForm" (ngSubmit)="addCourse()">
-      <input type="text" formControlName="title" placeholder="Title" required>
-      <input type="text" formControlName="category" placeholder="Category" required>
-      <input type="text" formControlName="duration" placeholder="Duration" required>
-      <input type="text" formControlName="skills" placeholder="Skills (comma-separated)" required>
-      <button type="submit" [disabled]="courseForm.invalid">Add Course</button>
-      <button type="button" (click)="courseForm.reset()">Cancel</button>
-    </form>
-  </div>
-</div>

@@ -11,7 +11,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getCurrentUser(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/users/profile`);
+    return this.http.get(`${this.apiUrl}/users/current`);
   }
 
   updateProfile(profileData: any): Observable<any> {
@@ -48,5 +48,13 @@ export class UserService {
 
   updateUserSettings(settings: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/users/settings`, settings);
+  }
+
+  getRecentActivities(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/recent-activities`);
+  }
+
+  getSkillProgress(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/skill-progress`);
   }
 }

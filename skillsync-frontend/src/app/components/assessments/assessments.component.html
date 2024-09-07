@@ -1,60 +1,97 @@
-<section id="personalizedAssessments">
-  <h2>Personalized Assessments</h2>
-  <div class="assessment-grid">
-    <div *ngFor="let assessment of personalizedAssessments" class="assessment-card">
-      <h3>{{ assessment.title }}</h3>
-      <p>Skill: {{ assessment.skill }}</p>
-      <button (click)="takeAssessment(assessment.id)" class="btn">Take Assessment</button>
-    </div>
-  </div>
-</section>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <h2 class="text-2xl font-semibold text-gray-900 mb-4">Skill Assessments</h2>
 
-<section id="assessments">
-  <h2>All Skill Assessments</h2>
-  <button (click)="assessmentForm.reset()" class="btn">Create New Assessment</button>
-  <div class="assessment-grid">
-    <div *ngFor="let assessment of allAssessments" class="assessment-card">
-      <h3>{{ assessment.title }}</h3>
-      <p>Skill: {{ assessment.skill }}</p>
-      <p>Questions: {{ assessment.questions }}</p>
-      <p>Due Date: {{ assessment.dueDate | date:'mediumDate' }}</p>
-      <button (click)="takeAssessment(assessment.id)" class="btn">Take Assessment</button>
+  <section id="personalizedAssessments" class="mb-8">
+    <h3 class="text-xl font-semibold text-gray-900 mb-4">Personalized Assessments</h3>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div *ngFor="let assessment of personalizedAssessments" class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h4 class="text-lg font-medium text-gray-900">{{ assessment.title }}</h4>
+          <p class="mt-1 text-sm text-gray-500">Skill: {{ assessment.skill }}</p>
+          <button (click)="takeAssessment(assessment.id)" class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Take Assessment</button>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="assessmentHistory">
-  <h2>Assessment History</h2>
-  <div *ngFor="let assessment of assessmentHistory" class="history-item">
-    <h3>{{ assessment.title }}</h3>
-    <p>Date Taken: {{ assessment.dateTaken | date:'medium' }}</p>
-    <p>Score: {{ assessment.score }}%</p>
-  </div>
-</section>
-
-<section id="certifications">
-  <h2>Certifications</h2>
-  <div class="certification-grid">
-    <div *ngFor="let certification of certifications" class="certification-card">
-      <h3>{{ certification.title }}</h3>
-      <p>{{ certification.description }}</p>
-      <button (click)="applyCertification(certification.id)" class="btn">Apply for Certification</button>
+  <section id="allAssessments" class="mb-8">
+    <h3 class="text-xl font-semibold text-gray-900 mb-4">All Assessments</h3>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div *ngFor="let assessment of allAssessments" class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h4 class="text-lg font-medium text-gray-900">{{ assessment.title }}</h4>
+          <p class="mt-1 text-sm text-gray-500">Skill: {{ assessment.skill }}</p>
+          <p class="mt-1 text-sm text-gray-500">Questions: {{ assessment.questions }}</p>
+          <p class="mt-1 text-sm text-gray-500">Due Date: {{ assessment.dueDate | date:'mediumDate' }}</p>
+          <button (click)="takeAssessment(assessment.id)" class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Take Assessment</button>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <section id="assessmentHistory" class="mb-8">
+    <h3 class="text-xl font-semibold text-gray-900 mb-4">Assessment History</h3>
+    <div class="bg-white shadow overflow-hidden sm:rounded-md">
+      <ul role="list" class="divide-y divide-gray-200">
+        <li *ngFor="let assessment of assessmentHistory">
+          <div class="px-4 py-4 sm:px-6">
+            <div class="flex items-center justify-between">
+              <p class="text-sm font-medium text-indigo-600 truncate">{{ assessment.title }}</p>
+              <div class="ml-2 flex-shrink-0 flex">
+                <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Score: {{ assessment.score }}%
+                </p>
+              </div>
+            </div>
+            <div class="mt-2 sm:flex sm:justify-between">
+              <div class="sm:flex">
+                <p class="flex items-center text-sm text-gray-500">
+                  Date Taken: {{ assessment.dateTaken | date:'medium' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="certifications" class="mb-8">
+    <h3 class="text-xl font-semibold text-gray-900 mb-4">Certifications</h3>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div *ngFor="let certification of certifications" class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h4 class="text-lg font-medium text-gray-900">{{ certification.title }}</h4>
+          <p class="mt-1 text-sm text-gray-500">{{ certification.description }}</p>
+          <button (click)="applyCertification(certification.id)" class="mt-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Apply for Certification</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 
 <!-- Assessment Form Modal -->
-<div id="assessmentFormModal" [style.display]="assessmentForm.dirty ? 'block' : 'none'">
-  <div class="modal-content">
-    <h2>Create New Assessment</h2>
-    <form [formGroup]="assessmentForm" (ngSubmit)="createAssessment()">
-      <input type="text" formControlName="title" placeholder="Assessment Title" required>
-      <input type="text" formControlName="skill" placeholder="Skill" required>
-      <input type="number" formControlName="questions" placeholder="Number of Questions" required>
-      <input type="date" formControlName="dueDate" required>
-      <input type="number" formControlName="passingGrade" placeholder="Passing Grade (%)" required>
-      <button type="submit" [disabled]="assessmentForm.invalid">Create Assessment</button>
-      <button type="button" (click)="assessmentForm.reset()">Cancel</button>
-    </form>
+<div *ngIf="assessmentForm.dirty" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+    <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+    <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <form [formGroup]="assessmentForm" (ngSubmit)="createAssessment()">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Create New Assessment</h3>
+          <div class="mt-2">
+            <input type="text" formControlName="title" placeholder="Assessment Title" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+            <input type="text" formControlName="skill" placeholder="Skill" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+            <input type="number" formControlName="questions" placeholder="Number of Questions" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+            <input type="date" formControlName="dueDate" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+            <input type="number" formControlName="passingGrade" placeholder="Passing Grade (%)" required class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button type="submit" [disabled]="assessmentForm.invalid" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">Create Assessment</button>
+          <button type="button" (click)="assessmentForm.reset()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
