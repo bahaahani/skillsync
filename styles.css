@@ -5,24 +5,27 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', Arial, sans-serif;
     line-height: 1.6;
     color: #333;
     background-color: #f4f4f4;
 }
 
 header {
-    background-color: #35424a;
+    background-color: #4CAF50;
     color: #ffffff;
     padding: 1rem;
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
     display: inline;
+    font-size: 1.5rem;
+    font-weight: 700;
 }
 
 nav {
@@ -35,40 +38,49 @@ nav ul {
 
 nav ul li {
     display: inline;
-    margin-left: 1rem;
+    margin-left: 1.5rem;
 }
 
 nav ul li a {
     color: #ffffff;
     text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
 }
 
-nav ul li a.active {
-    font-weight: bold;
-    border-bottom: 2px solid #ffffff;
+nav ul li a.active,
+nav ul li a:hover {
+    color: #FFC107;
+    border-bottom: 2px solid #FFC107;
 }
 
 main {
     padding: 2rem;
-    margin-top: 60px;
+    margin-top: 80px;
 }
 
 .dashboard-grid, .employee-grid, .course-grid, .assessment-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .card {
     background-color: #ffffff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    margin-bottom: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.chart {
-    height: 200px;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.chart-container {
+    height: 250px;
 }
 
 table {
@@ -78,13 +90,14 @@ table {
 }
 
 th, td {
-    padding: 0.5rem;
+    padding: 0.75rem;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
 
 th {
     background-color: #f2f2f2;
+    font-weight: 600;
 }
 
 ul {
@@ -92,38 +105,42 @@ ul {
 }
 
 footer {
-    background-color: #35424a;
+    background-color: #4CAF50;
     color: #ffffff;
     text-align: center;
     padding: 1rem;
     position: fixed;
     bottom: 0;
     width: 100%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .btn {
     display: inline-block;
-    background-color: #35424a;
+    background-color: #4CAF50;
     color: #ffffff;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.25rem;
     text-decoration: none;
-    border-radius: 3px;
+    border-radius: 5px;
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
     border: none;
     cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
 }
 
 .btn:hover {
-    background-color: #2c3840;
+    background-color: #388E3C;
 }
 
 input[type="text"], input[type="number"], input[type="date"], select {
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.75rem;
     margin-bottom: 1rem;
     border: 1px solid #ddd;
-    border-radius: 3px;
+    border-radius: 5px;
+    font-family: 'Montserrat', Arial, sans-serif;
 }
 
 .modal {
@@ -145,18 +162,25 @@ input[type="text"], input[type="number"], input[type="date"], select {
     border: 1px solid #888;
     width: 80%;
     max-width: 500px;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .notification {
     position: fixed;
-    top: 70px;
+    top: 80px;
     right: 20px;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 5px;
     color: white;
     font-weight: bold;
     z-index: 1002;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 .notification.success {
@@ -168,7 +192,7 @@ input[type="text"], input[type="number"], input[type="date"], select {
 }
 
 .notification.error {
-    background-color: #f44336;
+    background-color: #F44336;
 }
 
 .report-controls {
@@ -177,10 +201,10 @@ input[type="text"], input[type="number"], input[type="date"], select {
 
 .report-container {
     background-color: #ffffff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    margin-bottom: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .report-summary {
@@ -202,9 +226,42 @@ input[type="text"], input[type="number"], input[type="date"], select {
 .question label {
     display: block;
     margin: 0.5rem 0;
+    font-weight: 600;
 }
 
-@media screen and (max-width: 600px) {
+.xp-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+#xpProgress {
+    height: 100%;
+    background-color: #FFC107;
+    width: 0%;
+    transition: width 0.5s ease-in-out;
+}
+
+#userLevel {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #4CAF50;
+}
+
+.achievement-animation {
+    animation: bounce 0.5s ease-in-out;
+}
+
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+@media screen and (max-width: 768px) {
     nav {
         float: none;
         display: block;
@@ -214,7 +271,7 @@ input[type="text"], input[type="number"], input[type="date"], select {
 
     nav ul li {
         display: block;
-        margin: 0.5rem 0;
+        margin: 0.75rem 0;
     }
 
     header h1 {
@@ -223,6 +280,187 @@ input[type="text"], input[type="number"], input[type="date"], select {
     }
 
     main {
-        margin-top: 120px;
+        margin-top: 140px;
     }
+}
+
+/* Login styles */
+.login-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    margin: 50px auto;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-container input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login-container button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.login-container button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    display: none;
+    margin-top: 10px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+
+#logoutButton {
+    margin-left: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#logoutButton:hover {
+    background-color: #d32f2f;
+}
+
+/* Password strength meter styles */
+#passwordStrength {
+    height: 5px;
+    margin-bottom: 10px;
+    transition: width 0.5s ease-in-out;
+}
+
+.weak { background-color: #ff4d4d; width: 33.33%; }
+.medium { background-color: #ffa64d; width: 66.66%; }
+.strong { background-color: #4CAF50; width: 100%; }
+
+.auth-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 50px auto;
+}
+
+.auth-tabs {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.auth-tabs button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-tabs button.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.auth-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-container input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.auth-container button[type="submit"] {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-container button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    display: none;
+    margin-top: 10px;
+}
+
+.post {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post h3 {
+    margin-bottom: 5px;
+    color: #4CAF50;
+}
+
+.forum-topic {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.forum-topic h3 {
+    margin-bottom: 5px;
+    color: #4CAF50;
+}
+
+.goal {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.goal h3 {
+    margin-bottom: 5px;
+    color: #4CAF50;
+}
+
+#postContent {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
 }

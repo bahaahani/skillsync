@@ -32,6 +32,7 @@
                         <th>Department</th>
                         <th>Job Role</th>
                         <th>Skills</th>
+                        <th>Team</th>
                         <th>Assessments</th>
                         <th>Development Plan</th>
                         <th>Actions</th>
@@ -53,6 +54,7 @@
                 <input type="text" id="newEmployeeDepartment" placeholder="Department" required>
                 <input type="text" id="newEmployeeJobRole" placeholder="Job Role" required>
                 <input type="text" id="newEmployeeSkills" placeholder="Skills (comma-separated)" required>
+                <input type="text" id="newEmployeeTeam" placeholder="Team">
                 <textarea id="newEmployeeDevelopmentPlan" placeholder="Development Plan" required></textarea>
                 <button type="submit" class="btn">Add Employee</button>
             </form>
@@ -73,6 +75,10 @@
                     <p id="employeeProfileJobRole"></p>
                 </div>
                 <div class="profile-section">
+                    <h3>Team</h3>
+                    <p id="employeeProfileTeam"></p>
+                </div>
+                <div class="profile-section">
                     <h3>Skills</h3>
                     <ul id="employeeProfileSkills"></ul>
                 </div>
@@ -84,7 +90,29 @@
                     <h3>Development Plan</h3>
                     <p id="employeeProfileDevelopmentPlan"></p>
                 </div>
+                <div class="profile-section">
+                    <h3>Performance</h3>
+                    <div id="employeeProfilePerformance"></div>
+                </div>
             </div>
+            <button onclick="closeModal('employeeProfileModal')" class="btn">Close</button>
+        </div>
+    </div>
+
+    <!-- Edit Employee Modal -->
+    <div id="editEmployeeModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Employee</h2>
+            <form id="editEmployeeForm">
+                <input type="hidden" id="editEmployeeId">
+                <input type="text" id="editEmployeeName" placeholder="Name" required>
+                <input type="text" id="editEmployeeDepartment" placeholder="Department" required>
+                <input type="text" id="editEmployeeJobRole" placeholder="Job Role" required>
+                <input type="text" id="editEmployeeSkills" placeholder="Skills (comma-separated)" required>
+                <input type="text" id="editEmployeeTeam" placeholder="Team">
+                <textarea id="editEmployeeDevelopmentPlan" placeholder="Development Plan" required></textarea>
+                <button type="submit" class="btn">Update Employee</button>
+            </form>
         </div>
     </div>
 

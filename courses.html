@@ -35,6 +35,12 @@
                 <!-- Enrolled course cards will be populated here by JavaScript -->
             </div>
         </section>
+        <section id="recommendedCourses">
+            <h2>Recommended Courses</h2>
+            <div class="course-grid" id="recommendedCourseGrid">
+                <!-- Recommended course cards will be populated here by JavaScript -->
+            </div>
+        </section>
     </main>
 
     <!-- Add Course Modal -->
@@ -46,6 +52,7 @@
                 <input type="text" id="newCourseCategory" placeholder="Category" required>
                 <input type="text" id="newCourseDuration" placeholder="Duration" required>
                 <input type="number" id="newCourseEnrolled" placeholder="Enrolled" required>
+                <input type="text" id="newCourseSkills" placeholder="Required Skills (comma-separated)" required>
                 <button type="submit" class="btn">Add Course</button>
             </form>
         </div>
@@ -62,6 +69,23 @@
                 </select>
                 <button type="submit" class="btn">Enroll</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Course Details Modal -->
+    <div id="courseDetailsModal" class="modal">
+        <div class="modal-content">
+            <h2 id="courseDetailsTitle"></h2>
+            <p id="courseDetailsCategory"></p>
+            <p id="courseDetailsDuration"></p>
+            <p id="courseDetailsEnrolled"></p>
+            <h3>Required Skills:</h3>
+            <ul id="courseDetailsSkills"></ul>
+            <h3>Learning Path:</h3>
+            <ol id="courseDetailsLearningPath"></ol>
+            <h3>Assessments:</h3>
+            <div id="courseDetailsAssessments"></div>
+            <button onclick="closeModal('courseDetailsModal')" class="btn">Close</button>
         </div>
     </div>
 

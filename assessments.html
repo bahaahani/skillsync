@@ -21,11 +21,23 @@
     </header>
     
     <main>
+        <section id="personalizedAssessments">
+            <h2>Personalized Assessments</h2>
+            <div id="personalizedAssessmentList" class="assessment-grid">
+                <!-- Personalized assessment cards will be populated here by JavaScript -->
+            </div>
+        </section>
         <section id="assessments">
-            <h2>Skill Assessments</h2>
+            <h2>All Skill Assessments</h2>
             <button onclick="toggleModal('createAssessmentModal')" class="btn">Create New Assessment</button>
             <div id="assessmentList" class="assessment-grid">
                 <!-- Assessment cards will be populated here by JavaScript -->
+            </div>
+        </section>
+        <section id="assessmentHistory">
+            <h2>Assessment History</h2>
+            <div id="assessmentHistoryList">
+                <!-- Assessment history will be populated here by JavaScript -->
             </div>
         </section>
         <section id="certifications">
@@ -48,6 +60,7 @@
                 </select>
                 <input type="number" id="assessmentQuestions" placeholder="Number of Questions" required min="1">
                 <input type="date" id="assessmentDueDate" required>
+                <input type="number" id="assessmentPassingGrade" placeholder="Passing Grade (%)" required min="0" max="100">
                 <button type="submit" class="btn">Create Assessment</button>
             </form>
         </div>
@@ -69,6 +82,16 @@
             <p id="certificationDescription"></p>
             <p id="certificationRequirements"></p>
             <button onclick="applyCertification()" class="btn">Apply for Certification</button>
+        </div>
+    </div>
+
+    <!-- Assessment Result Modal -->
+    <div id="assessmentResultModal" class="modal">
+        <div class="modal-content">
+            <h2>Assessment Result</h2>
+            <p id="assessmentResultScore"></p>
+            <div id="assessmentResultFeedback"></div>
+            <button onclick="closeModal('assessmentResultModal')" class="btn">Close</button>
         </div>
     </div>
 
