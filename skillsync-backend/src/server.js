@@ -1,7 +1,9 @@
-const app = require("./app"); // Importing the Express app
-const mongoose = require("mongoose");
+const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const app = require("./app");
 const jwt = require("jsonwebtoken");
 const cron = require("node-cron");
 const { generateDailyAnalytics } = require("./controllers/analyticsController");
@@ -10,15 +12,25 @@ const User = require("./models/User");
 
 const port = process.env.PORT || 3000;
 
+// CORS configuration
+const corsOptions = {
+  origin: "http://localhost:4200", // Specify the frontend origin
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allowed methods
+  credentials: true, // To enable cookies/auth headers across origins
+  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+};
+
+app.use(cors(corsOptions));
+
 // Create HTTP server
 const server = http.createServer(app);
 
-// Set up Socket.IO
+// Set up Socket.IO with CORS
 const io = socketIo(server, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:4200", // Allow connections from this origin
     methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   },
 });
 
@@ -84,8 +96,6 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
-
-  // Add more socket event handlers as needed
 });
 
 // Schedule daily analytics generation
