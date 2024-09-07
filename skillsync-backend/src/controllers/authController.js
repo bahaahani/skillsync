@@ -1,6 +1,6 @@
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
-const { updateRealTimeAnalytics } = require('./analyticsController');
+import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
+import { updateRealTimeAnalytics } from './analyticsController.js';
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -8,7 +8,7 @@ const generateToken = (userId) => {
   });
 };
 
-exports.register = async (req, res, next) => {
+export const register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
 
@@ -39,7 +39,7 @@ exports.register = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -70,4 +70,9 @@ exports.login = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+export const logout = (req, res) => {
+  // Implement logout logic here if needed
+  res.json({ message: 'Logout successful' });
 };

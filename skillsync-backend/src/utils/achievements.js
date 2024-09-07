@@ -1,7 +1,6 @@
-const User = require('../models/User');
-const createNotification = require('./createNotification');
+import User from '../models/User.js';
 
-const achievementTypes = {
+export const achievementTypes = {
   COURSE_COMPLETION: 'course_completion',
   ASSESSMENT_ACE: 'assessment_ace',
   FORUM_CONTRIBUTOR: 'forum_contributor',
@@ -9,86 +8,54 @@ const achievementTypes = {
   SOCIAL_BUTTERFLY: 'social_butterfly',
 };
 
-const achievements = {
-  [achievementTypes.COURSE_COMPLETION]: {
-    name: 'Course Master',
-    description: 'Complete 5 courses',
-    check: async (userId) => {
-      const user = await User.findById(userId);
-      return user.coursesCompleted.length >= 5;
-    },
-  },
-  [achievementTypes.ASSESSMENT_ACE]: {
-    name: 'Assessment Ace',
-    description: 'Score 100% on 3 assessments',
-    check: async (userId) => {
-      // Implement logic to check if user has scored 100% on 3 assessments
-      return false;
-    },
-  },
-  [achievementTypes.FORUM_CONTRIBUTOR]: {
-    name: 'Forum Contributor',
-    description: 'Create 10 forum posts',
-    check: async (userId) => {
-      // Implement logic to check if user has created 10 forum posts
-      return false;
-    },
-  },
-  [achievementTypes.QUICK_LEARNER]: {
-    name: 'Quick Learner',
-    description: 'Complete a course within 7 days of enrollment',
-    check: async (userId) => {
-      // Implement logic to check if user has completed a course within 7 days
-      return false;
-    },
-  },
-  [achievementTypes.SOCIAL_BUTTERFLY]: {
-    name: 'Social Butterfly',
-    description: 'Interact with 20 different users through comments or forum replies',
-    check: async (userId) => {
-      // Implement logic to check if user has interacted with 20 different users
-      return false;
-    },
-  },
-};
+export const checkAndAwardAchievement = async (userId, achievementType) => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
 
-const checkAndAwardAchievement = async (userId, achievementType) => {
-  const user = await User.findById(userId);
-  const achievement = achievements[achievementType];
+    const existingAchievement = user.achievements.find(a => a.type === achievementType);
+    if (existingAchievement) {
+      return; // User already has this achievement
+    }
 
-  if (!achievement) {
-    throw new Error('Invalid achievement type');
-  }
-
-  const hasAchievement = user.achievements.some(a => a.type === achievementType);
-  if (hasAchievement) {
-    return false;
-  }
-
-  const earned = await achievement.check(userId);
-  if (earned) {
-    user.achievements.push({
+    const newAchievement = {
       type: achievementType,
-      name: achievement.name,
-      description: achievement.description,
-    });
+      dateEarned: new Date(),
+    };
+
+    switch (achievementType) {
+      case achievementTypes.COURSE_COMPLETION:
+        newAchievement.name = 'Course Completer';
+        newAchievement.description = 'Completed a course';
+        break;
+      case achievementTypes.ASSESSMENT_ACE:
+        newAchievement.name = 'Assessment Ace';
+        newAchievement.description = 'Scored 100% on an assessment';
+        break;
+      case achievementTypes.FORUM_CONTRIBUTOR:
+        newAchievement.name = 'Forum Contributor';
+        newAchievement.description = 'Made 10 forum posts';
+        break;
+      case achievementTypes.QUICK_LEARNER:
+        newAchievement.name = 'Quick Learner';
+        newAchievement.description = 'Completed a course in record time';
+        break;
+      case achievementTypes.SOCIAL_BUTTERFLY:
+        newAchievement.name = 'Social Butterfly';
+        newAchievement.description = 'Connected with 20 other learners';
+        break;
+      default:
+        throw new Error('Invalid achievement type');
+    }
+
+    user.achievements.push(newAchievement);
     await user.save();
 
-    await createNotification(
-      userId,
-      'achievement',
-      `Congratulations! You've earned the "${achievement.name}" achievement.`,
-      user._id,
-      'User'
-    );
-
-    return true;
+    // You might want to emit a socket event or create a notification here
+    console.log(`Achievement awarded to user ${userId}: ${newAchievement.name}`);
+  } catch (error) {
+    console.error('Error awarding achievement:', error);
   }
-
-  return false;
-};
-
-module.exports = {
-  achievementTypes,
-  checkAndAwardAchievement,
 };

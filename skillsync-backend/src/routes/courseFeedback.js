@@ -1,14 +1,17 @@
-const express = require('express');
+import express from 'express';
+import {
+  submitFeedback,
+  getCourseFeedback,
+  updateFeedback,
+  deleteFeedback
+} from '../controllers/courseFeedbackController.js';
+import { auth } from '../middleware/auth.js';
+
 const router = express.Router();
-const courseFeedbackController = require('../controllers/courseFeedbackController');
-const auth = require('../middleware/auth');
-const isInstructor = require('../middleware/isInstructor');
 
-router.post('/:courseId', auth, courseFeedbackController.submitFeedback);
-router.get('/:courseId', auth, courseFeedbackController.getCourseFeedback);
-router.post('/:feedbackId/respond', auth, isInstructor, courseFeedbackController.respondToFeedback);
-router.get('/instructor/:courseId', auth, isInstructor, courseFeedbackController.getCourseFeedbackForInstructor);
-router.post('/:feedbackId/rate-response', auth, courseFeedbackController.rateInstructorResponse);
-router.get('/instructor/:courseId/response-ratings', auth, isInstructor, courseFeedbackController.getInstructorResponseRatings);
+router.post('/:courseId', auth, submitFeedback);
+router.get('/:courseId', getCourseFeedback);
+router.put('/:courseId/:feedbackId', auth, updateFeedback);
+router.delete('/:courseId/:feedbackId', auth, deleteFeedback);
 
-module.exports = router;
+export default router;

@@ -1,19 +1,19 @@
-const Notification = require('../models/Notification');
+import Notification from '../models/Notification.js';
 
-const createNotification = async (recipientId, type, content, relatedItem, itemModel) => {
+const createNotification = async (userId, type, message, relatedId, relatedModel) => {
   try {
     const notification = new Notification({
-      recipient: recipientId,
+      user: userId,
       type,
-      content,
-      relatedItem,
-      itemModel,
+      message,
+      relatedId,
+      relatedModel,
     });
     await notification.save();
-    return notification;
+    // Emit socket event if needed
   } catch (error) {
     console.error('Error creating notification:', error);
   }
 };
 
-module.exports = createNotification;
+export default createNotification;

@@ -1,40 +1,43 @@
-const Message = require('../models/Message');
-const User = require('../models/User');
-const { emitChatMessage } = require('../utils/socketEvents');
+import Message from '../models/Message.js';
+import User from '../models/User.js';
+import { emitChatMessage } from '../utils/socketEvents.js';
 
-exports.sendMessage = async (req, res, next) => {
+export const sendMessage = async (req, res, next) => {
   try {
     const { recipientId, content } = req.body;
-    const sender = req.user.id;
+    const senderId = req.user.id;
 
     const message = new Message({
-      sender,
+      sender: senderId,
       recipient: recipientId,
       content,
     });
 
     await message.save();
 
-    // Emit real-time message
+    // Emit the message to the recipient
     emitChatMessage(recipientId, message);
 
-    res.status(201).json({ message: 'Message sent successfully', data: message });
+    res.status(201).json(message);
   } catch (error) {
     next(error);
   }
 };
 
-exports.getConversation = async (req, res, next) => {
+export const getConversation = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const currentUser = req.user.id;
+    const currentUserId = req.user.id;
 
     const messages = await Message.find({
       $or: [
-        { sender: currentUser, recipient: userId },
-        { sender: userId, recipient: currentUser },
+        { sender: currentUserId, recipient: userId },
+        { sender: userId, recipient: currentUserId },
       ],
-    }).sort({ createdAt: 1 });
+    })
+      .sort({ createdAt: 1 })
+      .populate('sender', 'username')
+      .populate('recipient', 'username');
 
     res.json(messages);
   } catch (error) {
@@ -42,14 +45,14 @@ exports.getConversation = async (req, res, next) => {
   }
 };
 
-exports.getConversationList = async (req, res, next) => {
+export const getRecentChats = async (req, res, next) => {
   try {
-    const currentUser = req.user.id;
+    const currentUserId = req.user.id;
 
-    const conversations = await Message.aggregate([
+    const recentChats = await Message.aggregate([
       {
         $match: {
-          $or: [{ sender: currentUser }, { recipient: currentUser }],
+          $or: [{ sender: currentUserId }, { recipient: currentUserId }],
         },
       },
       {
@@ -59,7 +62,7 @@ exports.getConversationList = async (req, res, next) => {
         $group: {
           _id: {
             $cond: [
-              { $eq: ['$sender', currentUser] },
+              { $eq: ['$sender', currentUserId] },
               '$recipient',
               '$sender',
             ],
@@ -80,13 +83,14 @@ exports.getConversationList = async (req, res, next) => {
       },
       {
         $project: {
-          user: { _id: 1, username: 1, avatar: 1 },
+          _id: 1,
+          username: '$user.username',
           lastMessage: 1,
         },
       },
     ]);
 
-    res.json(conversations);
+    res.json(recentChats);
   } catch (error) {
     next(error);
   }

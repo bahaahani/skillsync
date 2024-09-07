@@ -1,24 +1,20 @@
-const express = require('express');
+import express from 'express';
+import {
+  getAllAssessments,
+  getAssessmentById,
+  createAssessment,
+  updateAssessment,
+  deleteAssessment,
+  submitAssessment,
+} from '../controllers/assessmentController.js';
+
 const router = express.Router();
-const assessmentController = require('../controllers/assessmentController');
-const auth = require('../middleware/auth');
 
-// GET /api/assessments
-router.get('/', assessmentController.getAllAssessments);
+router.get('/', getAllAssessments);
+router.get('/:id', getAssessmentById);
+router.post('/', createAssessment);
+router.put('/:id', updateAssessment);
+router.delete('/:id', deleteAssessment);
+router.post('/:id/submit', submitAssessment);
 
-// GET /api/assessments/:id
-router.get('/:id', assessmentController.getAssessmentById);
-
-// POST /api/assessments
-router.post('/', auth, assessmentController.createAssessment);
-
-// PUT /api/assessments/:id
-router.put('/:id', auth, assessmentController.updateAssessment);
-
-// DELETE /api/assessments/:id
-router.delete('/:id', auth, assessmentController.deleteAssessment);
-
-// POST /api/assessments/:id/take
-router.post('/:id/take', auth, assessmentController.takeAssessment);
-
-module.exports = router;
+export default router;

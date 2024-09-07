@@ -1,9 +1,9 @@
-const Course = require('../models/Course');
-const CourseFeedback = require('../models/CourseFeedback');
-const User = require('../models/User');
-const Assessment = require('../models/Assessment');
+import Course from '../models/Course.js';
+import CourseFeedback from '../models/CourseFeedback.js';
+import User from '../models/User.js';
+import Assessment from '../models/Assessment.js';
 
-exports.getInstructorDashboard = async (req, res, next) => {
+export const getInstructorDashboard = async (req, res, next) => {
   try {
     const instructorId = req.user.id;
 
@@ -56,7 +56,7 @@ exports.getInstructorDashboard = async (req, res, next) => {
   }
 };
 
-exports.getPrioritizedFeedback = async (req, res, next) => {
+export const getPrioritizedFeedback = async (req, res, next) => {
   try {
     const instructorId = req.user.id;
     const courses = await Course.find({ instructor: instructorId });
@@ -76,7 +76,7 @@ exports.getPrioritizedFeedback = async (req, res, next) => {
   }
 };
 
-exports.getCoursePerformanceAnalytics = async (req, res, next) => {
+export const getCoursePerformanceAnalytics = async (req, res, next) => {
   try {
     const instructorId = req.user.id;
     const courses = await Course.find({ instructor: instructorId });
@@ -109,7 +109,7 @@ exports.getCoursePerformanceAnalytics = async (req, res, next) => {
   }
 };
 
-exports.getStudentEngagementAnalytics = async (req, res, next) => {
+export const getStudentEngagementAnalytics = async (req, res, next) => {
   try {
     const instructorId = req.user.id;
     const courses = await Course.find({ instructor: instructorId });
@@ -141,7 +141,7 @@ exports.getStudentEngagementAnalytics = async (req, res, next) => {
   }
 };
 
-exports.getContentEngagementAnalytics = async (req, res, next) => {
+export const getContentEngagementAnalytics = async (req, res, next) => {
   try {
     const instructorId = req.user.id;
     const courses = await Course.find({ instructor: instructorId });

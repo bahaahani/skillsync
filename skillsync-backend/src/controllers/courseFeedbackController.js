@@ -1,48 +1,29 @@
-const CourseFeedback = require('../models/CourseFeedback');
-const Course = require('../models/Course');
-const User = require('../models/User');
-const createNotification = require('../utils/createNotification');
-const { emitNotification } = require('../utils/socketEvents');
+import Course from '../models/Course.js';
+import User from '../models/User.js';
+import { emitCourseFeedbackUpdate } from '../utils/socketEvents.js';
 
-exports.submitFeedback = async (req, res, next) => {
+export const submitFeedback = async (req, res, next) => {
   try {
     const { courseId } = req.params;
     const { rating, comment } = req.body;
+    const userId = req.user.id;
 
-    const course = await Course.findById(courseId).populate('instructor');
+    const course = await Course.findById(courseId);
     if (!course) {
       return res.status(404).json({ message: 'Course not found' });
     }
 
-    if (!course.enrolledUsers.includes(req.user.id)) {
-      return res.status(403).json({ message: 'You must be enrolled in the course to submit feedback' });
-    }
-
-    const existingFeedback = await CourseFeedback.findOne({ course: courseId, user: req.user.id });
-    if (existingFeedback) {
-      return res.status(400).json({ message: 'You have already submitted feedback for this course' });
-    }
-
-    const feedback = new CourseFeedback({
-      course: courseId,
-      user: req.user.id,
+    const feedback = {
+      user: userId,
       rating,
       comment,
-    });
+    };
 
-    await feedback.save();
+    course.feedback.push(feedback);
+    await course.save();
 
-    // Create a notification for the instructor
-    const notification = await createNotification(
-      course.instructor._id,
-      'new_feedback',
-      `New feedback received for your course: ${course.title}`,
-      courseId,
-      'Course'
-    );
-
-    // Emit real-time notification to the instructor
-    emitNotification(course.instructor._id, notification);
+    // Emit real-time update to instructor
+    emitCourseFeedbackUpdate(course.instructor, { courseId, feedback });
 
     res.status(201).json({ message: 'Feedback submitted successfully', feedback });
   } catch (error) {
@@ -50,123 +31,74 @@ exports.submitFeedback = async (req, res, next) => {
   }
 };
 
-exports.getCourseFeedback = async (req, res, next) => {
+export const getCourseFeedback = async (req, res, next) => {
   try {
     const { courseId } = req.params;
-    const feedback = await CourseFeedback.find({ course: courseId })
-      .populate('user', 'username')
-      .sort({ createdAt: -1 });
 
-    const averageRating = feedback.reduce((acc, curr) => acc + curr.rating, 0) / feedback.length;
+    const course = await Course.findById(courseId).populate('feedback.user', 'username');
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
 
-    res.json({ feedback, averageRating });
+    res.json(course.feedback);
   } catch (error) {
     next(error);
   }
 };
 
-exports.respondToFeedback = async (req, res, next) => {
+export const updateFeedback = async (req, res, next) => {
   try {
-    const { feedbackId } = req.params;
-    const { response } = req.body;
+    const { courseId, feedbackId } = req.params;
+    const { rating, comment } = req.body;
+    const userId = req.user.id;
 
-    const feedback = await CourseFeedback.findById(feedbackId).populate('course');
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: 'Course not found' });
+    }
+
+    const feedback = course.feedback.id(feedbackId);
     if (!feedback) {
       return res.status(404).json({ message: 'Feedback not found' });
     }
 
-    if (feedback.course.instructor.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'You are not authorized to respond to this feedback' });
+    if (feedback.user.toString() !== userId) {
+      return res.status(403).json({ message: 'You are not authorized to update this feedback' });
     }
 
-    feedback.instructorResponse = {
-      content: response,
-      createdAt: new Date(),
-    };
+    feedback.rating = rating;
+    feedback.comment = comment;
+    await course.save();
 
-    await feedback.save();
-
-    // Notify the student that the instructor has responded to their feedback
-    await createNotification(
-      feedback.user,
-      'feedback_response',
-      `The instructor has responded to your feedback for the course: ${feedback.course.title}`,
-      feedback.course._id,
-      'Course'
-    );
-
-    res.json({ message: 'Response submitted successfully', feedback });
+    res.json({ message: 'Feedback updated successfully', feedback });
   } catch (error) {
     next(error);
   }
 };
 
-exports.getCourseFeedbackForInstructor = async (req, res, next) => {
+export const deleteFeedback = async (req, res, next) => {
   try {
-    const { courseId } = req.params;
-    const course = await Course.findOne({ _id: courseId, instructor: req.user.id });
+    const { courseId, feedbackId } = req.params;
+    const userId = req.user.id;
 
+    const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({ message: 'Course not found or you are not the instructor' });
+      return res.status(404).json({ message: 'Course not found' });
     }
 
-    const feedback = await CourseFeedback.find({ course: courseId })
-      .populate('user', 'username')
-      .sort({ createdAt: -1 });
-
-    const averageRating = feedback.reduce((acc, curr) => acc + curr.rating, 0) / feedback.length;
-
-    res.json({ feedback, averageRating });
-  } catch (error) {
-    next(error);
-  }
-};
-
-exports.rateInstructorResponse = async (req, res, next) => {
-  try {
-    const { feedbackId } = req.params;
-    const { rating } = req.body;
-
-    const feedback = await CourseFeedback.findById(feedbackId);
+    const feedback = course.feedback.id(feedbackId);
     if (!feedback) {
       return res.status(404).json({ message: 'Feedback not found' });
     }
 
-    if (feedback.user.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'You are not authorized to rate this response' });
+    if (feedback.user.toString() !== userId) {
+      return res.status(403).json({ message: 'You are not authorized to delete this feedback' });
     }
 
-    if (!feedback.instructorResponse) {
-      return res.status(400).json({ message: 'No instructor response to rate' });
-    }
+    feedback.remove();
+    await course.save();
 
-    feedback.instructorResponse.rating = rating;
-    await feedback.save();
-
-    res.json({ message: 'Instructor response rated successfully', feedback });
-  } catch (error) {
-    next(error);
-  }
-};
-
-exports.getInstructorResponseRatings = async (req, res, next) => {
-  try {
-    const { courseId } = req.params;
-    const course = await Course.findOne({ _id: courseId, instructor: req.user.id });
-
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found or you are not the instructor' });
-    }
-
-    const feedback = await CourseFeedback.find({ 
-      course: courseId, 
-      'instructorResponse.rating': { $exists: true } 
-    });
-
-    const totalRatings = feedback.length;
-    const averageRating = feedback.reduce((acc, curr) => acc + curr.instructorResponse.rating, 0) / totalRatings;
-
-    res.json({ totalRatings, averageRating });
+    res.json({ message: 'Feedback deleted successfully' });
   } catch (error) {
     next(error);
   }

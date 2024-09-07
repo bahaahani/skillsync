@@ -1,173 +1,89 @@
-const Course = require('../models/Course');
-const User = require('../models/User');
+import User from '../models/User.js';
+import Course from '../models/Course.js';
 
-exports.getStudentProgress = async (req, res, next) => {
+export const getStudentProgress = async (req, res, next) => {
   try {
-    const { courseId } = req.params;
     const userId = req.user.id;
+    const user = await User.findById(userId)
+      .populate('coursesEnrolled', 'title')
+      .populate('coursesCompleted', 'title')
+      .populate('assessmentsTaken', 'title score');
 
-    const course = await Course.findById(courseId);
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
-    }
+    const progress = {
+      coursesEnrolled: user.coursesEnrolled,
+      coursesCompleted: user.coursesCompleted,
+      assessmentsTaken: user.assessmentsTaken,
+      overallScore: user.score,
+    };
 
-    const user = await User.findById(userId);
-    if (!user.coursesEnrolled.includes(courseId)) {
-      return res.status(403).json({ message: 'You are not enrolled in this course' });
-    }
-
-    // Assuming we add a progress field to the User model for each course
-    const progress = user.courseProgress.find(p => p.course.toString() === courseId);
-
-    res.json(progress || { course: courseId, completedContent: [] });
+    res.json(progress);
   } catch (error) {
     next(error);
   }
 };
 
-exports.markContentAsCompleted = async (req, res, next) => {
+export const getCourseProgress = async (req, res, next) => {
   try {
-    const { courseId, contentId } = req.params;
     const userId = req.user.id;
+    const courseId = req.params.courseId;
 
+    const user = await User.findById(userId);
     const course = await Course.findById(courseId);
+
     if (!course) {
       return res.status(404).json({ message: 'Course not found' });
     }
 
-    const user = await User.findById(userId);
-    if (!user.coursesEnrolled.includes(courseId)) {
-      return res.status(403).json({ message: 'You are not enrolled in this course' });
+    const courseProgress = user.courseProgress.find(
+      (progress) => progress.course.toString() === courseId
+    );
+
+    if (!courseProgress) {
+      return res.status(404).json({ message: 'Course progress not found' });
     }
 
-    const contentExists = course.content.some(c => c._id.toString() === contentId);
-    if (!contentExists) {
-      return res.status(404).json({ message: 'Content not found in this course' });
-    }
+    const progress = {
+      course: course.title,
+      completedContent: courseProgress.completedContent.length,
+      totalContent: course.content.length,
+      quizResults: courseProgress.quizResults,
+      assignmentSubmissions: courseProgress.assignmentSubmissions,
+    };
 
-    let progress = user.courseProgress.find(p => p.course.toString() === courseId);
-    if (!progress) {
-      progress = { course: courseId, completedContent: [] };
-      user.courseProgress.push(progress);
-    }
-
-    if (!progress.completedContent.includes(contentId)) {
-      progress.completedContent.push(contentId);
-    }
-
-    await user.save();
-
-    res.json({ message: 'Content marked as completed', progress });
+    res.json(progress);
   } catch (error) {
     next(error);
   }
 };
 
-exports.submitQuiz = async (req, res, next) => {
+export const updateCourseProgress = async (req, res, next) => {
   try {
-    const { courseId, contentId } = req.params;
-    const { answers } = req.body;
     const userId = req.user.id;
-
-    const course = await Course.findById(courseId);
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
-    }
-
-    const content = course.content.id(contentId);
-    if (!content || content.type !== 'quiz') {
-      return res.status(404).json({ message: 'Quiz not found' });
-    }
+    const courseId = req.params.courseId;
+    const { contentId, completed } = req.body;
 
     const user = await User.findById(userId);
-    if (!user.coursesEnrolled.includes(courseId)) {
-      return res.status(403).json({ message: 'You are not enrolled in this course' });
+    const courseProgress = user.courseProgress.find(
+      (progress) => progress.course.toString() === courseId
+    );
+
+    if (!courseProgress) {
+      return res.status(404).json({ message: 'Course progress not found' });
     }
 
-    let score = 0;
-    const results = content.quizQuestions.map((question, index) => {
-      const isCorrect = question.correctAnswer === answers[index];
-      if (isCorrect) score++;
-      return { questionIndex: index, isCorrect };
-    });
-
-    const percentage = (score / content.quizQuestions.length) * 100;
-
-    // Update user's progress
-    let progress = user.courseProgress.find(p => p.course.toString() === courseId);
-    if (!progress) {
-      progress = { course: courseId, completedContent: [], quizResults: [] };
-      user.courseProgress.push(progress);
-    }
-
-    progress.quizResults.push({
-      quiz: contentId,
-      score,
-      percentage,
-      completedAt: new Date()
-    });
-
-    if (!progress.completedContent.includes(contentId)) {
-      progress.completedContent.push(contentId);
+    if (completed) {
+      if (!courseProgress.completedContent.includes(contentId)) {
+        courseProgress.completedContent.push(contentId);
+      }
+    } else {
+      courseProgress.completedContent = courseProgress.completedContent.filter(
+        (id) => id.toString() !== contentId
+      );
     }
 
     await user.save();
 
-    res.json({
-      message: 'Quiz submitted successfully',
-      score,
-      percentage,
-      results
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-exports.submitAssignment = async (req, res, next) => {
-  try {
-    const { courseId, contentId } = req.params;
-    const { submissionText } = req.body;
-    const userId = req.user.id;
-
-    const course = await Course.findById(courseId);
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
-    }
-
-    const content = course.content.id(contentId);
-    if (!content || content.type !== 'assignment') {
-      return res.status(404).json({ message: 'Assignment not found' });
-    }
-
-    const user = await User.findById(userId);
-    if (!user.coursesEnrolled.includes(courseId)) {
-      return res.status(403).json({ message: 'You are not enrolled in this course' });
-    }
-
-    // Update user's progress
-    let progress = user.courseProgress.find(p => p.course.toString() === courseId);
-    if (!progress) {
-      progress = { course: courseId, completedContent: [], assignmentSubmissions: [] };
-      user.courseProgress.push(progress);
-    }
-
-    progress.assignmentSubmissions.push({
-      assignment: contentId,
-      submissionText,
-      submittedAt: new Date()
-    });
-
-    if (!progress.completedContent.includes(contentId)) {
-      progress.completedContent.push(contentId);
-    }
-
-    await user.save();
-
-    res.json({
-      message: 'Assignment submitted successfully',
-      submittedAt: new Date()
-    });
+    res.json({ message: 'Course progress updated successfully' });
   } catch (error) {
     next(error);
   }

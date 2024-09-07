@@ -1,10 +1,10 @@
-const Assessment = require('../models/Assessment');
-const Course = require('../models/Course');
-const User = require('../models/User');
-const createNotification = require('../utils/createNotification');
-const { achievementTypes, checkAndAwardAchievement } = require('../utils/achievements');
+import Assessment from '../models/Assessment.js';
+import Course from '../models/Course.js';
+import User from '../models/User.js';
+import createNotification from '../utils/createNotification.js';
+import { achievementTypes, checkAndAwardAchievement } from '../utils/achievements.js';
 
-exports.getAllAssessments = async (req, res, next) => {
+export const getAllAssessments = async (req, res, next) => {
   try {
     const assessments = await Assessment.find().populate('course', 'title');
     res.json(assessments);
@@ -13,7 +13,7 @@ exports.getAllAssessments = async (req, res, next) => {
   }
 };
 
-exports.getAssessmentById = async (req, res, next) => {
+export const getAssessmentById = async (req, res, next) => {
   try {
     const assessment = await Assessment.findById(req.params.id).populate('course', 'title');
     if (!assessment) {
@@ -25,7 +25,7 @@ exports.getAssessmentById = async (req, res, next) => {
   }
 };
 
-exports.createAssessment = async (req, res, next) => {
+export const createAssessment = async (req, res, next) => {
   try {
     const { title, description, courseId, questions } = req.body;
     const course = await Course.findById(courseId);
@@ -45,7 +45,7 @@ exports.createAssessment = async (req, res, next) => {
   }
 };
 
-exports.updateAssessment = async (req, res, next) => {
+export const updateAssessment = async (req, res, next) => {
   try {
     const { title, description, questions } = req.body;
     const assessment = await Assessment.findByIdAndUpdate(
@@ -62,7 +62,7 @@ exports.updateAssessment = async (req, res, next) => {
   }
 };
 
-exports.deleteAssessment = async (req, res, next) => {
+export const deleteAssessment = async (req, res, next) => {
   try {
     const assessment = await Assessment.findByIdAndDelete(req.params.id);
     if (!assessment) {
@@ -74,7 +74,7 @@ exports.deleteAssessment = async (req, res, next) => {
   }
 };
 
-exports.takeAssessment = async (req, res, next) => {
+export const submitAssessment = async (req, res, next) => {
   try {
     const assessment = await Assessment.findById(req.params.id);
     if (!assessment) {

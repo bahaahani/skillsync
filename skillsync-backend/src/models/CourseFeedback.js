@@ -1,41 +1,34 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const courseFeedbackSchema = new mongoose.Schema({
   course: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course',
-    required: true,
+    required: true
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: true
   },
   rating: {
     type: Number,
-    required: true,
-    min: 1,
-    max: 5,
+    required: true
   },
   comment: {
     type: String,
-    maxlength: 1000,
+    required: true
   },
   instructorResponse: {
-    content: String,
-    createdAt: Date,
-    rating: {
-      type: Number,
-      min: 1,
-      max: 5,
-    },
+    type: String,
+    default: null
   },
   createdAt: {
     type: Date,
-    default: Date.now,
-  },
+    default: Date.now
+  }
 });
 
 const CourseFeedback = mongoose.model('CourseFeedback', courseFeedbackSchema);
 
-module.exports = CourseFeedback;
+export default CourseFeedback;

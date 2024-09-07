@@ -1,9 +1,15 @@
-const express = require('express');
+import express from 'express';
+import {
+  getRecommendedCourses,
+  getPersonalizedRecommendations,
+  getTrendingCourses
+} from '../controllers/courseRecommendationController.js';
+import { auth } from '../middleware/auth.js';
+
 const router = express.Router();
-const courseRecommendationController = require('../controllers/courseRecommendationController');
-const auth = require('../middleware/auth');
-const isInstructor = require('../middleware/isInstructor');
 
-router.get('/:courseId', auth, isInstructor, courseRecommendationController.getCourseRecommendations);
+router.get('/recommended', auth, getRecommendedCourses);
+router.get('/personalized', auth, getPersonalizedRecommendations);
+router.get('/trending', getTrendingCourses);
 
-module.exports = router;
+export default router;

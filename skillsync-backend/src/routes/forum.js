@@ -1,11 +1,23 @@
-const express = require('express');
+import express from 'express';
+import {
+  getAllPosts,
+  getPostById,
+  createPost,
+  updatePost,
+  deletePost,
+  addComment,
+  deleteComment
+} from '../controllers/forumController.js';
+import { auth } from '../middleware/auth.js';
+
 const router = express.Router();
-const forumController = require('../controllers/forumController');
-const auth = require('../middleware/auth');
 
-router.post('/topics', auth, forumController.createTopic);
-router.get('/topics/course/:courseId', auth, forumController.getTopicsByCourse);
-router.get('/topics/:id', auth, forumController.getTopic);
-router.post('/topics/:id/reply', auth, forumController.addReply);
+router.get('/', getAllPosts);
+router.get('/:id', getPostById);
+router.post('/', auth, createPost);
+router.put('/:id', auth, updatePost);
+router.delete('/:id', auth, deletePost);
+router.post('/:id/comments', auth, addComment);
+router.delete('/:postId/comments/:commentId', auth, deleteComment);
 
-module.exports = router;
+export default router;

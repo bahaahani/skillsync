@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-
+import mongoose from 'mongoose';
 const forumTopicSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -43,4 +42,4 @@ const forumTopicSchema = new mongoose.Schema({
 
 const ForumTopic = mongoose.model('ForumTopic', forumTopicSchema);
 
-module.exports = ForumTopic;
+export default ForumTopic;

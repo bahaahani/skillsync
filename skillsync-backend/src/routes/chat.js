@@ -1,10 +1,11 @@
-const express = require('express');
+import express from "express";
+import { sendMessage, getConversation, getRecentChats } from '../controllers/chatController.js';
+import { auth } from '../middleware/auth.js';
+
 const router = express.Router();
-const chatController = require('../controllers/chatController');
-const auth = require('../middleware/auth');
 
-router.post('/send', auth, chatController.sendMessage);
-router.get('/conversation/:userId', auth, chatController.getConversation);
-router.get('/conversations', auth, chatController.getConversationList);
+router.post("/send", auth, sendMessage);
+router.get("/conversation/:userId", auth, getConversation);
+router.get("/recent", auth, getRecentChats);
 
-module.exports = router;
+export default router;

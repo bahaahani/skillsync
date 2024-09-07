@@ -1,38 +1,37 @@
-const Notification = require('../models/Notification');
-const { emitNotification } = require('../utils/socketEvents');
+import Notification from '../models/Notification.js';
 
-exports.getUserNotifications = async (req, res, next) => {
+export const getNotifications = async (req, res, next) => {
   try {
-    const notifications = await Notification.find({ recipient: req.user.id })
+    const notifications = await Notification.find({ user: req.user.id })
       .sort({ createdAt: -1 })
-      .populate('relatedItem');
+      .limit(20);
     res.json(notifications);
   } catch (error) {
     next(error);
   }
 };
 
-exports.markNotificationAsRead = async (req, res, next) => {
+export const markNotificationAsRead = async (req, res, next) => {
   try {
     const notification = await Notification.findOneAndUpdate(
-      { _id: req.params.id, recipient: req.user.id },
+      { _id: req.params.id, user: req.user.id },
       { read: true },
       { new: true }
     );
     if (!notification) {
       return res.status(404).json({ message: 'Notification not found' });
     }
-    res.json({ message: 'Notification marked as read', notification });
+    res.json(notification);
   } catch (error) {
     next(error);
   }
 };
 
-exports.deleteNotification = async (req, res, next) => {
+export const deleteNotification = async (req, res, next) => {
   try {
     const notification = await Notification.findOneAndDelete({
       _id: req.params.id,
-      recipient: req.user.id,
+      user: req.user.id,
     });
     if (!notification) {
       return res.status(404).json({ message: 'Notification not found' });
@@ -40,25 +39,5 @@ exports.deleteNotification = async (req, res, next) => {
     res.json({ message: 'Notification deleted successfully' });
   } catch (error) {
     next(error);
-  }
-};
-
-exports.createNotification = async (recipientId, type, content, relatedItem, itemModel) => {
-  try {
-    const notification = new Notification({
-      recipient: recipientId,
-      type,
-      content,
-      relatedItem,
-      itemModel,
-    });
-    await notification.save();
-    
-    // Emit real-time notification
-    emitNotification(recipientId, notification);
-
-    return notification;
-  } catch (error) {
-    console.error('Error creating notification:', error);
   }
 };

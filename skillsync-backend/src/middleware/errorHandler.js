@@ -1,15 +1,12 @@
-const logger = require('../utils/logger');
+import logger from '../utils/logger.js';
 
 const errorHandler = (err, req, res, next) => {
-  logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+  logger.error(err.stack);
 
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
-
-  res.status(statusCode).json({
-    success: false,
-    error: message
+  res.status(err.status || 500).json({
+    message: err.message || 'An unexpected error occurred',
+    error: process.env.NODE_ENV === 'development' ? err : {}
   });
 };
 
-module.exports = errorHandler;
+export default errorHandler;

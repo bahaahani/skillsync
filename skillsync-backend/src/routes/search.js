@@ -1,8 +1,17 @@
-const express = require('express');
+import express from 'express';
+import {
+  searchAll,
+  searchCourses,
+  searchUsers,
+  searchForumTopics
+} from '../controllers/searchController.js';
+import { auth } from '../middleware/auth.js';
+
 const router = express.Router();
-const searchController = require('../controllers/searchController');
-const auth = require('../middleware/auth');
 
-router.get('/', auth, searchController.search);
+router.get('/', auth, searchAll);
+router.get('/courses', auth, searchCourses);
+router.get('/users', auth, searchUsers);
+router.get('/forum', auth, searchForumTopics);
 
-module.exports = router;
+export default router;

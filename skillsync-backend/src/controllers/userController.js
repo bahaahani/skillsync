@@ -1,7 +1,7 @@
-const User = require('../models/User');
-const cloudinary = require('../utils/cloudinary');
+import User from '../models/User.js';
+import cloudinary from '../utils/cloudinary.js';
 
-exports.getProfile = async (req, res, next) => {
+export const getProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id)
       .select('-password')
@@ -14,7 +14,7 @@ exports.getProfile = async (req, res, next) => {
   }
 };
 
-exports.updateProfile = async (req, res, next) => {
+export const updateProfile = async (req, res, next) => {
   try {
     const { username, email, firstName, lastName, bio, skills, interests } = req.body;
     const user = await User.findById(req.user.id);
@@ -49,7 +49,7 @@ exports.updateProfile = async (req, res, next) => {
   }
 };
 
-exports.getUserStats = async (req, res, next) => {
+export const getUserStats = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
     const stats = {
@@ -65,7 +65,7 @@ exports.getUserStats = async (req, res, next) => {
   }
 };
 
-exports.deleteProfile = async (req, res, next) => {
+export const deleteProfile = async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.user.id);
     res.json({ message: 'User profile deleted successfully' });
@@ -74,7 +74,7 @@ exports.deleteProfile = async (req, res, next) => {
   }
 };
 
-exports.uploadAvatar = async (req, res, next) => {
+export const uploadAvatar = async (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
@@ -88,6 +88,57 @@ exports.uploadAvatar = async (req, res, next) => {
     ).select('-password');
 
     res.json({ message: 'Avatar uploaded successfully', user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.find().select('-password');
+    res.json(users);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserById = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUser = async (req, res, next) => {
+  try {
+    const { username, email, ...updateData } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { username, email, ...updateData },
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({ message: 'User deleted successfully' });
   } catch (error) {
     next(error);
   }

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const assessmentSchema = new mongoose.Schema({
   title: {
@@ -16,19 +16,26 @@ const assessmentSchema = new mongoose.Schema({
     required: true,
   },
   questions: [{
-    question: {
-      type: String,
-      required: true,
-    },
-    options: [{
-      type: String,
-      required: true,
-    }],
-    correctAnswer: {
-      type: Number,
-      required: true,
-    },
+    questionText: String,
+    options: [String],
+    correctAnswer: Number,
   }],
+  timeLimit: {
+    type: Number,
+    required: true,
+  },
+  passingScore: {
+    type: Number,
+    required: true,
+  },
+  averageScore: {
+    type: Number,
+    default: 0,
+  },
+  attempts: {
+    type: Number,
+    default: 0,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -37,4 +44,4 @@ const assessmentSchema = new mongoose.Schema({
 
 const Assessment = mongoose.model('Assessment', assessmentSchema);
 
-module.exports = Assessment;
+export default Assessment;

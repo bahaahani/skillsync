@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const courseSchema = new mongoose.Schema({
   title: {
@@ -15,31 +15,51 @@ const courseSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  category: {
+    type: String,
+    required: true,
+  },
+  content: [{
+    title: String,
+    type: {
+      type: String,
+      enum: ['video', 'text', 'quiz', 'assignment'],
+    },
+    data: mongoose.Schema.Types.Mixed,
+    completionRate: {
+      type: Number,
+      default: 0,
+    },
+  }],
   enrolledUsers: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
-  content: [{
-    type: {
-      type: String,
-      enum: ['video', 'document', 'quiz', 'assignment'],
-      required: true,
+  completedUsers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  reviews: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
     },
-    title: {
-      type: String,
-      required: true,
+    rating: Number,
+    comment: String,
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
-    description: String,
-    fileUrl: String,
-    quizQuestions: [{
-      question: String,
-      options: [String],
-      correctAnswer: Number,
-    }],
-    assignmentInstructions: String,
-    dueDate: Date,
   }],
   createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
     type: Date,
     default: Date.now,
   },
@@ -47,4 +67,4 @@ const courseSchema = new mongoose.Schema({
 
 const Course = mongoose.model('Course', courseSchema);
 
-module.exports = Course;
+export default Course;

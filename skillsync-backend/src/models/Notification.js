@@ -1,38 +1,35 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const notificationSchema = new mongoose.Schema({
-  recipient: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: true
   },
   type: {
     type: String,
-    required: true,
-    enum: ['course_enrollment', 'assessment_completed', 'forum_reply', 'achievement', 'new_feedback', 'feedback_response'],
+    required: true
   },
-  content: {
+  message: {
     type: String,
-    required: true,
-  },
-  relatedItem: {
-    type: mongoose.Schema.Types.ObjectId,
-    refPath: 'itemModel',
-  },
-  itemModel: {
-    type: String,
-    enum: ['Course', 'Assessment', 'ForumTopic', 'CourseFeedback'],
+    required: true
   },
   read: {
     type: Boolean,
-    default: false,
+    default: false
+  },
+  relatedId: {
+    type: mongoose.Schema.Types.ObjectId
+  },
+  relatedModel: {
+    type: String
   },
   createdAt: {
     type: Date,
-    default: Date.now,
-  },
+    default: Date.now
+  }
 });
 
 const Notification = mongoose.model('Notification', notificationSchema);
 
-module.exports = Notification;
+export default Notification;

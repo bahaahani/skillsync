@@ -1,27 +1,26 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const cors = require("cors");
-const helmet = require("helmet");
-const apiLimiter = require("./middleware/rateLimiter");
-const authRoutes = require("./routes/auth");
-const userRoutes = require("./routes/users");
-const courseRoutes = require("./routes/courses");
-const assessmentRoutes = require("./routes/assessments");
-const postRoutes = require("./routes/posts");
-const leaderboardRoutes = require("./routes/leaderboard");
-const forumRoutes = require("./routes/forum");
-const notificationRoutes = require("./routes/notifications");
-const searchRoutes = require("./routes/search");
-const recommendationRoutes = require("./routes/recommendations");
-const errorHandler = require("./middleware/errorHandler");
-const analyticsRoutes = require('./routes/analytics');
-const chatRoutes = require('./routes/chat');
-const studentProgressRoutes = require('./routes/studentProgress');
-const courseRecommendationRoutes = require('./routes/courseRecommendations');
-const courseFeedbackRoutes = require('./routes/courseFeedback');
-const instructorDashboardRoutes = require('./routes/instructorDashboard');
-const apiV1Routes = require('./routes/api');
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import helmet from "helmet";
+import apiLimiter from "./middleware/rateLimiter.js";
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+import courseRoutes from "./routes/courses.js";
+import assessmentRoutes from "./routes/assessments.js";
+import postRoutes from "./routes/posts.js";
+import leaderboardRoutes from "./routes/leaderboard.js";
+import forumRoutes from "./routes/forum.js";
+import notificationRoutes from "./routes/notifications.js";
+import searchRoutes from "./routes/search.js";
+import recommendationRoutes from "./routes/recommendations.js";
+import errorHandler from "./middleware/errorHandler.js";
+import analyticsRoutes from "./routes/analytics.js";
+import chatRoutes from "./routes/chat.js";
+import studentProgressRoutes from "./routes/studentProgress.js";
+import courseRecommendationRoutes from "./routes/courseRecommendations.js";
+import courseFeedbackRoutes from "./routes/courseFeedback.js";
+import instructorDashboardRoutes from "./routes/instructorDashboard.js";
+import apiV1Routes from "./routes/api.js"; // Ensure this is a default export
 
 dotenv.config();
 
@@ -29,8 +28,8 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'https://localhost:3000',
-  optionsSuccessStatus: 200
+  origin: "*",
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 
@@ -38,19 +37,21 @@ app.use(cors(corsOptions));
 app.use(helmet());
 
 // Set Content Security Policy
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ["'self'"],
-    scriptSrc: ["'self'", "'unsafe-inline'", 'trusted-cdn.com'],
-    styleSrc: ["'self'", "'unsafe-inline'", 'trusted-cdn.com'],
-    imgSrc: ["'self'", 'data:', 'trusted-cdn.com'],
-    connectSrc: ["'self'", 'api.example.com'],
-    fontSrc: ["'self'", 'trusted-cdn.com'],
-    objectSrc: ["'none'"],
-    mediaSrc: ["'self'"],
-    frameSrc: ["'none'"],
-  },
-}));
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "trusted-cdn.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "trusted-cdn.com"],
+      imgSrc: ["'self'", "data:", "trusted-cdn.com"],
+      connectSrc: ["'self'", "api.example.com"],
+      fontSrc: ["'self'", "trusted-cdn.com"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  })
+);
 
 app.use(express.json());
 
@@ -68,12 +69,12 @@ app.use("/api/forum", forumRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/recommendations", recommendationRoutes);
-app.use('/api/analytics', analyticsRoutes);
-app.use('/api/chat', chatRoutes);
-app.use('/api/progress', studentProgressRoutes);
-app.use('/api/course-recommendations', courseRecommendationRoutes);
-app.use('/api/course-feedback', courseFeedbackRoutes);
-app.use('/api/instructor-dashboard', instructorDashboardRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/chat", chatRoutes);
+app.use("/api/progress", studentProgressRoutes);
+app.use("/api/course-recommendations", courseRecommendationRoutes);
+app.use("/api/course-feedback", courseFeedbackRoutes);
+app.use("/api/instructor-dashboard", instructorDashboardRoutes);
 
 // API routes
 app.use("/api/v1", apiV1Routes);
@@ -81,4 +82,4 @@ app.use("/api/v1", apiV1Routes);
 // Error handling middleware
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

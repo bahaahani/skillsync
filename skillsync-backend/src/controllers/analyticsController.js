@@ -1,12 +1,12 @@
-const User = require('../models/User');
-const Course = require('../models/Course');
-const Assessment = require('../models/Assessment');
-const Analytics = require('../models/Analytics');
-const mongoose = require('mongoose');
-const { stringify } = require('csv-stringify/sync');
-const { emitAnalyticsUpdate } = require('../utils/socketEvents');
+import User from '../models/User.js';
+import Course from '../models/Course.js';
+import Assessment from '../models/Assessment.js';
+import Analytics from '../models/Analytics.js';
+import mongoose from 'mongoose';
+import { stringify } from 'csv-stringify/sync';
+import { emitAnalyticsUpdate } from '../utils/socketEvents.js';
 
-exports.generateDailyAnalytics = async () => {
+export const generateDailyAnalytics = async () => {
   try {
     const totalUsers = await User.countDocuments();
     const activeUsers = await User.countDocuments({ lastActive: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) } });
@@ -41,7 +41,7 @@ exports.generateDailyAnalytics = async () => {
   }
 };
 
-exports.getAnalytics = async (req, res, next) => {
+export const getAnalytics = async (req, res, next) => {
   try {
     const { startDate, endDate } = req.query;
     const query = {};
@@ -56,7 +56,7 @@ exports.getAnalytics = async (req, res, next) => {
   }
 };
 
-exports.getCourseAnalytics = async (req, res, next) => {
+export const getCourseAnalytics = async (req, res, next) => {
   try {
     const courseAnalytics = await Course.aggregate([
       {
@@ -80,7 +80,7 @@ exports.getCourseAnalytics = async (req, res, next) => {
   }
 };
 
-exports.getUserEngagement = async (req, res, next) => {
+export const getUserEngagement = async (req, res, next) => {
   try {
     const userEngagement = await User.aggregate([
       {
@@ -101,7 +101,7 @@ exports.getUserEngagement = async (req, res, next) => {
   }
 };
 
-exports.getContentEngagement = async (req, res, next) => {
+export const getContentEngagement = async (req, res, next) => {
   try {
     const contentEngagement = await Course.aggregate([
       { $unwind: "$content" },
@@ -120,7 +120,7 @@ exports.getContentEngagement = async (req, res, next) => {
   }
 };
 
-exports.getInstructorCourseAnalytics = async (req, res, next) => {
+export const getInstructorCourseAnalytics = async (req, res, next) => {
   try {
     const instructorId = req.user.id;
     const courseAnalytics = await Course.aggregate([
@@ -155,7 +155,7 @@ exports.getInstructorCourseAnalytics = async (req, res, next) => {
   }
 };
 
-exports.getInstructorCourseDetails = async (req, res, next) => {
+export const getInstructorCourseDetails = async (req, res, next) => {
   try {
     const { courseId } = req.params;
     const course = await Course.findOne({ _id: courseId, instructor: req.user.id });
@@ -210,7 +210,7 @@ exports.getInstructorCourseDetails = async (req, res, next) => {
   }
 };
 
-exports.exportAnalytics = async (req, res, next) => {
+export const exportAnalytics = async (req, res, next) => {
   try {
     const { startDate, endDate } = req.query;
     const query = {};
@@ -242,7 +242,7 @@ exports.exportAnalytics = async (req, res, next) => {
   }
 };
 
-exports.exportCourseAnalytics = async (req, res, next) => {
+export const exportCourseAnalytics = async (req, res, next) => {
   try {
     const courseAnalytics = await Course.aggregate([
       {
@@ -283,7 +283,7 @@ exports.exportCourseAnalytics = async (req, res, next) => {
   }
 };
 
-exports.updateRealTimeAnalytics = async () => {
+export const updateRealTimeAnalytics = async () => {
   try {
     const totalUsers = await User.countDocuments();
     const activeUsers = await User.countDocuments({ lastActive: { $gte: new Date(Date.now() - 15 * 60 * 1000) } }); // Active in last 15 minutes
@@ -304,5 +304,3 @@ exports.updateRealTimeAnalytics = async () => {
     console.error('Error updating real-time analytics:', error);
   }
 };
-
-module.exports.updateRealTimeAnalytics = exports.updateRealTimeAnalytics;

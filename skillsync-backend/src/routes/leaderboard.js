@@ -1,8 +1,10 @@
-const express = require('express');
+import express from "express";
+import { getLeaderboard, getUserRank } from '../controllers/leaderboardController.js';
+import { auth } from '../middleware/auth.js';
+
 const router = express.Router();
-const leaderboardController = require('../controllers/leaderboardController');
-const auth = require('../middleware/auth');
 
-router.get('/', auth, leaderboardController.getLeaderboard);
+router.get("/", getLeaderboard);
+router.get("/rank", auth, getUserRank);
 
-module.exports = router;
+export default router;

@@ -1,11 +1,15 @@
-const express = require('express');
+import express from 'express';
+import {
+  getStudentProgress,
+  getCourseProgress,
+  updateCourseProgress
+} from '../controllers/studentProgressController.js';
+import { auth } from '../middleware/auth.js';
+
 const router = express.Router();
-const studentProgressController = require('../controllers/studentProgressController');
-const auth = require('../middleware/auth');
 
-router.get('/:courseId', auth, studentProgressController.getStudentProgress);
-router.post('/:courseId/:contentId/complete', auth, studentProgressController.markContentAsCompleted);
-router.post('/:courseId/:contentId/quiz', auth, studentProgressController.submitQuiz);
-router.post('/:courseId/:contentId/assignment', auth, studentProgressController.submitAssignment);
+router.get('/', auth, getStudentProgress);
+router.get('/:courseId', auth, getCourseProgress);
+router.put('/:courseId', auth, updateCourseProgress);
 
-module.exports = router;
+export default router;
