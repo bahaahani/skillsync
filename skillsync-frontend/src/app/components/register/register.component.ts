@@ -36,15 +36,17 @@ export class RegisterComponent {
     });
   }
 
-  onSubmit(): void {
+  onSubmit() {
     if (this.registerForm.valid) {
       const { username, email, password } = this.registerForm.value;
-      this.authService.register(username, email, password).subscribe({
-        next: () => {
-          this.router.navigate(['/dashboard']);
+      this.authService.register(username, email, password ).subscribe({
+        next: (response) => {
+          console.log('Registration successful', response);
+          this.router.navigate(['/login']);
         },
-        error: (err) => {
-          this.error = err.error.message || 'An error occurred during registration';
+        error: (err: any) => {
+          console.error('Registration error', err);
+          this.error = 'Registration failed. Please try again.';
         }
       });
     }

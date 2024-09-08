@@ -1,22 +1,16 @@
 import mongoose from 'mongoose';
 
 const forumPostSchema = new mongoose.Schema({
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  content: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  replies: [{
+    content: String,
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    createdAt: { type: Date, default: Date.now }
+  }]
 });
 
-const ForumPost = mongoose.model('ForumPost', forumPostSchema);
-
-export default ForumPost;
+export default mongoose.model('ForumPost', forumPostSchema);

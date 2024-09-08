@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import apiLimiter from "./middleware/rateLimiter.js";
-import authRoutes from "./routes/auth.js";
+import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/users.js";
 import courseRoutes from "./routes/courses.js";
 import assessmentRoutes from "./routes/assessments.js";
@@ -28,7 +28,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: "*",
+  origin: "http://localhost:4200", // or your Angular app's URL
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));

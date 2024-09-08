@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { ForumService } from '../../services/forum.service';
 
 @Component({
   selector: 'app-topic-view',
@@ -12,43 +13,41 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./topic-view.component.css']
 })
 export class TopicViewComponent implements OnInit {
-  topic: any;
-  newReply: string = '';
-  user: any;
+  post: any;
+  replyContent: string = '';
 
   constructor(
-    private http: HttpClient,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private forumService: ForumService
+  ) { }
 
   ngOnInit() {
-    this.user = JSON.parse(localStorage.getItem('user') || '{}');
-    const topicId = this.route.snapshot.paramMap.get('id');
-    this.loadTopic(topicId);
-  }
-
-  loadTopic(topicId: string | null) {
-    if (topicId) {
-      this.http.get<any>(`http://localhost:3000/api/forum/topics/${topicId}`).subscribe({
-        next: (data) => {
-          this.topic = data;
-        },
-        error: (error) => {
-          console.error('Error fetching topic:', error);
-        }
-      });
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.loadPost(id);
     }
   }
 
-  submitReply() {
-    if (this.newReply.trim()) {
-      this.http.post(`http://localhost:3000/api/forum/topics/${this.topic._id}/replies`, { content: this.newReply }).subscribe({
-        next: () => {
-          this.loadTopic(this.topic._id);
-          this.newReply = '';
+  loadPost(id: string) {
+    this.forumService.getPost(id).subscribe({
+      next: (data) => {
+        this.post = data;
+      },
+      error: (error) => {
+        console.error('Error fetching post:', error);
+      }
+    });
+  }
+
+  addReply() {
+    if (this.replyContent.trim()) {
+      this.forumService.addReply(this.post._id, { content: this.replyContent }).subscribe({
+        next: (updatedPost) => {
+          this.post = updatedPost;
+          this.replyContent = '';
         },
         error: (error) => {
-          console.error('Error submitting reply:', error);
+          console.error('Error adding reply:', error);
         }
       });
     }

@@ -54,72 +54,66 @@ export const getTopic = async (req, res, next) => {
 export const addReply = async (req, res, next) => {
   try {
     const { content } = req.body;
-    const topic = await ForumTopic.findById(req.params.id);
-    if (!topic) {
-      return res.status(404).json({ message: 'Topic not found' });
+    const post = await ForumPost.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
     }
     const newReply = {
       content,
       author: req.user.id,
     };
-    topic.replies.push(newReply);
-    await topic.save();
+    post.replies.push(newReply);
+    const updatedPost = await post.save();
 
-    // Emit real-time forum update
-    emitForumUpdate(topic.course, { type: 'newReply', topicId: topic._id, reply: newReply });
+    // Emit real-time forum update if needed
+    // emitForumUpdate(post.course, { type: 'newReply', postId: post._id, reply: newReply });
 
-    res.status(201).json({ message: 'Reply added successfully' });
+    res.status(201).json(updatedPost);
   } catch (error) {
     next(error);
   }
 };
 
-// Add these functions to match the route file
 export const getAllPosts = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
-    const skip = (page - 1) * pageSize;
-
-    const totalPosts = await ForumPost.countDocuments();
-    const totalPages = Math.ceil(totalPosts / pageSize);
-
-    const posts = await ForumPost.find()
-      .populate('author', 'username')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(pageSize);
-
-    res.json({
-      posts,
-      currentPage: page,
-      totalPages,
-      totalPosts
-    });
+    const posts = await ForumPost.find().populate('author', 'username').sort({ createdAt: -1 });
+    res.json(posts);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching forum posts', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const createPost = async (req, res) => {
+  const post = new ForumPost({
+    title: req.body.title,
+    content: req.body.content,
+    author: req.user.id
+  });
+
   try {
-    const { content } = req.body;
-    const newPost = new ForumPost({
-      author: req.user.id,
-      content
-    });
-    await newPost.save();
-    const populatedPost = await ForumPost.findById(newPost._id).populate('author', 'username');
-    res.status(201).json(populatedPost);
+    const newPost = await post.save();
+    res.status(201).json(newPost);
   } catch (error) {
-    res.status(400).json({ message: 'Error creating forum post', error: error.message });
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const getPost = async (req, res) => {
+  try {
+    const post = await ForumPost.findById(req.params.id).populate('author', 'username');
+    if (post == null) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const updatePost = async (req, res, next) => {
   try {
     const { title, content } = req.body;
-    const post = await ForumTopic.findOneAndUpdate(
+    const post = await ForumPost.findOneAndUpdate(
       { _id: req.params.id, author: req.user.id },
       { title, content },
       { new: true }
@@ -135,7 +129,7 @@ export const updatePost = async (req, res, next) => {
 
 export const deletePost = async (req, res, next) => {
   try {
-    const post = await ForumTopic.findOneAndDelete({ _id: req.params.id, author: req.user.id });
+    const post = await ForumPost.findOneAndDelete({ _id: req.params.id, author: req.user.id });
     if (!post) {
       return res.status(404).json({ message: 'Post not found or you are not the author' });
     }
@@ -145,11 +139,9 @@ export const deletePost = async (req, res, next) => {
   }
 };
 
-export const addComment = addReply;
-
 export const deleteComment = async (req, res, next) => {
   try {
-    const post = await ForumTopic.findById(req.params.postId);
+    const post = await ForumPost.findById(req.params.postId);
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }

@@ -1,18 +1,20 @@
-import User from '../models/User.js';
-import jwt from 'jsonwebtoken';
-import { updateRealTimeAnalytics } from './analyticsController.js';
-import bcrypt from 'bcryptjs';
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
+import { updateRealTimeAnalytics } from "./analyticsController.js";
+import bcrypt from "bcryptjs";
 
 // Fallback JWT secret
-const FALLBACK_JWT_SECRET = 'fallback_secret_do_not_use_in_production';
+const FALLBACK_JWT_SECRET = "fallback_secret_do_not_use_in_production";
 
 const generateToken = (userId) => {
   const secret = process.env.JWT_SECRET || FALLBACK_JWT_SECRET;
   if (secret === FALLBACK_JWT_SECRET) {
-    console.warn('Warning: Using fallback JWT secret. This is not secure for production use.');
+    console.warn(
+      "Warning: Using fallback JWT secret. This is not secure for production use."
+    );
   }
   return jwt.sign({ id: userId }, secret, {
-    expiresIn: '30d',
+    expiresIn: "30d",
   });
 };
 
@@ -22,7 +24,7 @@ export const register = async (req, res, next) => {
 
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     const user = new User({ username, email, password });
@@ -34,7 +36,7 @@ export const register = async (req, res, next) => {
     await updateRealTimeAnalytics();
 
     res.status(201).json({
-      message: 'User registered successfully',
+      message: "User registered successfully",
       token,
       user: {
         id: user._id,
@@ -53,12 +55,12 @@ export const login = async (req, res, next) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const token = generateToken(user._id);
@@ -67,7 +69,7 @@ export const login = async (req, res, next) => {
     await updateRealTimeAnalytics();
 
     res.json({
-      message: 'Login successful',
+      message: "Login successful",
       token,
       user: {
         id: user._id,
@@ -80,55 +82,38 @@ export const login = async (req, res, next) => {
   }
 };
 
-export const logout = (req, res) => {
-  // Implement logout logic here if needed
-  res.json({ message: 'Logout successful' });
+export const logout = async (req, res) => {
+  // Implementation for user logout
+  // Note: For a stateless JWT-based auth, you typically don't need server-side logout
+  // The client should discard the token
+  res.json({ message: "Logout successful" });
 };
 
-export const signup = async (req, res, next) => {
+export const updateProfile = async (req, res, next) => {
   try {
-    const { username, email, password } = req.body;
+    const userId = req.user.id; // Assuming the authenticateToken middleware adds user info to req
+    const updateData = req.body;
 
-    // Check if all required fields are provided
-    if (!username || !email || !password) {
-      return res.status(400).json({ message: 'Username, email, and password are required' });
+    // Remove sensitive fields that shouldn't be updated directly
+    delete updateData.password;
+    delete updateData.email;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
-
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Create new user
-    const newUser = new User({
-      username,
-      email,
-      password: hashedPassword
-    });
-
-    await newUser.save();
-
-    const token = generateToken(newUser._id);
-
-    res.status(201).json({
-      message: 'User created successfully',
-      token,
+    res.json({
+      message: "Profile updated successfully",
       user: {
-        id: newUser._id,
-        username: newUser.username,
-        email: newUser.email
+        id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        // Add other fields as necessary, but exclude sensitive information
       }
     });
   } catch (error) {
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(err => err.message);
-      return res.status(400).json({ message: messages.join(', ') });
-    }
     next(error);
   }
 };

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { ForumService } from '../services/forum.service';
 
 @Component({
   selector: 'app-forum',
@@ -23,18 +24,16 @@ export class ForumComponent implements OnInit {
   constructor(private forumService: ForumService) { }
 
   ngOnInit() {
-    this.user = JSON.parse(localStorage.getItem('user') || '{}');
     this.loadPosts();
   }
 
   loadPosts() {
-    this.http.get<any>(`http://localhost:3000/api/forum/posts?page=${this.currentPage}&pageSize=${this.pageSize}`).subscribe({
+    this.forumService.getAllPosts().subscribe({
       next: (data) => {
-        this.posts = data.posts;
-        this.totalPages = data.totalPages;
+        this.posts = data;
       },
       error: (error) => {
-        console.error('Error fetching forum posts:', error);
+        console.error('Error fetching posts:', error);
       }
     });
   }
