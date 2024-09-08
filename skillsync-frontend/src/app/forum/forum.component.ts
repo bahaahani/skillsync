@@ -20,7 +20,7 @@ export class ForumComponent implements OnInit {
   totalPages: number = 1;
   pageSize: number = 10;
 
-  constructor(private http: HttpClient) {}
+  constructor(private forumService: ForumService) { }
 
   ngOnInit() {
     this.user = JSON.parse(localStorage.getItem('user') || '{}');
