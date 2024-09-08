@@ -5,13 +5,13 @@ import {
   searchUsers,
   searchForumTopics
 } from '../controllers/searchController.js';
-import { auth } from '../middleware/auth.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/', auth, searchAll);
-router.get('/courses', auth, searchCourses);
-router.get('/users', auth, searchUsers);
-router.get('/forum', auth, searchForumTopics);
+router.get('/', authenticateToken, searchAll);
+router.get('/courses', authenticateToken, searchCourses);
+router.get('/users', authenticateToken, searchUsers);
+router.get('/forum', authenticateToken, searchForumTopics);
 
 export default router;

@@ -4,12 +4,12 @@ import {
   getCourseProgress,
   updateCourseProgress
 } from '../controllers/studentProgressController.js';
-import { auth } from '../middleware/auth.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/', auth, getStudentProgress);
-router.get('/:courseId', auth, getCourseProgress);
-router.put('/:courseId', auth, updateCourseProgress);
+router.get('/', authenticateToken, getStudentProgress);
+router.get('/:courseId', authenticateToken, getCourseProgress);
+router.put('/:courseId', authenticateToken, updateCourseProgress);
 
 export default router;

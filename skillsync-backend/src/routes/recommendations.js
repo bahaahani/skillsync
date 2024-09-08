@@ -4,12 +4,12 @@ import {
   getPersonalizedRecommendations,
   getTrendingCourses
 } from '../controllers/recommendationController.js';
-import { auth } from '../middleware/auth.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/courses', auth, getRecommendedCourses);
-router.get('/personalized', auth, getPersonalizedRecommendations);
+router.get('/courses', authenticateToken, getRecommendedCourses);
+router.get('/personalized', authenticateToken, getPersonalizedRecommendations);
 router.get('/trending', getTrendingCourses);
 
 export default router;

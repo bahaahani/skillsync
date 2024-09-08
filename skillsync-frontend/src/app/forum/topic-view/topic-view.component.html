@@ -1,0 +1,23 @@
+<div class="topic-view" *ngIf="topic">
+  <h2>{{ topic.title }}</h2>
+  <div class="topic-content">
+    <p class="author">{{ topic.author.username }}</p>
+    <p class="content">{{ topic.content }}</p>
+    <p class="timestamp">{{ topic.createdAt | date:'medium' }}</p>
+  </div>
+
+  <h3>Replies</h3>
+  <div class="replies">
+    <div *ngFor="let reply of topic.replies" class="reply">
+      <p class="author">{{ reply.author.username }}</p>
+      <p class="content">{{ reply.content }}</p>
+      <p class="timestamp">{{ reply.createdAt | date:'medium' }}</p>
+    </div>
+  </div>
+
+  <div class="new-reply">
+    <h4>Add a Reply</h4>
+    <textarea [(ngModel)]="newReply" placeholder="Your reply..."></textarea>
+    <button (click)="submitReply()">Submit Reply</button>
+  </div>
+</div>

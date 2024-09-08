@@ -1,1 +1,14 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <h1>Welcome to your Dashboard, {{ user.username }}!</h1>
+  <div class="user-info">
+    <p>Email: {{ user.email }}</p>
+    <p>Courses Enrolled: {{ user.coursesEnrolled?.length || 0 }}</p>
+    <p>Courses Completed: {{ user.coursesCompleted?.length || 0 }}</p>
+  </div>
+  <div class="dashboard-actions">
+    <a routerLink="/course-catalog" class="btn">Browse Courses</a>
+    <a routerLink="/user-settings" class="btn">User Settings</a>
+    <a routerLink="/forum" class="btn">Forum</a>
+  </div>
+  <button (click)="logout()" class="logout-btn">Logout</button>
+</div>

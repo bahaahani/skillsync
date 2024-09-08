@@ -8,6 +8,7 @@ import { schedule } from "node-cron";
 import generateDailyAnalytics from "./analytics/generateDailyAnalytics.js";
 import Message from "./models/Message.js";
 import User from "./models/User.js";
+import { authenticateToken } from './middleware/auth.js';
 
 const port = process.env.PORT || 3000;
 

@@ -1,1 +1,15 @@
-<p>course-catalog works!</p>
+<div class="course-catalog">
+  <h2>Course Catalog</h2>
+  <p *ngIf="enrollmentMessage" [ngClass]="{'success': enrollmentMessage.includes('Successfully'), 'error': enrollmentMessage.includes('Error')}">
+    {{ enrollmentMessage }}
+  </p>
+  <div class="course-list">
+    <div *ngFor="let course of courses" class="course-item">
+      <h3>{{ course.title }}</h3>
+      <p>{{ course.description }}</p>
+      <button (click)="enrollCourse(course._id)" [disabled]="course.isEnrolled">
+        {{ course.isEnrolled ? 'Enrolled' : 'Enroll' }}
+      </button>
+    </div>
+  </div>
+</div>

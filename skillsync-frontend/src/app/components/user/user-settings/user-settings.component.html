@@ -1,26 +1,29 @@
-<div class="user-settings">
+<div class="user-settings-container">
   <h2>User Settings</h2>
-  <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label>
-        <input type="checkbox" formControlName="emailNotifications">
-        Receive email notifications
-      </label>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" formControlName="username" required>
     </div>
-    <div class="form-group">
-      <label>
-        <input type="checkbox" formControlName="darkMode">
-        Enable dark mode
-      </label>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" formControlName="email" required>
     </div>
-    <div class="form-group">
-      <label for="language">Preferred Language:</label>
-      <select id="language" formControlName="language">
-        <option value="en">English</option>
-        <option value="es">Spanish</option>
-        <option value="fr">French</option>
-      </select>
+    <div>
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" formControlName="firstName">
     </div>
-    <button type="submit" [disabled]="settingsForm.invalid">Save Settings</button>
+    <div>
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" formControlName="lastName">
+    </div>
+    <div>
+      <label for="bio">Bio:</label>
+      <textarea id="bio" formControlName="bio"></textarea>
+    </div>
+    <button type="submit" [disabled]="!userForm.valid">Update Profile</button>
   </form>
+  <p *ngIf="message" [ngClass]="{'success': message.includes('successfully'), 'error': message.includes('Error')}">
+    {{ message }}
+  </p>
 </div>

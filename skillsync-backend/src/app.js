@@ -9,7 +9,7 @@ import courseRoutes from "./routes/courses.js";
 import assessmentRoutes from "./routes/assessments.js";
 import postRoutes from "./routes/posts.js";
 import leaderboardRoutes from "./routes/leaderboard.js";
-import forumRoutes from "./routes/forum.js";
+import forumRoutes from "./routes/forumRoutes.js";
 import notificationRoutes from "./routes/notifications.js";
 import searchRoutes from "./routes/search.js";
 import recommendationRoutes from "./routes/recommendations.js";
@@ -20,7 +20,7 @@ import studentProgressRoutes from "./routes/studentProgress.js";
 import courseRecommendationRoutes from "./routes/courseRecommendations.js";
 import courseFeedbackRoutes from "./routes/courseFeedback.js";
 import instructorDashboardRoutes from "./routes/instructorDashboard.js";
-import apiV1Routes from "./routes/api.js"; // Ensure this is a default export
+import apiV1Routes from "./routes/api.js";
 
 dotenv.config();
 

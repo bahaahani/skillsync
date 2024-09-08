@@ -1,7 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserService } from '../../../services/user.service';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-user-settings',
@@ -11,38 +11,38 @@ import { UserService } from '../../../services/user.service';
   styleUrls: ['./user-settings.component.css']
 })
 export class UserSettingsComponent implements OnInit {
-  settingsForm: FormGroup;
-  @Output() darkModeChanged = new EventEmitter<boolean>();
+  userForm: FormGroup;
+  user: any;
+  message: string = '';
 
-  constructor(private fb: FormBuilder, private userService: UserService) {
-    this.settingsForm = this.fb.group({
-      emailNotifications: [false],
-      darkMode: [false],
-      language: ['en']
+  constructor(private fb: FormBuilder, private authService: AuthService) {
+    this.userForm = this.fb.group({
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      firstName: [''],
+      lastName: [''],
+      bio: ['']
     });
   }
 
   ngOnInit() {
-    this.userService.getUserSettings().subscribe(
-      (settings) => {
-        this.settingsForm.patchValue(settings);
-      },
-      (error) => console.error('Error fetching user settings', error)
-    );
-
-    this.settingsForm.get('darkMode')?.valueChanges.subscribe(value => {
-      this.darkModeChanged.emit(value);
-    });
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.userForm.patchValue(this.user);
   }
 
   onSubmit() {
-    if (this.settingsForm.valid) {
-      this.userService.updateUserSettings(this.settingsForm.value).subscribe(
-        (response) => {
-          console.log('Settings updated successfully', response);
+    if (this.userForm.valid) {
+      this.authService.updateUserProfile(this.userForm.value).subscribe({
+        next: (updatedUser) => {
+          this.user = updatedUser;
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+          this.message = 'Profile updated successfully';
         },
-        (error) => console.error('Error updating settings', error)
-      );
+        error: (error) => {
+          this.message = 'Error updating profile';
+          console.error('Error updating user profile:', error);
+        }
+      });
     }
   }
 }

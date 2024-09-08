@@ -1,16 +1,21 @@
 import express from 'express';
+import { authenticateToken } from '../middleware/auth.js';
 import {
+  createPost,
   getAllPosts,
   getPostById,
-  createPost,
   updatePost,
   deletePost,
   likePost,
-  commentOnPost
+  unlikePost,
+  addComment,
+  deleteComment
 } from '../controllers/postController.js';
-import { auth } from '../middleware/auth.js';
 
 const router = express.Router();
+
+// Create a new post
+router.post('/', authenticateToken, createPost);
 
 // Get all posts
 router.get('/', getAllPosts);
@@ -18,19 +23,22 @@ router.get('/', getAllPosts);
 // Get a specific post
 router.get('/:id', getPostById);
 
-// Create a new post
-router.post('/', auth, createPost);
-
 // Update a post
-router.put('/:id', auth, updatePost);
+router.put('/:id', authenticateToken, updatePost);
 
 // Delete a post
-router.delete('/:id', auth, deletePost);
+router.delete('/:id', authenticateToken, deletePost);
 
 // Like a post
-router.post('/:id/like', auth, likePost);
+router.post('/:id/like', authenticateToken, likePost);
 
-// Comment on a post
-router.post('/:id/comment', auth, commentOnPost);
+// Unlike a post
+router.post('/:id/unlike', authenticateToken, unlikePost);
+
+// Add a comment to a post
+router.post('/:id/comments', authenticateToken, addComment);
+
+// Delete a comment from a post
+router.delete('/:id/comments/:commentId', authenticateToken, deleteComment);
 
 export default router;

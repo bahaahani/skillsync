@@ -1,29 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { CoursesComponent } from './components/courses/courses.component';
-import { AssessmentsComponent } from './components/assessments/assessments.component';
-import { EmployeesComponent } from './components/employees/employees.component';
-import { ReportsComponent } from './components/reports/reports.component';
-import { ProfileComponent } from './components/profile/profile.component';
-import { LearningPathComponent } from './components/learning-path/learning-path.component';
-import { MentorshipComponent } from './components/mentorship/mentorship.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { CourseCatalogComponent } from './course-catalog/course-catalog.component';
+import { UserSettingsComponent } from './components/user/user-settings/user-settings.component';
+import { ForumComponent } from './forum/forum.component';
+import { TopicViewComponent } from './forum/topic-view/topic-view.component';
 import { AuthGuard } from './guards/auth.guard';
-import { NotificationsComponent } from './components/notifications/notifications.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  { path: 'courses', component: CoursesComponent, canActivate: [AuthGuard] },
-  { path: 'assessments', component: AssessmentsComponent, canActivate: [AuthGuard] },
-  { path: 'employees', component: EmployeesComponent, canActivate: [AuthGuard] },
-  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: 'learning-path', component: LearningPathComponent, canActivate: [AuthGuard] },
-  { path: 'mentorship', component: MentorshipComponent, canActivate: [AuthGuard] },
-  { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuard] },
-  { path: '**', redirectTo: '' }
+  { path: 'course-catalog', component: CourseCatalogComponent, canActivate: [AuthGuard] },
+  { path: 'user-settings', component: UserSettingsComponent, canActivate: [AuthGuard] },
+  { path: 'forum', component: ForumComponent, canActivate: [AuthGuard] },
+  { path: 'forum/:id', component: TopicViewComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
 ];
 
 @NgModule({

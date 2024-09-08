@@ -1,6 +1,7 @@
 import ForumTopic from '../models/ForumTopic.js';
 import Course from '../models/Course.js';
 import { emitForumUpdate } from '../utils/socketEvents.js';
+import ForumPost from '../models/ForumPost.js';
 
 export const createTopic = async (req, res, next) => {
   try {
@@ -74,34 +75,46 @@ export const addReply = async (req, res, next) => {
 };
 
 // Add these functions to match the route file
-export const getAllPosts = async (req, res, next) => {
+export const getAllPosts = async (req, res) => {
   try {
-    const posts = await ForumTopic.find()
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const skip = (page - 1) * pageSize;
+
+    const totalPosts = await ForumPost.countDocuments();
+    const totalPages = Math.ceil(totalPosts / pageSize);
+
+    const posts = await ForumPost.find()
+      .populate('author', 'username')
       .sort({ createdAt: -1 })
-      .populate('author', 'username')
-      .populate('course', 'title');
-    res.json(posts);
+      .skip(skip)
+      .limit(pageSize);
+
+    res.json({
+      posts,
+      currentPage: page,
+      totalPages,
+      totalPosts
+    });
   } catch (error) {
-    next(error);
+    res.status(500).json({ message: 'Error fetching forum posts', error: error.message });
   }
 };
 
-export const getPostById = async (req, res, next) => {
+export const createPost = async (req, res) => {
   try {
-    const post = await ForumTopic.findById(req.params.id)
-      .populate('author', 'username')
-      .populate('course', 'title')
-      .populate('replies.author', 'username');
-    if (!post) {
-      return res.status(404).json({ message: 'Post not found' });
-    }
-    res.json(post);
+    const { content } = req.body;
+    const newPost = new ForumPost({
+      author: req.user.id,
+      content
+    });
+    await newPost.save();
+    const populatedPost = await ForumPost.findById(newPost._id).populate('author', 'username');
+    res.status(201).json(populatedPost);
   } catch (error) {
-    next(error);
+    res.status(400).json({ message: 'Error creating forum post', error: error.message });
   }
 };
-
-export const createPost = createTopic;
 
 export const updatePost = async (req, res, next) => {
   try {

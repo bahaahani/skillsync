@@ -1,10 +1,10 @@
 import express from "express";
-import { getLeaderboard, getUserRank } from '../controllers/leaderboardController.js';
-import { auth } from '../middleware/auth.js';
+import { authenticateToken } from '../middleware/auth.js';
+import { getLeaderboard } from '../controllers/leaderboardController.js';
 
 const router = express.Router();
 
-router.get("/", getLeaderboard);
-router.get("/rank", auth, getUserRank);
+// Get leaderboard
+router.get('/', authenticateToken, getLeaderboard);
 
 export default router;

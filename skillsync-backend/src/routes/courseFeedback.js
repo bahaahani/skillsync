@@ -5,13 +5,13 @@ import {
   updateFeedback,
   deleteFeedback
 } from '../controllers/courseFeedbackController.js';
-import { auth } from '../middleware/auth.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/:courseId', auth, submitFeedback);
+router.post('/:courseId', authenticateToken, submitFeedback);
 router.get('/:courseId', getCourseFeedback);
-router.put('/:courseId/:feedbackId', auth, updateFeedback);
-router.delete('/:courseId/:feedbackId', auth, deleteFeedback);
+router.put('/:courseId/:feedbackId', authenticateToken, updateFeedback);
+router.delete('/:courseId/:feedbackId', authenticateToken, deleteFeedback);
 
 export default router;
