@@ -37,14 +37,12 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.authService.login({ email, password }).subscribe({
+      this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
-          this.router.navigate(['/dashboard']);
+          // Handle successful login
         },
-        error: (err: any) => {
-          console.error('Login error', err);
-          this.error = 'Invalid email or password';
+        error: (error) => {
+          // Handle login error
         }
       });
     }

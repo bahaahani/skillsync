@@ -39,7 +39,7 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       const { username, email, password } = this.registerForm.value;
-      this.authService.register(username, email, password ).subscribe({
+      this.authService.register({ username, email, password }).subscribe({
         next: (response) => {
           console.log('Registration successful', response);
           this.router.navigate(['/login']);

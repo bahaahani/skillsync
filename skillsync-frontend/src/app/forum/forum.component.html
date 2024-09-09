@@ -1,9 +1,40 @@
 <div class="forum-container">
-  <h2>Forum</h2>
-  <div *ngFor="let post of posts" class="post-item">
-    <h3>{{ post.title }}</h3>
-    <p>{{ post.content }}</p>
-    <p>By: {{ post.author.username }} on {{ post.createdAt | date }}</p>
-    <a [routerLink]="['/forum', post._id]">View Discussion</a>
+  <h1>Forum</h1>
+
+  <!-- Create New Topic Form -->
+  <div class="new-topic-form">
+    <h2>Create New Topic</h2>
+    <form (ngSubmit)="createTopic()">
+      <div>
+        <label for="topicTitle">Title:</label>
+        <input type="text" id="topicTitle" [(ngModel)]="newTopic.title" name="title" required>
+      </div>
+      <div>
+        <label for="topicContent">Content:</label>
+        <textarea id="topicContent" [(ngModel)]="newTopic.content" name="content" required></textarea>
+      </div>
+      <button type="submit">Create Topic</button>
+    </form>
+  </div>
+
+  <!-- List of Topics -->
+  <div class="topics-list">
+    <h2>Topics</h2>
+    <div *ngFor="let post of posts" class="topic-item">
+      <h3><a [routerLink]="['/forum', post._id]">{{ post.title }}</a></h3>
+      <p>{{ post.content | slice:0:100 }}...</p>
+      <div class="topic-meta">
+        <span>By: {{ post.author.username }}</span>
+        <span>Created: {{ post.createdAt | date }}</span>
+        <span>Replies: {{ post.replies?.length || 0 }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
   </div>
 </div>

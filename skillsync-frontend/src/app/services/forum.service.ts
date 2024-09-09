@@ -1,27 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ForumService {
-  constructor(private http: HttpClient, private apiService: ApiService) { }
+  private apiUrl = 'http://localhost:3000/api/forum';
 
-  getAllPosts(): Observable<any> {
-    return this.http.get(`${this.apiService.apiUrl}/forum`);
-  }
+  constructor(private http: HttpClient) { }
 
-  createPost(postData: any): Observable<any> {
-    return this.http.post(`${this.apiService.apiUrl}/forum`, postData);
+  getAllPosts(page: number = 1, pageSize: number = 10): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/posts?page=${page}&pageSize=${pageSize}`);
   }
 
   getPost(id: string): Observable<any> {
-    return this.http.get(`${this.apiService.apiUrl}/forum/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/posts/${id}`);
   }
 
-  addReply(postId: string, replyData: any): Observable<any> {
-    return this.http.post(`${this.apiService.apiUrl}/forum/${postId}/reply`, replyData);
+  createPost(post: { content: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/posts`, post);
   }
+
+  createTopic(topic: { title: string, content: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/topics`, topic);
+  }
+
+  addReply(postId: string, reply: { content: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/posts/${postId}/replies`, reply);
+  }
+
+  // Add other methods as needed
 }

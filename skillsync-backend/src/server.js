@@ -103,6 +103,7 @@ io.on("connection", (socket) => {
 // Schedule daily analytics generation
 schedule("0 0 * * *", generateDailyAnalytics);
 
+
 server.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });

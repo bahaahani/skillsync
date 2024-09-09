@@ -14,7 +14,7 @@ export class CourseCatalogComponent implements OnInit {
   courses: any[] = [];
   enrollmentMessage: string = '';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   ngOnInit() {
     this.http.get<any[]>('http://localhost:3000/api/courses').subscribe({

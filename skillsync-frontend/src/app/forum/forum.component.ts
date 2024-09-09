@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ForumService } from '../services/forum.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forum',
@@ -21,18 +21,19 @@ export class ForumComponent implements OnInit {
   totalPages: number = 1;
   pageSize: number = 10;
 
-  constructor(private forumService: ForumService) { }
+  constructor(private forumService: ForumService, private router: Router) { }
 
   ngOnInit() {
     this.loadPosts();
   }
 
   loadPosts() {
-    this.forumService.getAllPosts().subscribe({
-      next: (data) => {
-        this.posts = data;
+    this.forumService.getAllPosts(this.currentPage, this.pageSize).subscribe({
+      next: (response: any) => {
+        this.posts = response.posts;
+        this.totalPages = response.totalPages;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error fetching posts:', error);
       }
     });
@@ -40,12 +41,12 @@ export class ForumComponent implements OnInit {
 
   submitPost() {
     if (this.newPost.trim()) {
-      this.http.post('http://localhost:3000/api/forum/posts', { content: this.newPost }).subscribe({
+      this.forumService.createPost({ content: this.newPost }).subscribe({
         next: () => {
           this.loadPosts();
           this.newPost = '';
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error submitting post:', error);
         }
       });
@@ -54,12 +55,13 @@ export class ForumComponent implements OnInit {
 
   createTopic() {
     if (this.newTopic.title.trim() && this.newTopic.content.trim()) {
-      this.http.post('http://localhost:3000/api/forum/topics', this.newTopic).subscribe({
-        next: () => {
+      this.forumService.createTopic(this.newTopic).subscribe({
+        next: (createdTopic) => {
           this.loadPosts();
           this.newTopic = { title: '', content: '' };
+          this.router.navigate(['/forum', createdTopic._id]);
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error creating topic:', error);
         }
       });
