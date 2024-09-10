@@ -15,15 +15,16 @@
     <mat-form-field>
       <input matInput type="number" [(ngModel)]="durationFilter" (ngModelChange)="onDurationFilterChange()" placeholder="Max duration (hours)">
     </mat-form-field>
-    <mat-form-field>
-      <mat-chip-grid #chipGrid>
+    <mat-form-field *ngIf="!isLoading">
+      <mat-label>Tags</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Tag selection">
         <mat-chip-row *ngFor="let tag of tagFilter" (removed)="removeTagFilter(tag)">
           {{tag}}
-          <button matChipRemove>
+          <button matChipRemove [attr.aria-label]="'remove ' + tag">
             <mat-icon>cancel</mat-icon>
           </button>
         </mat-chip-row>
-        <input placeholder="Filter by tags..."
+        <input placeholder="New tag..."
                [matChipInputFor]="chipGrid"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                (matChipInputTokenEnd)="addTagFilter($event)">
@@ -32,42 +33,51 @@
   </div>
 
   <!-- Create new course form -->
-  <form (ngSubmit)="createCourse()">
+  <form (ngSubmit)="createCourse()" #courseForm="ngForm">
+    <h2>Create New Course</h2>
+
     <mat-form-field>
-      <input matInput [(ngModel)]="newCourse.title" name="title" placeholder="Course Title" required>
+      <input matInput placeholder="Title" [(ngModel)]="newCourse.title" name="title" required>
     </mat-form-field>
+
     <mat-form-field>
-      <textarea matInput [(ngModel)]="newCourse.description" name="description" placeholder="Course Description" required></textarea>
+      <input matInput placeholder="Category" [(ngModel)]="newCourse.category" name="category" required>
     </mat-form-field>
+
     <mat-form-field>
-      <input matInput [(ngModel)]="newCourse.instructor" name="instructor" placeholder="Instructor" required>
+      <input matInput placeholder="Instructor" [(ngModel)]="newCourse.instructor" name="instructor" required>
     </mat-form-field>
+
     <mat-form-field>
-      <input matInput type="number" [(ngModel)]="newCourse.duration" name="duration" placeholder="Duration (hours)" required>
+      <textarea matInput placeholder="Description" [(ngModel)]="newCourse.description" name="description" required></textarea>
     </mat-form-field>
+
     <mat-form-field>
-      <mat-select [(ngModel)]="newCourse.level" name="level" placeholder="Level" required>
+      <input matInput type="number" placeholder="Duration (hours)" [(ngModel)]="newCourse.duration" name="duration" required>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Level" [(ngModel)]="newCourse.level" name="level" required>
         <mat-option value="Beginner">Beginner</mat-option>
         <mat-option value="Intermediate">Intermediate</mat-option>
         <mat-option value="Advanced">Advanced</mat-option>
       </mat-select>
     </mat-form-field>
+
     <mat-form-field>
-      <mat-label>Tags</mat-label>
-      <mat-chip-grid #chipGrid>
-        <mat-chip-row *ngFor="let tag of newCourse.tags" (removed)="removeTag(tag)">
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let tag of newCourse.tags" (removed)="removeTag(tag)">
           {{tag}}
-          <button matChipRemove>
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip-row>
-        <input placeholder="New tag..."
-               [matChipInputFor]="chipGrid"
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input placeholder="Tags"
+               [matChipInputFor]="chipList"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                (matChipInputTokenEnd)="addTag($event)">
-      </mat-chip-grid>
+      </mat-chip-list>
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit">Create Course</button>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="!courseForm.form.valid">Create Course</button>
   </form>
 
   <!-- Loading indicator -->

@@ -14,14 +14,16 @@ interface UserProfile {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient) { }
 
-  login(credentials: { email: string; password: string }) {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/auth/login`, credentials).pipe(
+  login(credentials: { username: string, password: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
-        localStorage.setItem('token', response.token);
+        if (response && response.token) {
+          localStorage.setItem('token', response.token);
+        }
       })
     );
   }
@@ -48,5 +50,9 @@ export class AuthService {
 
   updateUserProfile(user: Partial<UserProfile>): Observable<UserProfile> {
     return this.http.put<UserProfile>(`${this.apiUrl}/user/profile`, user);
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
   }
 }

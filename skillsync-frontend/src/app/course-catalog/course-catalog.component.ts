@@ -44,7 +44,7 @@ export class CourseCatalogComponent implements OnInit {
     this.isLoading = true;
     this.courseService.getCourses(this.pageIndex + 1, this.pageSize).subscribe({
       next: (data) => {
-        this.courses = data.courses;
+        this.courses = data.courses || []; // Ensure courses is always an array
         this.totalCourses = data.totalCount;
         this.applyFilters();
         this.isLoading = false;
@@ -53,6 +53,8 @@ export class CourseCatalogComponent implements OnInit {
         console.error('Error fetching courses:', error);
         this.showErrorMessage('Error fetching courses. Please try again later.');
         this.isLoading = false;
+        this.courses = []; // Initialize as empty array in case of error
+        this.applyFilters(); // Still apply filters to show empty state
       }
     });
   }
@@ -64,6 +66,11 @@ export class CourseCatalogComponent implements OnInit {
   }
 
   applyFilters() {
+    if (!this.courses) {
+      this.filteredCourses = [];
+      return;
+    }
+  
     this.filteredCourses = this.courses.filter(course =>
       (course.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
        course.description.toLowerCase().includes(this.searchTerm.toLowerCase())) &&
@@ -103,6 +110,12 @@ export class CourseCatalogComponent implements OnInit {
   }
 
   createCourse() {
+    // Validate required fields
+    if (!this.newCourse.title || !this.newCourse.category || !this.newCourse.instructor) {
+      this.showErrorMessage('Title, category, and instructor are required fields');
+      return;
+    }
+
     const courseToCreate: Omit<Course, '_id'> = { ...this.newCourse };
     delete (courseToCreate as Partial<Course>)._id; // Type assertion to allow delete
     this.courseService.addCourse(courseToCreate).subscribe({

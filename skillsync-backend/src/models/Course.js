@@ -1,68 +1,114 @@
 import mongoose from 'mongoose';
 
+const lessonSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  content: {
+    type: String,
+    required: true
+  },
+  duration: {
+    type: Number,
+    required: true
+  },
+  order: {
+    type: Number,
+    required: true
+  }
+});
+
 const courseSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
   description: {
     type: String,
-    required: true,
+    required: true
   },
   instructor: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: true
   },
   category: {
     type: String,
     required: true,
+    trim: true
   },
-  content: [{
-    title: String,
-    type: {
-      type: String,
-      enum: ['video', 'text', 'quiz', 'assignment'],
-    },
-    data: mongoose.Schema.Types.Mixed,
-    completionRate: {
-      type: Number,
-      default: 0,
-    },
-  }],
-  enrolledUsers: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }],
-  completedUsers: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }],
-  rating: {
+  level: {
+    type: String,
+    enum: ['Beginner', 'Intermediate', 'Advanced'],
+    required: true
+  },
+  duration: {
     type: Number,
-    default: 0,
+    required: true
   },
-  reviews: [{
+  price: {
+    type: Number,
+    required: true
+  },
+  tags: [{
+    type: String,
+    trim: true
+  }],
+  lessons: [lessonSchema],
+  enrolledStudents: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  ratings: [{
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'User'
     },
-    rating: Number,
-    comment: String,
-    createdAt: {
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5
+    },
+    review: String,
+    date: {
       type: Date,
-      default: Date.now,
-    },
+      default: Date.now
+    }
   }],
+  averageRating: {
+    type: Number,
+    default: 0
+  },
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   updatedAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
+  isPublished: {
+    type: Boolean,
+    default: false
+  }
+});
+
+// Add indexes
+courseSchema.index({ title: 'text', description: 'text', tags: 'text' });
+courseSchema.index({ category: 1 });
+courseSchema.index({ level: 1 });
+courseSchema.index({ instructor: 1 });
+
+// Calculate average rating before saving
+courseSchema.pre('save', function(next) {
+  if (this.ratings.length > 0) {
+    this.averageRating = this.ratings.reduce((acc, curr) => acc + curr.rating, 0) / this.ratings.length;
+  }
+  this.updatedAt = Date.now();
+  next();
 });
 
 const Course = mongoose.model('Course', courseSchema);

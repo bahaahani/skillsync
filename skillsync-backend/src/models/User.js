@@ -107,7 +107,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['student', 'instructor', 'admin'],
     default: 'student'
-  }
+  },
+  enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }]
 });
 
 // Add indexes

@@ -1,32 +1,27 @@
 <div class="dashboard">
-  <h2>Your Dashboard</h2>
+  <h2>Dashboard</h2>
+  
+  <div *ngIf="isLoading">Loading...</div>
+  
+  <div *ngIf="error" class="error-message">{{ error }}</div>
 
-  <h3>Enrolled Courses</h3>
-  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-  <div *ngIf="!isLoading" class="course-list">
-    <mat-card *ngFor="let course of enrolledCourses" class="course-item">
-      <mat-card-title>{{ course.title }}</mat-card-title>
-      <mat-card-content>
-        <p>{{ course.description }}</p>
-        <p *ngIf="course.progress !== undefined">Progress: {{ course.progress }}%</p>
-        <mat-progress-bar mode="determinate" [value]="course.progress || 0"></mat-progress-bar>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button (click)="navigateToCourse(course._id)">Continue Course</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+  <div *ngIf="!isLoading && !error">
+    <h3>Enrolled Courses</h3>
+    <div *ngIf="enrolledCourses.length === 0">You are not enrolled in any courses yet.</div>
+    <ul>
+      <li *ngFor="let course of enrolledCourses">
+        {{ course.title }}
+        <!-- Add more course details as needed -->
+      </li>
+    </ul>
 
-  <h3>Recommended Courses</h3>
-  <div class="course-list">
-    <mat-card *ngFor="let course of recommendedCourses" class="course-item">
-      <mat-card-title>{{ course.title }}</mat-card-title>
-      <mat-card-content>
-        <p>{{ course.description }}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button (click)="navigateToCourse(course._id)">View Course</button>
-      </mat-card-actions>
-    </mat-card>
+    <h3>Recommended Courses</h3>
+    <div *ngIf="recommendedCourses.length === 0">No recommended courses at the moment.</div>
+    <ul>
+      <li *ngFor="let course of recommendedCourses">
+        {{ course.title }}
+        <!-- Add more course details as needed -->
+      </li>
+    </ul>
   </div>
 </div>

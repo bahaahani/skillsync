@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = `${environment.apiUrl}/users`;
 
   constructor(private http: HttpClient) { }
 
@@ -59,11 +59,11 @@ export class UserService {
     return this.http.get(`${this.apiUrl}/users/skill-progress`);
   }
 
-  updateUserProfile(userProfile: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/users/profile`, userProfile);
+  getUserProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/profile`);
   }
 
-  getUserProfile(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/users/profile`);
+  updateUserProfile(profileData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/profile`, profileData);
   }
 }

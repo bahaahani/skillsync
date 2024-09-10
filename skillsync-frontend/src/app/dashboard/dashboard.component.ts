@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CourseService } from '../services/course.service';
 import { Course } from '../models/course.model';
-import { Router } from '@angular/router';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,36 +15,46 @@ export class DashboardComponent implements OnInit {
   enrolledCourses: Course[] = [];
   recommendedCourses: Course[] = [];
   isLoading: boolean = false;
+  error: string | null = null;
 
-  constructor(private courseService: CourseService, private router: Router) { }
+  constructor(
+    private courseService: CourseService,
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
-    this.loadEnrolledCourses();
-    this.loadRecommendedCourses();
+    if (this.authService.isLoggedIn()) {
+      this.loadEnrolledCourses();
+      this.loadRecommendedCourses();
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   loadEnrolledCourses() {
     this.isLoading = true;
-    this.courseService.getEnrolledCourses().subscribe({
-      next: (courses: Course[]) => {
-        this.enrolledCourses = courses;
-        this.isLoading = false;
-      },
-      error: (error) => {
+    this.courseService.getEnrolledCourses().pipe(
+      catchError(error => {
         console.error('Error fetching enrolled courses:', error);
-        this.isLoading = false;
-      }
+        this.error = 'Failed to load enrolled courses. Please try again later.';
+        return of([]);
+      })
+    ).subscribe(courses => {
+      this.enrolledCourses = courses;
+      this.isLoading = false;
     });
   }
 
   loadRecommendedCourses() {
-    this.courseService.getRecommendedCourses().subscribe({
-      next: (courses) => {
-        this.recommendedCourses = courses;
-      },
-      error: (error) => {
+    this.courseService.getRecommendedCourses().pipe(
+      catchError(error => {
         console.error('Error fetching recommended courses:', error);
-      }
+        this.error = 'Failed to load recommended courses. Please try again later.';
+        return of([]);
+      })
+    ).subscribe(courses => {
+      this.recommendedCourses = courses;
     });
   }
 

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import apiLimiter from "./middleware/rateLimiter.js";
-import authRoutes from "./routes/authRoutes.js";
+import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import courseRoutes from "./routes/courses.js";
 import assessmentRoutes from "./routes/assessments.js";

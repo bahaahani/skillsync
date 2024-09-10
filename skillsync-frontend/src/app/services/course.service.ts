@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Course } from '../models/course.model';
+import { Router } from '@angular/router';
 
 export interface Lesson {
   _id: string;
@@ -28,9 +29,18 @@ export interface ForumPost {
   providedIn: 'root'
 })
 export class CourseService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 401) {
+      // Token might be expired or invalid
+      localStorage.removeItem('token');
+      this.router.navigate(['/login']);
+    }
+    return throwError(() => new Error('An error occurred. Please try again later.'));
+  }
 
   getCourses(page: number = 1, limit: number = 10): Observable<PaginatedCourses> {
     const params = new HttpParams()
@@ -62,11 +72,15 @@ export class CourseService {
 
   // Existing methods
   getEnrolledCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>(`${this.apiUrl}/courses/enrolled`);
+    return this.http.get<Course[]>(`${this.apiUrl}/courses/enrolled`).pipe(
+      catchError(this.handleError.bind(this))
+    );
   }
 
   getRecommendedCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>(`${this.apiUrl}/courses/recommended`);
+    return this.http.get<Course[]>(`${this.apiUrl}/courses/recommended`).pipe(
+      catchError(this.handleError.bind(this))
+    );
   }
 
   getCourseStats(): Observable<any> {
