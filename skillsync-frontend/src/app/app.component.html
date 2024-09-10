@@ -1,1 +1,12 @@
+<mat-toolbar color="primary">
+  <span>SkillSync</span>
+  <span class="spacer"></span>
+  <a mat-button routerLink="/dashboard">Dashboard</a>
+  <a mat-button routerLink="/course-catalog">Courses</a>
+  <a mat-button routerLink="/forum">Forum</a>
+  <a mat-button routerLink="/user-settings">Settings</a>
+  <button mat-button (click)="logout()">Logout</button>
+  <a mat-button routerLink="/profile">Profile</a>
+</mat-toolbar>
+
 <router-outlet></router-outlet>

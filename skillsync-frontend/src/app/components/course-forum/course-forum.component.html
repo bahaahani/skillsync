@@ -1,0 +1,16 @@
+<div class="course-forum">
+  <h3>Course Forum</h3>
+  <div class="new-post">
+    <mat-form-field appearance="fill">
+      <textarea matInput [(ngModel)]="newPostContent" placeholder="Write a new post..."></textarea>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="createPost()">Post</button>
+  </div>
+  <mat-list>
+    <mat-list-item *ngFor="let post of posts">
+      <h4 matLine>{{ post.username }}</h4>
+      <p matLine>{{ post.content }}</p>
+      <p matLine class="post-date">{{ post.createdAt | date:'medium' }}</p>
+    </mat-list-item>
+  </mat-list>
+</div>

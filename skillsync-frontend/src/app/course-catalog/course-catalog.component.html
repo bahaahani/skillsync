@@ -1,15 +1,132 @@
 <div class="course-catalog">
   <h2>Course Catalog</h2>
-  <p *ngIf="enrollmentMessage" [ngClass]="{'success': enrollmentMessage.includes('Successfully'), 'error': enrollmentMessage.includes('Error')}">
-    {{ enrollmentMessage }}
-  </p>
-  <div class="course-list">
-    <div *ngFor="let course of courses" class="course-item">
-      <h3>{{ course.title }}</h3>
-      <p>{{ course.description }}</p>
-      <button (click)="enrollCourse(course._id)" [disabled]="course.isEnrolled">
-        {{ course.isEnrolled ? 'Enrolled' : 'Enroll' }}
-      </button>
-    </div>
+  
+  <!-- Search and filter inputs -->
+  <div class="search-filter">
+    <mat-form-field>
+      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" placeholder="Search courses...">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select [(ngModel)]="levelFilter" (ngModelChange)="onLevelFilterChange()" placeholder="Filter by level">
+        <mat-option *ngFor="let level of levels" [value]="level">{{ level }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="number" [(ngModel)]="durationFilter" (ngModelChange)="onDurationFilterChange()" placeholder="Max duration (hours)">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-chip-grid #chipGrid>
+        <mat-chip-row *ngFor="let tag of tagFilter" (removed)="removeTagFilter(tag)">
+          {{tag}}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        <input placeholder="Filter by tags..."
+               [matChipInputFor]="chipGrid"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="addTagFilter($event)">
+      </mat-chip-grid>
+    </mat-form-field>
   </div>
+
+  <!-- Create new course form -->
+  <form (ngSubmit)="createCourse()">
+    <mat-form-field>
+      <input matInput [(ngModel)]="newCourse.title" name="title" placeholder="Course Title" required>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput [(ngModel)]="newCourse.description" name="description" placeholder="Course Description" required></textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [(ngModel)]="newCourse.instructor" name="instructor" placeholder="Instructor" required>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="number" [(ngModel)]="newCourse.duration" name="duration" placeholder="Duration (hours)" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select [(ngModel)]="newCourse.level" name="level" placeholder="Level" required>
+        <mat-option value="Beginner">Beginner</mat-option>
+        <mat-option value="Intermediate">Intermediate</mat-option>
+        <mat-option value="Advanced">Advanced</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Tags</mat-label>
+      <mat-chip-grid #chipGrid>
+        <mat-chip-row *ngFor="let tag of newCourse.tags" (removed)="removeTag(tag)">
+          {{tag}}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        <input placeholder="New tag..."
+               [matChipInputFor]="chipGrid"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               (matChipInputTokenEnd)="addTag($event)">
+      </mat-chip-grid>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Create Course</button>
+  </form>
+
+  <!-- Loading indicator -->
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+  <!-- Course list -->
+  <div class="course-list">
+    <mat-card *ngFor="let course of filteredCourses" class="course-item">
+      <ng-container *ngIf="editingCourse?._id !== course._id; else editForm">
+        <mat-card-title>
+          <a [routerLink]="['/course', course._id]">{{ course.title }}</a>
+        </mat-card-title>
+        <mat-card-content>
+          <p>{{ course.description }}</p>
+          <p *ngIf="course.instructor"><strong>Instructor:</strong> {{ course.instructor }}</p>
+          <p *ngIf="course.duration"><strong>Duration:</strong> {{ course.duration }} hours</p>
+          <p *ngIf="course.level"><strong>Level:</strong> {{ course.level }}</p>
+          <p *ngIf="course.tags && course.tags.length > 0"><strong>Tags:</strong> {{ course.tags.join(', ') }}</p>
+          <p *ngIf="course.rating !== undefined"><strong>Rating:</strong> {{ course.rating | number:'1.1-1' }}/5</p>
+          <app-course-rating [rating]="course.rating || 0" [readonly]="true"></app-course-rating>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="enrollCourse(course._id)" [disabled]="course.isEnrolled">
+            {{ course.isEnrolled ? 'Enrolled' : 'Enroll' }}
+          </button>
+          <button mat-button (click)="startEdit(course)">Edit</button>
+          <button mat-button (click)="deleteCourse(course._id)">Delete</button>
+        </mat-card-actions>
+      </ng-container>
+      <ng-template #editForm>
+        <mat-form-field>
+          <input matInput [(ngModel)]="editingCourse!.title" name="editTitle">
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput [(ngModel)]="editingCourse!.description" name="editDescription"></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [(ngModel)]="editingCourse!.instructor" name="editInstructor">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" [(ngModel)]="editingCourse!.duration" name="editDuration">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select [(ngModel)]="editingCourse!.level" name="editLevel">
+            <mat-option value="Beginner">Beginner</mat-option>
+            <mat-option value="Intermediate">Intermediate</mat-option>
+            <mat-option value="Advanced">Advanced</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-button (click)="updateCourse()">Save</button>
+        <button mat-button (click)="editingCourse = null">Cancel</button>
+      </ng-template>
+    </mat-card>
+  </div>
+
+  <!-- Pagination -->
+  <mat-paginator [length]="totalCourses"
+                 [pageSize]="pageSize"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 (page)="onPageChange($event)"
+                 aria-label="Select page">
+  </mat-paginator>
 </div>

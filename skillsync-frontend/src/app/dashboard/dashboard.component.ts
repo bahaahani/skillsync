@@ -1,26 +1,51 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { CourseService } from '../services/course.service';
+import { Course } from '../models/course.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  user: any;
+  enrolledCourses: Course[] = [];
+  recommendedCourses: Course[] = [];
+  isLoading: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private courseService: CourseService, private router: Router) { }
 
   ngOnInit() {
-    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.loadEnrolledCourses();
+    this.loadRecommendedCourses();
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  loadEnrolledCourses() {
+    this.isLoading = true;
+    this.courseService.getEnrolledCourses().subscribe({
+      next: (courses: Course[]) => {
+        this.enrolledCourses = courses;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching enrolled courses:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  loadRecommendedCourses() {
+    this.courseService.getRecommendedCourses().subscribe({
+      next: (courses) => {
+        this.recommendedCourses = courses;
+      },
+      error: (error) => {
+        console.error('Error fetching recommended courses:', error);
+      }
+    });
+  }
+
+  navigateToCourse(courseId: string) {
+    this.router.navigate(['/course', courseId]);
   }
 }

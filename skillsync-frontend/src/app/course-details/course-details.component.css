@@ -1,0 +1,22 @@
+.course-details {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+button {
+  margin-top: 20px;
+}
+
+mat-spinner {
+  margin: 20px auto;
+}

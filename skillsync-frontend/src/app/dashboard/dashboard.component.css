@@ -39,3 +39,11 @@
 .logout-btn:hover {
   background-color: #c82333;
 }
+
+h2, h3 {
+  margin-bottom: 20px;
+}
+
+mat-list {
+  margin-bottom: 40px;
+}

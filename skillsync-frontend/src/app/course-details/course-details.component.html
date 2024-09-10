@@ -1,0 +1,12 @@
+<div *ngIf="course" class="course-details">
+  <h2>{{ course.title }}</h2>
+  <p>{{ course.description }}</p>
+  <app-course-rating [rating]="course.rating ?? 0" [readonly]="true"></app-course-rating>
+  <button mat-raised-button color="primary" (click)="enrollCourse()" [disabled]="course.isEnrolled">
+    {{ course.isEnrolled ? 'Enrolled' : 'Enroll' }}
+  </button>
+  <app-course-progress *ngIf="course.isEnrolled" [course]="course" (lessonCompleted)="updateLessonProgress($event)"></app-course-progress>
+  <app-course-forum [courseId]="course._id"></app-course-forum>
+</div>
+
+<mat-spinner *ngIf="isLoading"></mat-spinner>

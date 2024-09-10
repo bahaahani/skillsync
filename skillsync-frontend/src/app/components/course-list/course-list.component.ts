@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CourseService } from '../../services/course.service';
+import { Course } from '../../models/course.model';
 
-interface Course {
-  id: string;
-  title: string;
-  description: string;
+interface PaginatedCourses {
+  courses: Course[];
+  totalCount: number;
 }
 
 @Component({
@@ -23,7 +23,7 @@ export class CourseListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadCourses();
-    this.setupRealTimeUpdates();
+    // Remove the setupRealTimeUpdates() call if it's not implemented
   }
 
   ngOnDestroy() {
@@ -34,28 +34,14 @@ export class CourseListComponent implements OnInit, OnDestroy {
 
   loadCourses() {
     this.courseService.getCourses().subscribe(
-      (data: Course[]) => {
-        this.courses = data;
+      (data: PaginatedCourses) => {
+        this.courses = data.courses;
       },
       (error) => {
         console.error('Error loading courses:', error);
       }
     );
   }
-  setupRealTimeUpdates() {
-    this.courseUpdateSubscription = this.courseService.onCourseUpdate().subscribe(
-      (updatedCourse: Course) => {
-        const index = this.courses.findIndex(course => course.id === updatedCourse.id);
-        if (index !== -1) {
-          this.courses[index] = updatedCourse;
-        } else {
-          this.courses.push(updatedCourse);
-        }
-      }
-    );
-  }
 
-  joinCourse(courseId: string) {
-    this.courseService.joinCourse(courseId);
-  }
+  // Remove or comment out the setupRealTimeUpdates and joinCourse methods if they're not used
 }

@@ -140,3 +140,6 @@ body.dark-mode tr:nth-child(even) {
 }
 
 /* Add more dark mode styles as needed */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

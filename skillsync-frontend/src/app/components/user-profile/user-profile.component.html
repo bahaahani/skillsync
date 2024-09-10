@@ -1,0 +1,18 @@
+<div class="user-profile-container" *ngIf="user">
+  <h2>User Profile</h2>
+  <div *ngIf="!isEditing">
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <button mat-raised-button color="primary" (click)="toggleEdit()">Edit Profile</button>
+  </div>
+  <div *ngIf="isEditing">
+    <mat-form-field>
+      <input matInput [(ngModel)]="user.username" placeholder="Username">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [(ngModel)]="user.email" placeholder="Email">
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="saveProfile()">Save</button>
+    <button mat-raised-button (click)="toggleEdit()">Cancel</button>
+  </div>
+</div>
