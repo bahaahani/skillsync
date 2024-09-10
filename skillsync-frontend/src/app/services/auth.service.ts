@@ -1,35 +1,38 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient) { }
+  private currentUserSubject: BehaviorSubject<any>;
+  public currentUser: Observable<any>;
 
-  login(credentials: { email: string; password: string }) {
-    return this.http.post<{ token: string }>('/api/auth/login', credentials).pipe(
-      tap(response => {
-        localStorage.setItem('token', response.token);
-      })
-    );
+  constructor(private http: HttpClient) {
+    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser') || '{}'));
+    this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  register(user: { username: string; email: string; password: string }) {
-    return this.http.post('/api/auth/register', user);
+  public get currentUserValue(): any {
+    return this.currentUserSubject.value;
+  }
+
+  login(username: string, password: string) {
+    return this.http.post<any>(`${environment.apiUrl}/auth/login`, { username, password })
+      .pipe(map(user => {
+        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.currentUserSubject.next(user);
+        return user;
+      }));
   }
 
   logout() {
-    localStorage.removeItem('token');
-  }
-
-  enrollInCourse(courseId: string) {
-    return this.http.post(`/api/enroll/${courseId}`, {});
-  }
-
-  updateUserProfile(user: any) {
-    return this.http.put('/api/user', user);
+    // remove user from local storage to log user out
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
   }
 }

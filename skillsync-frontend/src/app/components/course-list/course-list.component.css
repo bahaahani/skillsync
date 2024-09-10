@@ -1,0 +1,12 @@
+/* Add your styles here */
+.course-card {
+  margin-bottom: 20px;
+}
+
+.course-title {
+  font-weight: bold;
+}
+
+.course-description {
+  margin-top: 10px;
+}

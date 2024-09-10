@@ -1,40 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { SocketService } from './socket.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CourseService {
-  private apiUrl = 'http://localhost:3000/api'; // Adjust this to your backend URL
-
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private socketService: SocketService
+  ) { }
 
   getCourses(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/courses`);
+    return this.http.get(`${environment.apiUrl}/courses`);
   }
 
-  getEnrolledCourses(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/courses/enrolled`);
+  getCourseById(id: string): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/courses/${id}`);
   }
 
-  getRecommendedCourses(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/courses/recommended`);
+  createCourse(courseData: any): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/courses`, courseData);
   }
 
-  addCourse(course: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/courses`, course);
+  updateCourse(id: string, courseData: any): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/courses/${id}`, courseData);
   }
 
-  enrollInCourse(courseId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/courses/${courseId}/enroll`, {});
+  deleteCourse(id: string): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/courses/${id}`);
   }
 
-  getCourseStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/courses/stats`);
+  joinCourse(courseId: string) {
+    this.socketService.joinCourse(courseId);
   }
 
-  getCourseCompletion(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/courses/completion`);
-  }
+  // Add more methods for other course-related API endpoints and Socket.IO events
 }
