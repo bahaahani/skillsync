@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-confirmation-dialog',
@@ -11,6 +12,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
       <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Confirm</button>
     </mat-dialog-actions>
   `,
+  standalone: true,
+  imports: [MatDialogModule, MatButtonModule],
 })
 export class ConfirmationDialogComponent {
   constructor(

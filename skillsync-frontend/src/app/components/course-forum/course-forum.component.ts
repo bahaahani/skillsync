@@ -1,16 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { CourseService } from '../../services/course.service';
-import { Course } from '../../models/course.model';
-import { AuthService } from '../../services/auth.service';
-
-interface ForumPost {
-  _id: string;
-  courseId: string;
-  userId: string;
-  username: string;
-  content: string;
-  createdAt: Date;
-}
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-course-forum',
@@ -19,40 +8,46 @@ interface ForumPost {
 })
 export class CourseForumComponent implements OnInit {
   @Input() courseId!: string;
-  posts: ForumPost[] = [];
-  newPostContent: string = '';
+  posts: any[] = [];
+  newPost: string = '';
+  isLoading: boolean = false;
+  error: string | null = null;
 
-  constructor(
-    private courseService: CourseService,
-    private authService: AuthService
-  ) { }
+  constructor(private apiService: ApiService) {}
 
   ngOnInit() {
     this.loadPosts();
   }
 
   loadPosts() {
-    this.courseService.getForumPosts(this.courseId).subscribe({
-      next: (posts) => {
-        this.posts = posts;
+    this.isLoading = true;
+    this.error = null;
+    this.apiService.getForumPosts(this.courseId).subscribe(
+      data => {
+        this.posts = data;
+        this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error loading forum posts:', error);
+      error => {
+        console.error('Error fetching forum posts:', error);
+        this.error = 'Failed to load forum posts. Please try again later.';
+        this.isLoading = false;
       }
-    });
+    );
   }
 
   createPost() {
-    if (this.newPostContent.trim()) {
-      this.courseService.createForumPost(this.courseId, this.newPostContent).subscribe({
-        next: (newPost) => {
-          this.posts.unshift(newPost);
-          this.newPostContent = '';
+    if (this.newPost.trim()) {
+      this.apiService.createForumPost(this.courseId, { content: this.newPost }).subscribe(
+        response => {
+          console.log('Post created:', response);
+          this.newPost = '';
+          this.loadPosts();
         },
-        error: (error) => {
-          console.error('Error creating forum post:', error);
+        error => {
+          console.error('Error creating post:', error);
+          this.error = 'Failed to create post. Please try again later.';
         }
-      });
+      );
     }
   }
 }

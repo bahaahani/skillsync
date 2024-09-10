@@ -1,111 +1,89 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { UserService } from '../../services/user.service';
-import { CourseService } from '../../services/course.service';
-import { AssessmentService } from '../../services/assessment.service';
-import { Chart, registerables } from 'chart.js';
+import { ApiService } from '../../services/api.service';
+import { Course } from '../../models/course.model';
+import { Chart } from 'chart.js/auto';
 
-Chart.register(...registerables);
+interface User {
+  name: string;
+  skillsAcquired: string[];
+}
+
+interface CourseStats {
+  completed: number;
+}
+
+interface AssessmentStats {
+  averageScore: number;
+}
+
+interface Activity {
+  title: string;
+  description: string;
+  date: Date;
+}
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  enrolledCourses: Course[] = [];
+  isLoading: boolean = false;
+  error: string | null = null;
+  user: User | null = null;
+  courseStats: CourseStats | null = null;
+  assessmentStats: AssessmentStats | null = null;
+  recentActivities: Activity[] = [];
+
   @ViewChild('skillProgressChart') skillProgressChart!: ElementRef;
   @ViewChild('courseCompletionChart') courseCompletionChart!: ElementRef;
 
-  user: any;
-  courseStats: any;
-  assessmentStats: any;
-  recentActivities: any[] = [];
-  skillProgress: any;
-  courseCompletion: any;
-
-  constructor(
-    private userService: UserService,
-    private courseService: CourseService,
-    private assessmentService: AssessmentService
-  ) {}
+  constructor(private apiService: ApiService) {}
 
   ngOnInit() {
-    this.loadUserData();
-    this.loadCourseStats();
-    this.loadAssessmentStats();
-    this.loadRecentActivities();
-    this.loadSkillProgress();
-    this.loadCourseCompletion();
+    this.loadDashboardData();
   }
 
-  loadUserData() {
-    this.userService.getCurrentUser().subscribe(
-      (user) => {
-        this.user = user;
-      },
-      (error) => console.error('Error loading user data', error)
-    );
+  loadDashboardData() {
+    this.isLoading = true;
+    this.error = null;
+
+    Promise.all([
+      this.apiService.getEnrolledCourses().toPromise(),
+      this.apiService.getUserProfile().toPromise(),
+      this.apiService.getCourseStats().toPromise(),
+      this.apiService.getAssessmentStats().toPromise(),
+      this.apiService.getRecentActivities().toPromise()
+    ]).then(([enrolledCourses, user, courseStats, assessmentStats, recentActivities]) => {
+      this.enrolledCourses = enrolledCourses;
+      this.user = user;
+      this.courseStats = courseStats;
+      this.assessmentStats = assessmentStats;
+      this.recentActivities = recentActivities;
+      this.isLoading = false;
+      this.renderCharts();
+    }).catch(error => {
+      console.error('Error fetching dashboard data:', error);
+      this.error = 'Failed to load dashboard data. Please try again later.';
+      this.isLoading = false;
+    });
   }
 
-  loadCourseStats() {
-    this.courseService.getCourseStats().subscribe(
-      (stats) => {
-        this.courseStats = stats;
-      },
-      (error) => console.error('Error loading course stats', error)
-    );
+  renderCharts() {
+    this.renderSkillProgressChart();
+    this.renderCourseCompletionChart();
   }
 
-  loadAssessmentStats() {
-    this.assessmentService.getAssessmentStats().subscribe(
-      (stats) => {
-        this.assessmentStats = stats;
-      },
-      (error) => console.error('Error loading assessment stats', error)
-    );
-  }
-
-  loadRecentActivities() {
-    this.userService.getRecentActivities().subscribe(
-      (activities) => {
-        this.recentActivities = activities;
-      },
-      (error) => console.error('Error loading recent activities', error)
-    );
-  }
-
-  loadSkillProgress() {
-    this.userService.getSkillProgress().subscribe(
-      (progress) => {
-        this.skillProgress = progress;
-        this.createSkillProgressChart();
-      },
-      (error) => console.error('Error loading skill progress', error)
-    );
-  }
-
-  loadCourseCompletion() {
-    this.courseService.getCourseCompletion().subscribe(
-      (completion) => {
-        this.courseCompletion = completion;
-        this.createCourseCompletionChart();
-      },
-      (error) => console.error('Error loading course completion', error)
-    );
-  }
-
-  createSkillProgressChart() {
+  renderSkillProgressChart() {
     const ctx = this.skillProgressChart.nativeElement.getContext('2d');
     new Chart(ctx, {
       type: 'radar',
       data: {
-        labels: Object.keys(this.skillProgress),
+        labels: this.user?.skillsAcquired || [],
         datasets: [{
           label: 'Skill Progress',
-          data: Object.values(this.skillProgress),
+          data: this.user?.skillsAcquired?.map(() => Math.random() * 100) || [],
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 1
@@ -122,36 +100,16 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  createCourseCompletionChart() {
+  renderCourseCompletionChart() {
     const ctx = this.courseCompletionChart.nativeElement.getContext('2d');
     new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['Completed', 'In Progress', 'Not Started'],
+        labels: ['Completed', 'In Progress'],
         datasets: [{
-          data: [
-            this.courseCompletion.completed,
-            this.courseCompletion.inProgress,
-            this.courseCompletion.notStarted
-          ],
-          backgroundColor: [
-            'rgba(75, 192, 192, 0.8)',
-            'rgba(255, 206, 86, 0.8)',
-            'rgba(255, 99, 132, 0.8)'
-          ]
+          data: [this.courseStats?.completed || 0, this.enrolledCourses.length - (this.courseStats?.completed || 0)],
+          backgroundColor: ['rgba(75, 192, 192, 0.8)', 'rgba(255, 206, 86, 0.8)']
         }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'bottom',
-          },
-          title: {
-            display: true,
-            text: 'Course Completion'
-          }
-        }
       }
     });
   }

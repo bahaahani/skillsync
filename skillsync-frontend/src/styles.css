@@ -1,5 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* You can replace 'indigo-pink.css' with another pre-built theme if you prefer */
+
+/* Your custom styles go here */
+
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -140,6 +146,9 @@ body.dark-mode tr:nth-child(even) {
 }
 
 /* Add more dark mode styles as needed */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

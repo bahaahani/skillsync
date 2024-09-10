@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-login',
@@ -8,26 +7,21 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
-  error: string = '';
+  credentials = { email: '', password: '' };
+  error: string = ''; // Add this line to fix the error property
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private apiService: ApiService) {}
 
   onSubmit() {
-    this.authService.login({ email: this.email, password: this.password }).subscribe({
-      next: () => {
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
-        this.router.navigateByUrl(returnUrl);
+    this.apiService.login(this.credentials).subscribe(
+      response => {
+        console.log('Login successful', response);
+        // Handle successful login (e.g., store token, redirect)
       },
-      error: (err) => {
-        this.error = 'Invalid email or password';
-        console.error('Login error:', err);
+      error => {
+        console.error('Login failed', error);
+        this.error = 'Login failed. Please check your credentials.'; // Set error message
       }
-    });
+    );
   }
 }

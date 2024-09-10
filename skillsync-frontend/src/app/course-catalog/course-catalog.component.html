@@ -8,6 +8,7 @@
     </mat-form-field>
     <mat-form-field>
       <mat-select [(ngModel)]="levelFilter" (ngModelChange)="onLevelFilterChange()" placeholder="Filter by level">
+        <mat-option value="all">All Levels</mat-option>
         <mat-option *ngFor="let level of levels" [value]="level">{{ level }}</mat-option>
       </mat-select>
     </mat-form-field>

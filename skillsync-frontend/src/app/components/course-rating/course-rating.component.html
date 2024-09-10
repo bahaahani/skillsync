@@ -1,5 +1,5 @@
-<div class="rating">
-  <span *ngFor="let star of stars" (click)="rate(star)" [class.filled]="star <= rating" [class.readonly]="readonly">
-    ★
-  </span>
+<div class="rating-container">
+  <h3>Course Rating</h3>
+  <p>Average Rating: {{ rating | number:'1.1-1' }} / 5</p>
+  <!-- ... rest of the template ... -->
 </div>

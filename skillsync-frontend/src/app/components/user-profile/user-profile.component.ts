@@ -1,16 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../services/user.service';
-
-interface User {
-    _id: string;
-    username: string;
-    email: string;
-    role: string;
-}
-
-interface UserProfile extends User {
-    // Add any additional properties specific to UserProfile
-}
+import { ApiService } from '../../services/api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-user-profile',
@@ -18,41 +8,46 @@ interface UserProfile extends User {
     styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-    user: User | null = null;
-    isEditing: boolean = false;
+    user: any = {};
+    isLoading: boolean = false;
+    error: string | null = null;
 
-    constructor(private userService: UserService) { }
+    constructor(private apiService: ApiService, private snackBar: MatSnackBar) {}
 
     ngOnInit() {
         this.loadUserProfile();
     }
 
     loadUserProfile() {
-        this.userService.getUserProfile().subscribe({
-            next: (user: User) => {
-                this.user = user;
+        this.isLoading = true;
+        this.error = null;
+        this.apiService.getUserProfile().subscribe(
+            (data) => {
+                this.user = data;
+                this.isLoading = false;
             },
-            error: (error: any) => {
-                console.error('Error loading user profile:', error);
+            (error) => {
+                console.error('Error fetching user profile:', error);
+                this.error = 'Failed to load user profile. Please try again later.';
+                this.isLoading = false;
             }
-        });
+        );
     }
 
-    toggleEdit() {
-        this.isEditing = !this.isEditing;
-    }
-
-    saveProfile() {
-        if (this.user) {
-            this.userService.updateUserProfile(this.user as UserProfile).subscribe({
-                next: (updatedUser: User) => {
-                    this.user = updatedUser;
-                    this.isEditing = false;
-                },
-                error: (error: any) => {
-                    console.error('Error updating user profile:', error);
-                }
-            });
-        }
+    updateProfile() {
+        this.isLoading = true;
+        this.error = null;
+        this.apiService.updateUserProfile(this.user).subscribe(
+            (response) => {
+                this.isLoading = false;
+                this.snackBar.open('Profile updated successfully', 'Close', { duration: 3000 });
+            },
+            (error) => {
+                console.error('Error updating user profile:', error);
+                this.error = 'Failed to update profile. Please try again later.';
+                this.isLoading = false;
+                this.snackBar.open('Failed to update profile', 'Close', { duration: 3000 });
+            }
+        );
     }
 }

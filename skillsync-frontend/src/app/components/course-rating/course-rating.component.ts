@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-course-rating',
@@ -8,14 +9,4 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class CourseRatingComponent {
   @Input() rating: number = 0;
   @Input() readonly: boolean = false;
-  @Output() ratingChange = new EventEmitter<number>();
-
-  stars: number[] = [1, 2, 3, 4, 5];
-
-  rate(rating: number) {
-    if (!this.readonly) {
-      this.rating = rating;
-      this.ratingChange.emit(this.rating);
-    }
-  }
 }

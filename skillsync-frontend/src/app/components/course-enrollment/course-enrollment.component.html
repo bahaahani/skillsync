@@ -1,0 +1,4 @@
+<div class="enrollment-container">
+  <button mat-raised-button color="primary" *ngIf="!isEnrolled" (click)="enrollCourse()">Enroll in Course</button>
+  <button mat-raised-button color="warn" *ngIf="isEnrolled" (click)="unenrollCourse()">Unenroll from Course</button>
+</div>

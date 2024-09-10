@@ -1,78 +1,70 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { MatDialogModule } from '@angular/material/dialog';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule, Routes } from '@angular/router'; // Import Routes
+
+// Angular Material Imports
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatListModule } from '@angular/material/list';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { CourseProgressComponent } from './components/course-progress/course-progress.component';
-import { CourseForumComponent } from './components/course-forum/course-forum.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
-import { AppRoutingModule } from './app-routing.module';
+// Import AppComponent and other components
 import { AppComponent } from './app.component';
-import { CourseCatalogComponent } from './course-catalog/course-catalog.component';
-import { CourseDetailsComponent } from './course-details/course-details.component';
-import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
-import { LoginComponent } from './components/login/login.component';
-import { AuthService } from './services/auth.service';
-import { CourseService } from './services/course.service';
-import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { CourseCatalogComponent } from './course-catalog/course-catalog.component';
 import { CourseRatingComponent } from './components/course-rating/course-rating.component';
+// ... import other components as needed
+
+// Define routes
+const routes: Routes = [
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'courses', component: CourseCatalogComponent },
+  // ... add other routes as needed
+];
 
 @NgModule({
   declarations: [
     AppComponent,
-    ConfirmationDialogComponent,
-    CourseCatalogComponent,
-    CourseDetailsComponent,
-    LoginComponent,
-    RegisterComponent,
     DashboardComponent,
-    UserProfileComponent,
+    CourseCatalogComponent,
     CourseRatingComponent,
-    CourseProgressComponent,
-    CourseForumComponent,
+    // ... declare other components
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    HttpClientModule,
     FormsModule,
-    RouterModule,
-    MatDialogModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    RouterModule.forRoot(routes), // Add this line to set up routing
+    MatToolbarModule,
     MatButtonModule,
     MatInputModule,
+    MatFormFieldModule,
     MatCardModule,
-    MatProgressBarModule,
-    MatSnackBarModule,
-    MatPaginatorModule,
     MatProgressSpinnerModule,
-    MatToolbarModule,
-    MatListModule,
+    MatDialogModule,
+    MatPaginatorModule,
     MatSelectModule,
     MatChipsModule,
     MatIconModule,
-    MatFormFieldModule,
-    MatCheckboxModule,
+    MatProgressBarModule,
+    // ... other modules
   ],
-  providers: [AuthService, CourseService],
+  providers: [
+    // ... your providers
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

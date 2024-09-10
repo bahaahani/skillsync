@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CourseService } from '../services/course.service';
+import { ApiService } from '../services/api.service';
 import { Course } from '../models/course.model';
-import { AuthService } from '../services/auth.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-course-details',
@@ -11,77 +9,31 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./course-details.component.css']
 })
 export class CourseDetailsComponent implements OnInit {
-  course: Course | null = null;
-  isLoading = false;
+  courseId!: string;
+  courseDetails: Course | null = null;
+  isLoading: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
-    private courseService: CourseService,
-    private authService: AuthService,
-    private snackBar: MatSnackBar
-  ) { }
+    private apiService: ApiService
+  ) {}
 
   ngOnInit() {
+    this.courseId = this.route.snapshot.paramMap.get('id') || '';
     this.loadCourseDetails();
   }
 
   loadCourseDetails() {
-    const courseId = this.route.snapshot.paramMap.get('id');
-    if (courseId) {
-      this.isLoading = true;
-      this.courseService.getCourseById(courseId).subscribe({
-        next: (course) => {
-          this.course = course;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching course details:', error);
-          this.showErrorMessage('Error fetching course details. Please try again later.');
-          this.isLoading = false;
-        }
-      });
-    }
-  }
-
-  enrollCourse() {
-    if (this.course) {
-      this.authService.enrollInCourse(this.course._id).subscribe({
-        next: () => {
-          this.course!.isEnrolled = true;
-          this.showSuccessMessage('Successfully enrolled in the course');
-        },
-        error: (error) => {
-          console.error('Error enrolling in course:', error);
-          this.showErrorMessage('Error enrolling in the course. Please try again later.');
-        }
-      });
-    }
-  }
-
-  updateLessonProgress(event: { courseId: string, lessonId: string, completed: boolean }) {
-    this.courseService.updateLessonProgress(event.courseId, event.lessonId, event.completed).subscribe({
-      next: (updatedCourse) => {
-        this.course = updatedCourse;
-        this.showSuccessMessage('Progress updated successfully');
+    this.isLoading = true;
+    this.apiService.getCourseDetails(this.courseId).subscribe(
+      (data: Course) => {
+        this.courseDetails = data;
+        this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error updating lesson progress:', error);
-        this.showErrorMessage('Error updating progress. Please try again later.');
+      error => {
+        console.error('Error fetching course details:', error);
+        this.isLoading = false;
       }
-    });
-  }
-
-  private showErrorMessage(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      panelClass: ['error-snackbar']
-    });
-  }
-
-  private showSuccessMessage(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      panelClass: ['success-snackbar']
-    });
+    );
   }
 }

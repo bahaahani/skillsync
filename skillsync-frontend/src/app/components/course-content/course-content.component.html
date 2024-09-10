@@ -1,0 +1,12 @@
+<div class="course-content">
+  <h3>Course Content</h3>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <p *ngIf="error" class="error-message">{{ error }}</p>
+  <ul *ngIf="!isLoading && !error">
+    <li *ngFor="let item of content">
+      <h4>{{ item.title }}</h4>
+      <p>{{ item.description }}</p>
+      <!-- Add more details or interactions as needed -->
+    </li>
+  </ul>
+</div>

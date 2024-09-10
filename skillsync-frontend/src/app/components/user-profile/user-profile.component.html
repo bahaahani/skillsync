@@ -1,18 +1,20 @@
-<div class="user-profile-container" *ngIf="user">
+<div class="user-profile-container">
   <h2>User Profile</h2>
-  <div *ngIf="!isEditing">
-    <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <button mat-raised-button color="primary" (click)="toggleEdit()">Edit Profile</button>
-  </div>
-  <div *ngIf="isEditing">
-    <mat-form-field>
-      <input matInput [(ngModel)]="user.username" placeholder="Username">
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <p *ngIf="error" class="error-message">{{ error }}</p>
+  <form *ngIf="!isLoading && !error" (ngSubmit)="updateProfile()">
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="user.name" name="name" required>
     </mat-form-field>
-    <mat-form-field>
-      <input matInput [(ngModel)]="user.email" placeholder="Email">
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput [(ngModel)]="user.email" name="email" required type="email">
     </mat-form-field>
-    <button mat-raised-button color="primary" (click)="saveProfile()">Save</button>
-    <button mat-raised-button (click)="toggleEdit()">Cancel</button>
-  </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Bio</mat-label>
+      <textarea matInput [(ngModel)]="user.bio" name="bio"></textarea>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Update Profile</button>
+  </form>
 </div>

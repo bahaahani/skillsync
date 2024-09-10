@@ -249,7 +249,7 @@ export class CourseCatalogComponent implements OnInit {
     }
   }
 
-  separatorKeysCodes: number[] = [ENTER, COMMA];
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   newCourse: Course = {
     _id: '',

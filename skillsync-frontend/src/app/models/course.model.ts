@@ -3,14 +3,13 @@ import { Lesson } from '../services/course.service';
 export interface Course {
   _id: string;
   title: string;
-  description: string;
   category: string;
   instructor: string;
+  description: string;
   duration: number;
   level: string;
   tags: string[];
-  isEnrolled: boolean;
   rating?: number;
+  isEnrolled?: boolean;
   progress?: number;
-  lessons?: Lesson[]; // Add this line
 }

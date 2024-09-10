@@ -1,12 +1,15 @@
-<div *ngIf="course" class="course-details">
-  <h2>{{ course.title }}</h2>
-  <p>{{ course.description }}</p>
-  <app-course-rating [rating]="course.rating ?? 0" [readonly]="true"></app-course-rating>
-  <button mat-raised-button color="primary" (click)="enrollCourse()" [disabled]="course.isEnrolled">
-    {{ course.isEnrolled ? 'Enrolled' : 'Enroll' }}
-  </button>
-  <app-course-progress *ngIf="course.isEnrolled" [course]="course" (lessonCompleted)="updateLessonProgress($event)"></app-course-progress>
-  <app-course-forum [courseId]="course._id"></app-course-forum>
+<div *ngIf="courseDetails" class="course-details">
+  <h1>{{ courseDetails?.title }}</h1>
+  <p>{{ courseDetails?.description }}</p>
+  
+  <app-course-enrollment [courseId]="courseId"></app-course-enrollment>
+  <app-course-content [courseId]="courseId"></app-course-content>
+  <app-course-progress [courseId]="courseId"></app-course-progress>
+  <app-course-rating [courseId]="courseId"></app-course-rating>
+  <app-course-feedback [courseId]="courseId"></app-course-feedback>
+  <app-course-forum [courseId]="courseId"></app-course-forum>
 </div>
+
+<p *ngIf="!isLoading && !courseDetails">Course not found.</p>
 
 <mat-spinner *ngIf="isLoading"></mat-spinner>

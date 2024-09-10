@@ -1,11 +1,8 @@
-<div class="course-progress">
-  <h3>Course Progress: {{ progress | number:'1.0-0' }}%</h3>
-  <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
-  <mat-list>
-    <mat-list-item *ngFor="let lesson of course.lessons">
-      <mat-checkbox [checked]="lesson.completed" (change)="toggleLessonCompletion(lesson)">
-        {{ lesson.title }}
-      </mat-checkbox>
-    </mat-list-item>
-  </mat-list>
+<div class="progress-container">
+  <h3>Course Progress</h3>
+  <div class="progress-bar">
+    <div class="progress" [style.width.%]="progress"></div>
+  </div>
+  <p>{{ progress }}% complete</p>
+  <button (click)="updateProgress()">Update Progress</button>
 </div>
