@@ -23,4 +23,13 @@ export class WebsocketService {
   emit(eventName: string, data: any) {
     this.socket.emit(eventName, data);
   }
+  onCourseUpdate() {
+    return this.listen('courseUpdate');
+  }
+  onCourseEnrollment() {
+    return this.listen('courseEnrollment');
+  }
+  onCourseCompletion() {
+    return this.listen('courseCompletion');
+  }
 }
