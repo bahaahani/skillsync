@@ -1,0 +1,34 @@
+.course-catalog {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.course-list {
+  margin-top: 20px;
+}
+
+.course-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input, button {
+  padding: 5px;
+}
+
+.success {
+  color: green;
+}
+
+.error {
+  color: red;
+}

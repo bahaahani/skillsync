@@ -1,0 +1,9 @@
+<div class="feedback-container">
+  <h3>Course Feedback</h3>
+  <form (ngSubmit)="submitFeedback()">
+    <mat-form-field appearance="fill">
+      <textarea matInput [(ngModel)]="feedback" name="feedback" placeholder="Your feedback"></textarea>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Submit Feedback</button>
+  </form>
+</div>

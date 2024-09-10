@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup - SkillSync</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-tabs">
+            <button id="loginTab" class="active">Login</button>
+            <button id="signupTab">Sign Up</button>
+        </div>
+        <form id="loginForm">
+            <h2>Login to SkillSync</h2>
+            <input type="text" id="loginUsername" placeholder="Username" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <div id="loginPasswordStrength"></div>
+            <div class="remember-me">
+                <input type="checkbox" id="rememberMe">
+                <label for="rememberMe">Remember me</label>
+            </div>
+            <button type="submit">Login</button>
+            <p id="loginErrorMessage" class="error-message"></p>
+        </form>
+        <form id="signupForm" style="display: none;">
+            <h2>Sign Up for SkillSync</h2>
+            <input type="text" id="signupUsername" placeholder="Username" required>
+            <input type="email" id="signupEmail" placeholder="Email" required>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+            <div id="signupPasswordStrength"></div>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+            <button type="submit">Sign Up</button>
+            <p id="signupErrorMessage" class="error-message"></p>
+        </form>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

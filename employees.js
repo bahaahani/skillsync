@@ -3,106 +3,50 @@ let employees = [
   {
     id: 1,
     name: "John Doe",
+    email: "john.doe@example.com",
     department: "IT",
     jobRole: "Software Engineer",
     skills: ["JavaScript", "Python", "React"],
+    team: "Web Development",
     assessments: [
       {
         id: 1,
         title: "JavaScript Basics",
         score: 85,
-        userAnswers: [1, 2, 0, 1, 2],
+        dateCompleted: "2023-05-15"
       },
       {
         id: 3,
         title: "React Components",
         score: 92,
-        userAnswers: [0, 1, 2, 0, 1],
+        dateCompleted: "2023-05-20"
       },
     ],
-    developmentPlan:
-      "John needs to improve his Python skills and learn more about cloud technologies.",
+    developmentPlan: {
+      goals: [
+        { id: 1, description: "Learn GraphQL", status: "In Progress", dueDate: "2023-08-31" },
+        { id: 2, description: "Improve Python skills", status: "Not Started", dueDate: "2023-09-30" }
+      ],
+      recommendedCourses: [2, 5] // IDs of recommended courses
+    },
+    performance: {
+      rating: 4,
+      strengths: ["Problem-solving", "Team collaboration"],
+      areasForImprovement: ["Time management", "Documentation"],
+      lastReviewDate: "2023-04-01"
+    },
+    socialProfile: {
+      connections: [2, 3, 4], // IDs of connected employees
+      posts: [
+        { id: 1, content: "Just completed the React course!", timestamp: "2023-05-21T10:30:00Z" }
+      ],
+      badges: ["Quick Learner", "Team Player"]
+    }
   },
-  {
-    id: 2,
-    name: "Jane Smith",
-    department: "HR",
-    jobRole: "HR Specialist",
-    skills: ["Leadership", "Communication", "Conflict Resolution"],
-    assessments: [
-      {
-        id: 2,
-        title: "Python Data Structures",
-        score: 78,
-        userAnswers: [0, 1, 2, 1, 0],
-      },
-    ],
-    developmentPlan:
-      "Jane should attend a communication skills workshop and get certified in HR management.",
-  },
-  {
-    id: 3,
-    name: "Mike Johnson",
-    department: "Marketing",
-    jobRole: "Digital Marketing Specialist",
-    skills: ["SEO", "Content Writing", "Social Media Management"],
-    assessments: [],
-    developmentPlan:
-      "Mike needs to expand his knowledge of data analytics and improve his content strategy.",
-  },
-  {
-    id: 4,
-    name: "Emily Brown",
-    department: "Finance",
-    jobRole: "Financial Analyst",
-    skills: ["Financial Analysis", "Budgeting", "Excel"],
-    assessments: [
-      {
-        id: 1,
-        title: "JavaScript Basics",
-        score: 90,
-        userAnswers: [2, 1, 0, 2, 1],
-      },
-      {
-        id: 2,
-        title: "Python Data Structures",
-        score: 85,
-        userAnswers: [0, 2, 1, 0, 2],
-      },
-    ],
-    developmentPlan:
-      "Emily should take a course on advanced financial modeling and get certified in financial planning.",
-  },
-  {
-    id: 5,
-    name: "Chris Lee",
-    department: "IT",
-    jobRole: "DevOps Engineer",
-    skills: ["Java", "SQL", "Machine Learning"],
-    assessments: [
-      {
-        id: 1,
-        title: "JavaScript Basics",
-        score: 80,
-        userAnswers: [1, 2, 1, 0, 2],
-      },
-      {
-        id: 2,
-        title: "Python Data Structures",
-        score: 92,
-        userAnswers: [2, 0, 1, 2, 0],
-      },
-      {
-        id: 3,
-        title: "React Components",
-        score: 88,
-        userAnswers: [1, 1, 2, 0, 1],
-      },
-    ],
-    developmentPlan:
-      "Chris should focus on improving his cloud infrastructure skills and get hands-on experience with Kubernetes.",
-  },
+  // Add more sample employees here...
 ];
+
+let currentUser = null; // Will store the logged-in user's information
 
 // Function to populate the employee table
 function populateEmployeeTable(employeesToShow = employees) {
@@ -112,65 +56,19 @@ function populateEmployeeTable(employeesToShow = employees) {
   employeesToShow.forEach((employee) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-            <td><a href="#" onclick="viewEmployeeProfile(${employee.id})">${
-      employee.name
-    }</a></td>
-            <td>${employee.department}</td>
-            <td>${employee.jobRole}</td>
-            <td>${employee.skills.join(", ")}</td>
-            <td>
-                ${employee.assessments
-                  .map(
-                    (assessment) => `
-                    <div>
-                        <a href="#" onclick="viewAssessment(${employee.id}, ${assessment.id})">${assessment.title}</a>: ${assessment.score}
-                    </div>
-                `
-                  )
-                  .join("")}
-            </td>
-            <td>${employee.developmentPlan}</td>
-            <td>
-                <button onclick="editEmployee(${
-                  employee.id
-                })" class="btn">Edit</button>
-                <button onclick="deleteEmployee(${
-                  employee.id
-                })" class="btn">Delete</button>
-            </td>
-        `;
+      <td><a href="#" onclick="viewEmployeeProfile(${employee.id})">${employee.name}</a></td>
+      <td>${employee.email}</td>
+      <td>${employee.department}</td>
+      <td>${employee.jobRole}</td>
+      <td>${employee.team}</td>
+      <td>${employee.skills.join(", ")}</td>
+      <td>
+        <button onclick="editEmployee(${employee.id})" class="btn btn-primary">Edit</button>
+        <button onclick="deleteEmployee(${employee.id})" class="btn btn-danger">Delete</button>
+      </td>
+    `;
     tableBody.appendChild(row);
   });
-}
-
-// Function to add a new employee
-function addEmployee(event) {
-  event.preventDefault();
-  const name = document.getElementById("newEmployeeName").value;
-  const department = document.getElementById("newEmployeeDepartment").value;
-  const jobRole = document.getElementById("newEmployeeJobRole").value;
-  const skills = document
-    .getElementById("newEmployeeSkills")
-    .value.split(",")
-    .map((skill) => skill.trim());
-  const developmentPlan = document.getElementById(
-    "newEmployeeDevelopmentPlan"
-  ).value;
-
-  const newEmployee = {
-    id: employees.length + 1,
-    name,
-    department,
-    jobRole,
-    skills,
-    assessments: [],
-    developmentPlan,
-  };
-  employees.push(newEmployee);
-  populateEmployeeTable();
-  closeAllModals();
-  showNotification(`Employee ${name} added successfully!`, "success");
-  event.target.reset();
 }
 
 // Function to view employee profile
@@ -178,128 +76,230 @@ function viewEmployeeProfile(id) {
   const employee = employees.find((e) => e.id === id);
   if (!employee) return;
 
-  const profileNameElement = document.getElementById("employeeProfileName");
-  const profileDepartmentElement = document.getElementById(
-    "employeeProfileDepartment"
-  );
-  const profileJobRoleElement = document.getElementById(
-    "employeeProfileJobRole"
-  );
-  const profileSkillsElement = document.getElementById("employeeProfileSkills");
-  const profileAssessmentsElement = document.getElementById(
-    "employeeProfileAssessments"
-  );
-  const profileDevelopmentPlanElement = document.getElementById(
-    "employeeProfileDevelopmentPlan"
-  );
-
-  profileNameElement.textContent = employee.name;
-  profileDepartmentElement.textContent = employee.department;
-  profileJobRoleElement.textContent = employee.jobRole;
-
-  profileSkillsElement.innerHTML = "";
-  employee.skills.forEach((skill) => {
-    const li = document.createElement("li");
-    li.textContent = skill;
-    profileSkillsElement.appendChild(li);
-  });
-
-  profileAssessmentsElement.innerHTML = "";
-  employee.assessments.forEach((assessment) => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-            <a href="#" onclick="viewAssessment(${employee.id}, ${assessment.id})">${assessment.title}</a>: ${assessment.score}
-        `;
-    profileAssessmentsElement.appendChild(div);
-  });
-
-  profileDevelopmentPlanElement.textContent = employee.developmentPlan;
-
   const modal = document.getElementById("employeeProfileModal");
-  modal.style.display = "block";
-}
+  const modalContent = modal.querySelector(".modal-content");
 
-// Function to view assessment details
-function viewAssessment(employeeId, assessmentId) {
-  const employee = employees.find((e) => e.id === employeeId);
-  const assessment = employee.assessments.find((a) => a.id === assessmentId);
-  if (!employee || !assessment) return;
-
-  const modal = document.getElementById("assessmentModal");
-  const titleElement = document.getElementById("assessmentTitle");
-  const questionContainer = document.getElementById("assessmentQuestions");
-  const scoreElement = document.getElementById("assessmentScore");
-
-  titleElement.textContent = assessment.title;
-  questionContainer.innerHTML = "";
-
-  assessment.questions.forEach((q, index) => {
-    const questionElement = document.createElement("div");
-    questionElement.className = "question";
-    questionElement.innerHTML = `
-            <p><strong>Question ${index + 1}:</strong> ${q.question}</p>
-            ${q.options
-              .map(
-                (option, i) => `
-                <label>
-                    <input type="radio" name="question${index}" value="${i}" ${
-                  assessment.userAnswers[index] === i ? "checked" : ""
-                }>
-                    ${option}
-                </label>
-            `
-              )
-              .join("")}
-        `;
-    questionContainer.appendChild(questionElement);
-  });
-
-  scoreElement.textContent = `Your score: ${assessment.score}`;
+  modalContent.innerHTML = `
+    <h2>${employee.name}</h2>
+    <p><strong>Email:</strong> ${employee.email}</p>
+    <p><strong>Department:</strong> ${employee.department}</p>
+    <p><strong>Job Role:</strong> ${employee.jobRole}</p>
+    <p><strong>Team:</strong> ${employee.team}</p>
+    <p><strong>Skills:</strong> ${employee.skills.join(", ")}</p>
+    
+    <h3>Assessments</h3>
+    <ul>
+      ${employee.assessments.map(a => `<li>${a.title}: ${a.score}% (Completed: ${a.dateCompleted})</li>`).join("")}
+    </ul>
+    
+    <h3>Development Plan</h3>
+    <h4>Goals</h4>
+    <ul>
+      ${employee.developmentPlan.goals.map(g => `<li>${g.description} - ${g.status} (Due: ${g.dueDate})</li>`).join("")}
+    </ul>
+    
+    <h3>Performance</h3>
+    <p><strong>Rating:</strong> ${employee.performance.rating}/5</p>
+    <p><strong>Strengths:</strong> ${employee.performance.strengths.join(", ")}</p>
+    <p><strong>Areas for Improvement:</strong> ${employee.performance.areasForImprovement.join(", ")}</p>
+    <p><strong>Last Review Date:</strong> ${employee.performance.lastReviewDate}</p>
+    
+    <h3>Social Profile</h3>
+    <p><strong>Connections:</strong> ${employee.socialProfile.connections.length}</p>
+    <p><strong>Badges:</strong> ${employee.socialProfile.badges.join(", ")}</p>
+    
+    <button onclick="closeModal('employeeProfileModal')" class="btn btn-secondary">Close</button>
+  `;
 
   modal.style.display = "block";
 }
 
-// Function to edit employee (placeholder)
+// Function to add a new employee
+function addEmployee(event) {
+  event.preventDefault();
+  const name = document.getElementById("newEmployeeName").value;
+  const email = document.getElementById("newEmployeeEmail").value;
+  const department = document.getElementById("newEmployeeDepartment").value;
+  const jobRole = document.getElementById("newEmployeeJobRole").value;
+  const team = document.getElementById("newEmployeeTeam").value;
+  const skills = document.getElementById("newEmployeeSkills").value.split(",").map(skill => skill.trim());
+
+  const newEmployee = {
+    id: employees.length + 1,
+    name,
+    email,
+    department,
+    jobRole,
+    team,
+    skills,
+    assessments: [],
+    developmentPlan: {
+      goals: [],
+      recommendedCourses: []
+    },
+    performance: {
+      rating: 0,
+      strengths: [],
+      areasForImprovement: [],
+      lastReviewDate: null
+    },
+    socialProfile: {
+      connections: [],
+      posts: [],
+      badges: []
+    }
+  };
+
+  employees.push(newEmployee);
+  populateEmployeeTable();
+  closeModal("addEmployeeModal");
+  showNotification(`Employee ${name} added successfully!`, "success");
+  event.target.reset();
+}
+
+// Function to edit an employee
 function editEmployee(id) {
   const employee = employees.find((e) => e.id === id);
   if (!employee) return;
-  showNotification(`Editing ${employee.name}`, "info");
-  // TODO: Implement employee editing functionality
+
+  const modal = document.getElementById("editEmployeeModal");
+  const form = document.getElementById("editEmployeeForm");
+
+  form.innerHTML = `
+    <input type="hidden" id="editEmployeeId" value="${employee.id}">
+    <input type="text" id="editEmployeeName" value="${employee.name}" required>
+    <input type="email" id="editEmployeeEmail" value="${employee.email}" required>
+    <input type="text" id="editEmployeeDepartment" value="${employee.department}" required>
+    <input type="text" id="editEmployeeJobRole" value="${employee.jobRole}" required>
+    <input type="text" id="editEmployeeTeam" value="${employee.team}" required>
+    <input type="text" id="editEmployeeSkills" value="${employee.skills.join(", ")}" required>
+    <button type="submit" class="btn btn-primary">Update Employee</button>
+  `;
+
+  form.onsubmit = updateEmployee;
+  modal.style.display = "block";
 }
 
-// Function to delete employee
+// Function to update an employee
+function updateEmployee(event) {
+  event.preventDefault();
+  const id = parseInt(document.getElementById("editEmployeeId").value);
+  const name = document.getElementById("editEmployeeName").value;
+  const email = document.getElementById("editEmployeeEmail").value;
+  const department = document.getElementById("editEmployeeDepartment").value;
+  const jobRole = document.getElementById("editEmployeeJobRole").value;
+  const team = document.getElementById("editEmployeeTeam").value;
+  const skills = document.getElementById("editEmployeeSkills").value.split(",").map(skill => skill.trim());
+
+  const employeeIndex = employees.findIndex(e => e.id === id);
+  if (employeeIndex === -1) return;
+
+  employees[employeeIndex] = {
+    ...employees[employeeIndex],
+    name,
+    email,
+    department,
+    jobRole,
+    team,
+    skills
+  };
+
+  populateEmployeeTable();
+  closeModal("editEmployeeModal");
+  showNotification(`Employee ${name} updated successfully!`, "success");
+}
+
+// Function to delete an employee
 function deleteEmployee(id) {
   const employee = employees.find((e) => e.id === id);
   if (!employee) return;
+
   if (confirm(`Are you sure you want to delete ${employee.name}?`)) {
     employees = employees.filter((e) => e.id !== id);
     populateEmployeeTable();
-    showNotification(
-      `Employee ${employee.name} deleted successfully!`,
-      "success"
-    );
+    showNotification(`Employee ${employee.name} deleted successfully!`, "success");
   }
 }
 
 // Function to search employees
 function searchEmployees() {
-  const searchTerm = document
-    .getElementById("employeeSearch")
-    .value.toLowerCase();
+  const searchTerm = document.getElementById("employeeSearch").value.toLowerCase();
   const filteredEmployees = employees.filter(
     (employee) =>
       employee.name.toLowerCase().includes(searchTerm) ||
+      employee.email.toLowerCase().includes(searchTerm) ||
       employee.department.toLowerCase().includes(searchTerm) ||
       employee.jobRole.toLowerCase().includes(searchTerm) ||
+      employee.team.toLowerCase().includes(searchTerm) ||
       employee.skills.some((skill) => skill.toLowerCase().includes(searchTerm))
   );
   populateEmployeeTable(filteredEmployees);
 }
 
+// Function to show notification
+function showNotification(message, type) {
+  const notification = document.createElement("div");
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
+
+// Function to close modal
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = "none";
+}
+
 // Event listeners
 window.onload = function () {
   populateEmployeeTable();
-  document
-    .getElementById("addEmployeeForm")
-    .addEventListener("submit", addEmployee);
+  document.getElementById("addEmployeeForm").addEventListener("submit", addEmployee);
+  document.getElementById("employeeSearch").addEventListener("input", searchEmployees);
 };
+
+// Error handling
+window.onerror = function(message, source, lineno, colno, error) {
+  console.error("An error occurred:", error);
+  showNotification("An error occurred. Please try again.", "error");
+  return true;
+};
+
+// Simulated authentication (replace with actual authentication logic)
+function login(username, password) {
+  // In a real application, this would validate credentials against a backend
+  currentUser = employees.find(e => e.email === username);
+  if (currentUser) {
+    showNotification(`Welcome, ${currentUser.name}!`, "success");
+    // Update UI to show logged-in state
+  } else {
+    showNotification("Invalid credentials. Please try again.", "error");
+  }
+}
+
+function logout() {
+  currentUser = null;
+  showNotification("You have been logged out.", "info");
+  // Update UI to show logged-out state
+}
+
+// Example of integrating with a backend API (replace with actual API calls)
+async function fetchEmployeesFromAPI() {
+  try {
+    const response = await fetch('/api/employees');
+    if (!response.ok) {
+      throw new Error('Failed to fetch employees');
+    }
+    const data = await response.json();
+    employees = data;
+    populateEmployeeTable();
+  } catch (error) {
+    console.error("Error fetching employees:", error);
+    showNotification("Failed to fetch employees. Please try again later.", "error");
+  }
+}
+
+// Call this function instead of using the sample data when integrating with a backend
+// fetchEmployeesFromAPI();

@@ -1,405 +1,390 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const images = document.querySelectorAll("img");
-    const options = {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.1
-    };
+document.addEventListener("DOMContentLoaded", function () {
+  const images = document.querySelectorAll("img");
+  const options = {
+    root: null,
+    rootMargin: "0px",
+    threshold: 0.1,
+  };
 
-
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                observer.unobserve(img);
-            }
-        });
-    }, options);
-
-    images.forEach(image => {
-        observer.observe(image);
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        img.src = img.dataset.src;
+        observer.unobserve(img);
+      }
     });
+  }, options);
 
-    // Animate sections on scroll
-    const sections = document.querySelectorAll("section");
-    const sectionObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
-                observer.unobserve(entry.target);
-            }
-        });
-    }, options);
+  images.forEach((image) => observer.observe(image));
 
-    sections.forEach(section => {
-        sectionObserver.observe(section);
+  // Animate sections on scroll
+  const sections = document.querySelectorAll("section");
+  const sectionObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
     });
+  }, options);
 
-    // Hide loading spinner once the page is fully loaded
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    window.addEventListener('load', () => {
-        loadingSpinner.style.display = 'none';
-    });
+  sections.forEach((section) => sectionObserver.observe(section));
 
-    // Dark mode toggle
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const body = document.body;
+  // Hide loading spinner once the page is fully loaded
+  const loadingSpinner = document.getElementById("loadingSpinner");
+  window.addEventListener("load", () => {
+    loadingSpinner.style.display = "none";
+  });
 
-    if (localStorage.getItem('darkMode') === 'enabled') {
-        body.classList.add('dark-mode');
+  // Dark mode toggle
+  const darkModeToggle = document.getElementById("darkModeToggle");
+  const body = document.body;
+
+  if (localStorage.getItem("darkMode") === "enabled") {
+    body.classList.add("dark-mode");
+  }
+
+  darkModeToggle.addEventListener("click", () => {
+    body.classList.toggle("dark-mode");
+    if (body.classList.contains("dark-mode")) {
+      localStorage.setItem("darkMode", "enabled");
+    } else {
+      localStorage.removeItem("darkMode");
     }
+  });
 
-    darkModeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
-        if (body.classList.contains('dark-mode')) {
-            localStorage.setItem('darkMode', 'enabled');
+  // Back-to-top button
+  const backToTopButton = document.getElementById("backToTop");
+
+  window.addEventListener("scroll", () => {
+    backToTopButton.style.display = window.scrollY > 300 ? "block" : "none";
+  });
+
+  backToTopButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // Search functionality
+  const searchBar = document.getElementById("searchBar");
+  searchBar.addEventListener("input", () => {
+    const filter = searchBar.value.toLowerCase();
+    document.querySelectorAll(".card, .stat-card").forEach((card) => {
+      card.style.display = card.textContent.toLowerCase().includes(filter)
+        ? ""
+        : "none";
+    });
+  });
+
+  // Modal functionality
+  const modal = document.getElementById("myModal");
+  const span = document.getElementsByClassName("close")[0];
+
+  span.onclick = () => (modal.style.display = "none");
+
+  window.onclick = (event) => {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  // Notification functionality
+  const notificationBell = document.querySelector(".notification-bell");
+  const notificationDropdown = document.querySelector(".notification-dropdown");
+
+  notificationBell.addEventListener("click", () => {
+    notificationDropdown.style.display =
+      notificationDropdown.style.display === "block" ? "none" : "block";
+  });
+
+  window.addEventListener("click", (event) => {
+    if (
+      !event.target.matches(".notification-bell") &&
+      notificationDropdown.style.display === "block"
+    ) {
+      notificationDropdown.style.display = "none";
+    }
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener("keydown", (event) => {
+    if (event.ctrlKey || event.metaKey) {
+      switch (event.key) {
+        case "d":
+          event.preventDefault();
+          window.location.href = "index.html";
+          break;
+        case "e":
+          event.preventDefault();
+          window.location.href = "employees.html";
+          break;
+        case "c":
+          event.preventDefault();
+          window.location.href = "courses.html";
+          break;
+        case "a":
+          event.preventDefault();
+          window.location.href = "assessments.html";
+          break;
+        case "r":
+          event.preventDefault();
+          window.location.href = "reports.html";
+          break;
+      }
+    }
+  });
+
+  // Data Visualization - Pie chart
+  const skillDistribution = document.getElementById("skillDistribution");
+  if (skillDistribution) {
+    new Chart(skillDistribution, {
+      type: "pie",
+      data: {
+        labels: ["JavaScript", "Python", "Java", "C++", "Ruby"],
+        datasets: [
+          {
+            data: [30, 25, 20, 15, 10],
+            backgroundColor: [
+              "#FF6384",
+              "#36A2EB",
+              "#FFCE56",
+              "#4BC0C0",
+              "#9966FF",
+            ],
+          },
+        ],
+      },
+      options: { responsive: true, maintainAspectRatio: false },
+    });
+  }
+
+  // Data Visualization - Line chart
+  const completionTrends = document.getElementById("completionTrends");
+  if (completionTrends) {
+    new Chart(completionTrends, {
+      type: "line",
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        datasets: [
+          {
+            label: "Course Completion Rate",
+            data: [65, 70, 75, 80, 85, 90],
+            borderColor: "#36A2EB",
+            tension: 0.1,
+          },
+        ],
+      },
+      options: { responsive: true, maintainAspectRatio: false },
+    });
+  }
+
+  // Progress bar
+  function updateProgressBar(percentage) {
+    const progressBar = document.getElementById("overallProgress");
+    const progressPercentage = document.getElementById("progressPercentage");
+    progressBar.style.width = `${percentage}%`;
+    progressPercentage.textContent = `${percentage}% Complete`;
+  }
+
+  // Skill Radar Chart
+  function createSkillRadarChart() {
+    const ctx = document.getElementById("skillRadar").getContext("2d");
+    new Chart(ctx, {
+      type: "radar",
+      data: {
+        labels: ["JavaScript", "Python", "Java", "C++", "Ruby"],
+        datasets: [
+          {
+            label: "Your Skills",
+            data: [70, 65, 60, 80, 75],
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgb(255, 99, 132)",
+          },
+        ],
+      },
+      options: {
+        elements: { line: { borderWidth: 3 } },
+        scale: {
+          ticks: { beginAtZero: true, max: 100 },
+        },
+      },
+    });
+  }
+
+  // Initialize additional features
+  updateProgressBar(75);
+  createSkillRadarChart();
+
+  // Login functionality
+  const loginForm = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
+  const loginTab = document.getElementById("loginTab");
+  const signupTab = document.getElementById("signupTab");
+
+  // Tab switching
+  loginTab.addEventListener("click", () => {
+    loginForm.style.display = "block";
+    signupForm.style.display = "none";
+    loginTab.classList.add("active");
+    signupTab.classList.remove("active");
+  });
+
+  signupTab.addEventListener("click", () => {
+    loginForm.style.display = "none";
+    signupForm.style.display = "block";
+    loginTab.classList.remove("active");
+    signupTab.classList.add("active");
+  });
+
+  // Login functionality
+  if (loginForm) {
+    const loginErrorMessage = document.getElementById("loginErrorMessage");
+    const rememberMe = document.getElementById("rememberMe");
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        // For demonstration purposes, we'll use a mock login
+        if (username === "demo" && password === "password") {
+          const token = "mock_token";
+          if (rememberMe.checked) {
+            localStorage.setItem("token", token);
+          } else {
+            sessionStorage.setItem("token", token);
+          }
+          window.location.href = "index.html"; // Redirect to the main page
         } else {
-            localStorage.removeItem('darkMode');
+          throw new Error("Invalid credentials");
         }
+      } catch (error) {
+        loginErrorMessage.textContent = error.message;
+        loginErrorMessage.style.display = "block";
+      }
     });
+  }
 
-    // Back-to-top button
-    const backToTopButton = document.getElementById('backToTop');
+  // Signup functionality
+  if (signupForm) {
+    const signupErrorMessage = document.getElementById("signupErrorMessage");
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            backToTopButton.style.display = 'block';
-        } else {
-            backToTopButton.style.display = 'none';
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("signupUsername").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      try {
+        if (password !== confirmPassword) {
+          throw new Error("Passwords do not match");
         }
+
+        // For demonstration purposes, we'll use a mock signup
+        console.log("User signed up:", { username, email });
+        alert("Sign up successful! Please log in.");
+        loginTab.click(); // Switch to login tab
+      } catch (error) {
+        signupErrorMessage.textContent = error.message;
+        signupErrorMessage.style.display = "block";
+      }
     });
+  }
 
-    backToTopButton.addEventListener('click', () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    });
+  // Password strength meter
+  function setupPasswordStrengthMeter(inputId, strengthId) {
+    const passwordInput = document.getElementById(inputId);
+    const passwordStrength = document.getElementById(strengthId);
 
-    // Search functionality
-    const searchBar = document.getElementById('searchBar');
-    searchBar.addEventListener('input', function() {
-        const filter = searchBar.value.toLowerCase();
-        const cards = document.querySelectorAll('.card, .stat-card');
-        cards.forEach(card => {
-            const text = card.textContent.toLowerCase();
-            if (text.includes(filter)) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    });
+    if (passwordInput && passwordStrength) {
+      passwordInput.addEventListener('input', () => {
+        const password = passwordInput.value;
+        let strength = 0;
+        if (password.match(/[a-z]+/)) strength += 1;
+        if (password.match(/[A-Z]+/)) strength += 1;
+        if (password.match(/[0-9]+/)) strength += 1;
+        if (password.match(/[$@#&!]+/)) strength += 1;
 
-    // Modal functionality
-    const modal = document.getElementById('myModal');
-    const span = document.getElementsByClassName('close')[0];
-
-    // Open the modal (for demonstration, you can trigger this with a button click)
-    // modal.style.display = 'block';
-
-    // Close the modal
-    span.onclick = function() {
-        modal.style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
+        switch (strength) {
+          case 0:
+            passwordStrength.className = '';
+            break;
+          case 1:
+            passwordStrength.className = 'weak';
+            break;
+          case 2:
+            passwordStrength.className = 'medium';
+            break;
+          default:
+            passwordStrength.className = 'strong';
         }
+      });
     }
+  }
 
-    // Notification functionality
-    const notificationBell = document.querySelector('.notification-bell');
-    const notificationDropdown = document.querySelector('.notification-dropdown');
+  setupPasswordStrengthMeter('loginPassword', 'loginPasswordStrength');
+  setupPasswordStrengthMeter('signupPassword', 'signupPasswordStrength');
 
-    notificationBell.addEventListener('click', () => {
-        notificationDropdown.style.display = notificationDropdown.style.display === 'block' ? 'none' : 'block';
+  // Logout functionality
+  const logoutButton = document.getElementById("logoutButton");
+  if (logoutButton) {
+    logoutButton.addEventListener("click", () => {
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
     });
+  }
 
-    // Close the dropdown when clicking outside
-    window.addEventListener('click', (event) => {
-        if (!event.target.matches('.notification-bell')) {
-            notificationDropdown.style.display = 'none';
-        }
+  // Check authentication status
+  function checkAuth() {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    const protectedPages = ["employees.html", "courses.html", "assessments.html", "reports.html"];
+    const currentPage = window.location.pathname.split("/").pop();
+    const loginButton = document.querySelector(".login-button");
+    const logoutButton = document.getElementById("logoutButton");
+
+    if (token) {
+      if (loginButton) loginButton.style.display = "none";
+      if (logoutButton) logoutButton.style.display = "block";
+    } else {
+      if (loginButton) loginButton.style.display = "block";
+      if (logoutButton) logoutButton.style.display = "none";
+      if (protectedPages.includes(currentPage)) {
+        window.location.href = "login.html";
+      }
+    }
+  }
+
+  // Call checkAuth when the page loads
+  checkAuth();
+
+  // Session timeout
+  const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+  let sessionTimer;
+
+  function resetSessionTimer() {
+    clearTimeout(sessionTimer);
+    sessionTimer = setTimeout(() => {
+      localStorage.removeItem('token');
+      alert('Your session has expired. Please log in again.');
+      window.location.href = 'login.html';
+    }, SESSION_TIMEOUT);
+  }
+
+  // Reset timer on user activity
+  ['click', 'touchstart', 'mousemove', 'keypress'].forEach(event => {
+    document.addEventListener(event, resetSessionTimer, false);
+  });
+
+  // Initialize session timer
+  resetSessionTimer();
+
+  // Login button functionality
+  const loginButton = document.getElementById("loginButton");
+  if (loginButton) {
+    loginButton.addEventListener("click", () => {
+      window.location.href = "login.html";
     });
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (event) => {
-        if (event.ctrlKey || event.metaKey) {
-            switch (event.key) {
-                case 'd':
-                    event.preventDefault();
-                    window.location.href = 'index.html';
-                    break;
-                case 'e':
-                    event.preventDefault();
-                    window.location.href = 'employees.html';
-                    break;
-                case 'c':
-                    event.preventDefault();
-                    window.location.href = 'courses.html';
-                    break;
-                case 'a':
-                    event.preventDefault();
-                    window.location.href = 'assessments.html';
-                    break;
-                case 'r':
-                    event.preventDefault();
-                    window.location.href = 'reports.html';
-                    break;
-            }
-        }
-    });
-
-    // Data Visualization
-    const skillDistribution = document.getElementById('skillDistribution');
-    const completionTrends = document.getElementById('completionTrends');
-
-    if (skillDistribution) {
-        new Chart(skillDistribution, {
-            type: 'pie',
-            data: {
-                labels: ['JavaScript', 'Python', 'Java', 'C++', 'Ruby'],
-                datasets: [{
-                    data: [30, 25, 20, 15, 10],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-    }
-
-    if (completionTrends) {
-        new Chart(completionTrends, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Course Completion Rate',
-                    data: [65, 70, 75, 80, 85, 90],
-                    borderColor: '#36A2EB',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-    }
-
-    // Progress Bar
-    function updateProgressBar(percentage) {
-        const progressBar = document.getElementById('overallProgress');
-        const progressPercentage = document.getElementById('progressPercentage');
-        progressBar.style.width = percentage + '%';
-        progressPercentage.textContent = percentage + '% Complete';
-    }
-
-    // Skill Radar Chart
-    function createSkillRadarChart() {
-        const ctx = document.getElementById('skillRadar').getContext('2d');
-        new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: ['JavaScript', 'Python', 'Java', 'C++', 'Ruby'],
-                datasets: [{
-                    label: 'Your Skills',
-                    data: [70, 65, 60, 80, 75],
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    pointBackgroundColor: 'rgb(255, 99, 132)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgb(255, 99, 132)'
-                }]
-            },
-            options: {
-                elements: {
-                    line: {
-                        borderWidth: 3
-                    }
-                },
-                scale: {
-                    ticks: {
-                        beginAtZero: true,
-                        max: 100
-                    }
-                }
-            }
-        });
-    }
-
-    // Recent Achievements
-    function addAchievement(achievement) {
-        const achievementsList = document.getElementById('achievementsList');
-        const li = document.createElement('li');
-        li.textContent = achievement;
-        achievementsList.prepend(li);
-    }
-
-    // Learning Streak
-    function updateStreak(days) {
-        const streakCount = document.getElementById('streakCount');
-        streakCount.textContent = days;
-    }
-
-    // Personalized Recommendations
-    function addRecommendation(recommendation) {
-        const recommendationsList = document.getElementById('recommendationsList');
-        const li = document.createElement('li');
-        li.textContent = recommendation;
-        recommendationsList.appendChild(li);
-    }
-
-    // Initialize student progress features
-    updateProgressBar(75); // Example: 75% complete
-    createSkillRadarChart();
-    addAchievement('Completed JavaScript Basics course');
-    addAchievement('Earned Python Intermediate badge');
-    updateStreak(5); // Example: 5-day streak
-    addRecommendation('Take the Advanced JavaScript course');
-    addRecommendation('Practice more Python coding challenges');
-
-    // Skill Proficiency Levels
-    function createSkillProficiencyChart() {
-        const ctx = document.getElementById('skillProficiencyChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['JavaScript', 'Python', 'Java', 'C++', 'Ruby'],
-                datasets: [{
-                    label: 'Proficiency Level',
-                    data: [80, 65, 70, 55, 60],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(54, 162, 235, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(75, 192, 192, 0.6)',
-                        'rgba(153, 102, 255, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
-                    }
-                }
-            }
-        });
-    }
-
-    // Study Time Tracker
-    function createStudyTimeChart() {
-        const ctx = document.getElementById('studyTimeChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Study Hours',
-                    data: [2, 3, 1.5, 4, 2.5, 3.5, 2],
-                    fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-
-    // Goals
-    function initializeGoals() {
-        const goalsList = document.getElementById('goalsList');
-        const addGoalBtn = document.getElementById('addGoalBtn');
-        
-        const goals = [
-            { text: 'Complete JavaScript course', progress: 75 },
-            { text: 'Build a portfolio project', progress: 30 }
-        ];
-        
-        function renderGoals() {
-            goalsList.innerHTML = '';
-            goals.forEach((goal, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>${goal.text}</span>
-                    <progress value="${goal.progress}" max="100"></progress>
-                    <button onclick="removeGoal(${index})">Remove</button>
-                `;
-                goalsList.appendChild(li);
-            });
-        }
-        
-        addGoalBtn.addEventListener('click', () => {
-            const newGoal = prompt('Enter a new goal:');
-            if (newGoal) {
-                goals.push({ text: newGoal, progress: 0 });
-                renderGoals();
-            }
-        });
-        
-        window.removeGoal = function(index) {
-            goals.splice(index, 1);
-            renderGoals();
-        };
-        
-        renderGoals();
-    }
-
-    // Peer Comparison
-    function createPeerComparisonChart() {
-        const ctx = document.getElementById('peerComparisonChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: ['Problem Solving', 'Coding Speed', 'Code Quality', 'Teamwork', 'Communication'],
-                datasets: [{
-                    label: 'You',
-                    data: [80, 70, 75, 85, 80],
-                    fill: true,
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    pointBackgroundColor: 'rgb(255, 99, 132)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgb(255, 99, 132)'
-                }, {
-                    label: 'Average Peer',
-                    data: [70, 75, 70, 75, 75],
-                    fill: true,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgb(54, 162, 235)',
-                    pointBackgroundColor: 'rgb(54, 162, 235)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgb(54, 162, 235)'
-                }]
-            }
-        });
-    }
-
-    // Initialize peer comparison chart
-    createPeerComparisonChart();
+  }
 });

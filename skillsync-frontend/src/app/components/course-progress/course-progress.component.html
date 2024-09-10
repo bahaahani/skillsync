@@ -1,0 +1,8 @@
+<div class="progress-container">
+  <h3>Course Progress</h3>
+  <div class="progress-bar">
+    <div class="progress" [style.width.%]="progress"></div>
+  </div>
+  <p>{{ progress }}% complete</p>
+  <button (click)="updateProgress()">Update Progress</button>
+</div>

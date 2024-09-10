@@ -1,0 +1,29 @@
+<div class="user-settings-container">
+  <h2>User Settings</h2>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" formControlName="username" required>
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" formControlName="email" required>
+    </div>
+    <div>
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" formControlName="firstName">
+    </div>
+    <div>
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" formControlName="lastName">
+    </div>
+    <div>
+      <label for="bio">Bio:</label>
+      <textarea id="bio" formControlName="bio"></textarea>
+    </div>
+    <button type="submit" [disabled]="!userForm.valid">Update Profile</button>
+  </form>
+  <p *ngIf="message" [ngClass]="{'success': message.includes('successfully'), 'error': message.includes('Error')}">
+    {{ message }}
+  </p>
+</div>

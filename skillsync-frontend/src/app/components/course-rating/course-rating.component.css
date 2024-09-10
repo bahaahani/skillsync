@@ -1,0 +1,12 @@
+.rating {
+  font-size: 24px;
+  color: #ddd;
+}
+
+.rating .filled {
+  color: #ffd700;
+}
+
+.rating span:not(.readonly) {
+  cursor: pointer;
+}

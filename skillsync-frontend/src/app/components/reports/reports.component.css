@@ -1,0 +1,19 @@
+.report-controls {
+  margin-bottom: 20px;
+}
+
+.report-controls select {
+  margin-right: 10px;
+  padding: 5px;
+}
+
+.report-container {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.report-summary {
+  margin-top: 20px;
+  font-weight: bold;
+}

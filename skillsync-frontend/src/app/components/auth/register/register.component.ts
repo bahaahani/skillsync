@@ -1,0 +1,50 @@
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+@Component({
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.css'],
+    standalone: true,
+    imports: [ReactiveFormsModule, CommonModule]
+})
+export class RegisterComponent {
+    registerForm: FormGroup;
+    errorMessage: string = '';
+
+    constructor(
+        private fb: FormBuilder,
+        private authService: AuthService,
+        private router: Router
+    ) {
+        this.registerForm = this.fb.group({
+            name: ['', [Validators.required]],
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required, Validators.minLength(6)]],
+            confirmPassword: ['', [Validators.required]]
+        }, { validator: this.passwordMatchValidator });
+    }
+
+    passwordMatchValidator(g: FormGroup) {
+        return g.get('password')?.value === g.get('confirmPassword')?.value
+            ? null : { 'mismatch': true };
+    }
+
+    onSubmit() {
+        if (this.registerForm.valid) {
+            const { name, email, password } = this.registerForm.value;
+            this.authService.register(name, email, password).subscribe(
+                response => {
+                    console.log('Registration successful', response);
+                    this.router.navigate(['/login']);
+                },
+                error => {
+                    this.errorMessage = 'Registration failed. Please try again.';
+                    console.error('Registration error', error);
+                }
+            );
+        }
+    }
+}

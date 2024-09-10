@@ -1,0 +1,21 @@
+.dashboard {
+  padding: 20px;
+}
+
+.widgets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.widget {
+  flex: 1;
+  min-width: 250px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+progress {
+  width: 100%;
+}

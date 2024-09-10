@@ -1,0 +1,58 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <h2 class="text-2xl font-semibold text-gray-900">Employee Management</h2>
+  <div class="mt-4">
+    <button (click)="openAddEmployeeModal()" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      Add New Employee
+    </button>
+  </div>
+  <div class="mt-4">
+    <input type="text" [(ngModel)]="searchTerm" (keyup)="searchEmployees()" placeholder="Search employees..." class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+  </div>
+  <div class="mt-8 flex flex-col">
+    <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+        <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <table class="min-w-full divide-y divide-gray-300">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Department</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Job Role</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Skills</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Team</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Development Plan</th>
+                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                  <span class="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 bg-white">
+              <tr *ngFor="let employee of employees">
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ employee.name }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employee.department }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employee.jobRole }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employee.skills.join(', ') }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employee.team }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employee.developmentPlan }}</td>
+                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                  <button (click)="openEditEmployeeModal(employee)" class="text-indigo-600 hover:text-indigo-900">Edit</button>
+                  <button (click)="openDeleteConfirmation(employee)" class="ml-3 text-red-600 hover:text-red-900">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Employee Form Modal -->
+<!-- ... (keep the existing modal code, but add Tailwind classes for styling) ... -->
+
+<app-confirmation-dialog
+  [isOpen]="showConfirmDialog"
+  [message]="confirmDialogMessage"
+  (confirm)="confirmDelete()"
+  (cancel)="cancelDelete()">
+</app-confirmation-dialog>

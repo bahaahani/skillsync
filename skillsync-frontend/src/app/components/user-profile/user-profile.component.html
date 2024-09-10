@@ -1,0 +1,20 @@
+<div class="user-profile-container">
+  <h2>User Profile</h2>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <p *ngIf="error" class="error-message">{{ error }}</p>
+  <form *ngIf="!isLoading && !error" (ngSubmit)="updateProfile()">
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="user.name" name="name" required>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput [(ngModel)]="user.email" name="email" required type="email">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Bio</mat-label>
+      <textarea matInput [(ngModel)]="user.bio" name="bio"></textarea>
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Update Profile</button>
+  </form>
+</div>
