@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Course from '../models/Course.js';
 import Review from '../models/Review.js';
 import User from '../models/User.js';
@@ -17,15 +18,31 @@ export const getAllCourses = async (req, res, next) => {
   }
 };
 
-export const getCourseById = async (req, res, next) => {
+export const getCourseById = async (req, res) => {
   try {
-    const course = await Course.findById(req.params.id);
+    const { id } = req.params;
+    
+    // Check if the id is 'stats' and handle it separately
+    if (id === 'stats') {
+      // Handle the stats route here
+      // For example:
+      return res.json({ message: 'Course stats endpoint' });
+    }
+
+    // Validate if the id is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid course ID' });
+    }
+
+    // For normal course IDs, proceed with finding the course
+    const course = await Course.findById(id);
     if (!course) {
       return res.status(404).json({ message: 'Course not found' });
     }
     res.json(course);
   } catch (error) {
-    next(error);
+    console.error('Error in getCourseById:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -282,5 +299,27 @@ export const updateLessonProgress = async (req, res, next) => {
     res.json({ progress });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getRecommendedCourses = async (req, res) => {
+  try {
+    // Implement logic to fetch and return recommended courses
+    res.json({ message: 'Recommended courses data' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching recommended courses' });
+  }
+};
+
+export const getEnrolledCourses = async (userId) => {
+  try {
+    const user = await User.findById(userId).populate('enrolledCourses');
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return user.enrolledCourses;
+  } catch (error) {
+    console.error('Error in getEnrolledCourses:', error);
+    throw error;
   }
 };

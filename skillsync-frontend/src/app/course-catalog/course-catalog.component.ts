@@ -9,6 +9,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Course, CourseReview } from '../models/course.model';
 import { CourseReviewComponent } from '../components/course-review/course-review.component';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-course-catalog',
@@ -39,7 +41,8 @@ export class CourseCatalogComponent implements OnInit {
     private authService: AuthService,
     private courseService: CourseService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -66,6 +69,11 @@ export class CourseCatalogComponent implements OnInit {
         this.isLoading = false;
         this.courses = []; // Initialize as empty array in case of error
         this.applyFilters(); // Still apply filters to show empty state
+        if (error.status === 401 || error.status === 403) {
+          // Token is invalid or expired
+          console.log('Authentication failed. Redirecting to login.');
+          this.router.navigate(['/login']);
+        }
       }
     });
   }
@@ -214,14 +222,18 @@ export class CourseCatalogComponent implements OnInit {
   }
 
   enrollCourse(courseId: string) {
-    this.authService.enrollInCourse(courseId).subscribe({
+    this.courseService.enrollInCourse(courseId).subscribe({
       next: () => {
         this.enrollmentMessage = 'Successfully enrolled in the course';
         this.updateCourseEnrollmentStatus(courseId, true);
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         this.enrollmentMessage = 'Error enrolling in the course';
         console.error('Error enrolling in course:', error);
+        if (error.status === 401 || error.status === 403) {
+          console.log('Authentication failed. Redirecting to login.');
+          this.router.navigate(['/login']);
+        }
       }
     });
   }

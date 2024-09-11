@@ -5,6 +5,7 @@ import {
   createCourse,
   updateCourse,
   deleteCourse,
+  getEnrolledCourses,
 } from '../controllers/courseController.js';
 import { authenticateToken } from '../middleware/auth.js';
 import Course from '../models/Course.js';
@@ -13,13 +14,18 @@ import User from '../models/User.js';
 const router = express.Router();
 
 // Get enrolled courses
-router.get('/enrolled', authenticateToken, async (req, res) => {
+router.get('/enrolled', authenticateToken, async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id).populate('enrolledCourses');
-    res.json(user.enrolledCourses);
+    if (!req.user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+    const enrolledCourses = await getEnrolledCourses(req.user._id);
+    res.json(enrolledCourses);
   } catch (error) {
-    console.error('Error fetching enrolled courses:', error);
-    res.status(500).json({ message: 'Error fetching enrolled courses' });
+    if (error.message === 'User not found') {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    next(error);
   }
 });
 

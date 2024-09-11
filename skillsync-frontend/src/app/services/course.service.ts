@@ -157,4 +157,22 @@ export class CourseService {
   deleteCourseReview(courseId: string, reviewId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/courses/${courseId}/reviews/${reviewId}`);
   }
+
+  enrollInCourse(courseId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${courseId}/enroll`, {});
+  }
+
+  getEnrolledCourses(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/courses/enrolled`);
+  }
+
+  getRecentActivities(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/users/recent-activities`);
+  }
+
+  getCourseProgress(courseId: string): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/courses/${courseId}/progress`);
+  }
+
+  // Add more course-related methods as needed
 }

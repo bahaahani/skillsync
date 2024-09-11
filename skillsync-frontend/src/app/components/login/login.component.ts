@@ -34,6 +34,7 @@ export class LoginComponent {
         next: (response) => {
           this.isLoading = false;
           this.showSuccessMessage('Login successful');
+          // Navigate to a protected route
           this.router.navigate(['/dashboard']);
         },
         error: (error) => {

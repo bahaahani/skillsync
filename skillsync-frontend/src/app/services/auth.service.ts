@@ -7,48 +7,63 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api'; // Update with your actual API URL
+  private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   login(username: string, password: string, rememberMe: boolean): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/login`, { username, password })
+    return this.http.post<any>('/api/auth/login', { username, password })
       .pipe(
         tap(response => {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('userId', response.userId);
-          if (rememberMe) {
-            localStorage.setItem('rememberMe', 'true');
-          } else {
-            localStorage.removeItem('rememberMe');
+          if (response && response.token) {
+            this.setToken(response.token, rememberMe);
+            this.currentUserSubject.next(response.user);
           }
         })
       );
   }
 
-  logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('rememberMe');
-  }
-
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+  logout() {
+    localStorage.removeItem(this.tokenKey);
+    sessionStorage.removeItem(this.tokenKey);
+    this.currentUserSubject.next(null);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem(this.tokenKey) || sessionStorage.getItem(this.tokenKey);
   }
 
-  getCurrentUserId(): string | null {
-    return localStorage.getItem('userId');
+  private setToken(token: string, rememberMe: boolean) {
+    if (rememberMe) {
+      localStorage.setItem(this.tokenKey, token);
+    } else {
+      sessionStorage.setItem(this.tokenKey, token);
+    }
   }
 
-  isRememberMeSet(): boolean {
-    return localStorage.getItem('rememberMe') === 'true';
+  isLoggedIn(): boolean {
+    return !!this.getToken();
   }
 
-  enrollInCourse(courseId: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/courses/${courseId}/enroll`, {});
+  getUserProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/profile`);
   }
+
+  updateUserProfile(userData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/profile`, userData).pipe(
+      tap(updatedUser => {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      })
+    );
+  }
+
+  changePassword(passwordData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/change-password`, passwordData);
+  }
+
+  updateUserPreferences(preferences: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/preferences`, preferences);
+  }
+
+  // Add more user-related methods as needed
 }

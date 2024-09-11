@@ -2,16 +2,12 @@ import User from '../models/User.js';
 import cloudinary from '../utils/cloudinary.js';
 import mongoose from 'mongoose';
 
-export const getProfile = async (req, res, next) => {
+export const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id)
-      .select('-password')
-      .populate('coursesEnrolled', 'title')
-      .populate('coursesCompleted', 'title')
-      .populate('assessmentsTaken', 'title');
-    res.json(user);
+    // Implement logic to fetch and return user profile
+    res.json({ message: 'User profile data' });
   } catch (error) {
-    next(error);
+    res.status(500).json({ message: 'Error fetching user profile' });
   }
 };
 
@@ -151,5 +147,14 @@ export const deleteUser = async (req, res, next) => {
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getActivities = async (req, res) => {
+  try {
+    // Implement logic to fetch and return user activities
+    res.json({ message: 'User activities data' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching user activities' });
   }
 };
