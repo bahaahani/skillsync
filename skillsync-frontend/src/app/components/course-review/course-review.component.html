@@ -1,0 +1,44 @@
+<div class="course-reviews">
+  <h3>Reviews for {{ course.title }}</h3>
+
+  <div class="review-summary">
+    <p>Average Rating: {{ course.rating | number:'1.1-1' }}/5</p>
+    <!-- Add rating distribution here -->
+  </div>
+
+  <mat-form-field>
+    <mat-select [(ngModel)]="sortBy" (selectionChange)="onSortChange()">
+      <mat-option value="date">Sort by Date</mat-option>
+      <mat-option value="rating">Sort by Rating</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div *ngFor="let review of reviews" class="review">
+    <p><strong>{{ review.username }}</strong> - {{ review.rating }}/5</p>
+    <p>{{ review.content }}</p>
+    <p class="review-date">{{ review.createdAt | date }}</p>
+    <ng-container *ngIf="canEditReview(review)">
+      <button mat-button (click)="editReview(review)">Edit</button>
+      <button mat-button (click)="deleteReview(review._id)">Delete</button>
+    </ng-container>
+  </div>
+
+  <mat-paginator
+    [length]="totalReviews"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25]"
+    (page)="onPageChange($event)"
+  ></mat-paginator>
+
+  <div *ngIf="course.isEnrolled" class="add-review">
+    <h4>Add a Review</h4>
+    <mat-form-field>
+      <textarea matInput [(ngModel)]="newReviewContent" placeholder="Write your review"></textarea>
+    </mat-form-field>
+    <app-course-rating
+      [rating]="newReviewRating"
+      (ratingChange)="newReviewRating = $event"
+    ></app-course-rating>
+    <button mat-button (click)="addReview()">Submit Review</button>
+  </div>
+</div>

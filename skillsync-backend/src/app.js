@@ -22,6 +22,7 @@ import courseFeedbackRoutes from "./routes/courseFeedback.js";
 import instructorDashboardRoutes from "./routes/instructorDashboard.js";
 import apiV1Routes from "./routes/api.js";
 
+// Load environment variables
 dotenv.config();
 
 const app = express();
