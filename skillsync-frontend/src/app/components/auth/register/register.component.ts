@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
@@ -35,12 +36,13 @@ export class RegisterComponent {
     onSubmit() {
         if (this.registerForm.valid) {
             const { name, email, password } = this.registerForm.value;
-            this.authService.register(name, email, password).subscribe(
-                response => {
+            const userData = { name, email, password };
+            this.authService.register(userData).subscribe(
+                (response: any) => {
                     console.log('Registration successful', response);
                     this.router.navigate(['/login']);
                 },
-                error => {
+                (error: any) => {
                     this.errorMessage = 'Registration failed. Please try again.';
                     console.error('Registration error', error);
                 }

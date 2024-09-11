@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -8,15 +8,32 @@ import { tap } from 'rxjs/operators';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api';
+  private tokenKey = 'auth_token';
+  private currentUserSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    const user = this.getToken() ? JSON.parse(localStorage.getItem('user') || '{}') : null;
+    this.currentUserSubject = new BehaviorSubject<any>(user);
+  }
 
   login(username: string, password: string, rememberMe: boolean): Observable<any> {
-    return this.http.post<any>('/api/auth/login', { username, password })
+    return this.http.post<any>(`${this.apiUrl}/auth/login`, { username, password })
       .pipe(
         tap(response => {
           if (response && response.token) {
             this.setToken(response.token, rememberMe);
+            this.currentUserSubject.next(response.user);
+          }
+        })
+      );
+  }
+
+  register(userData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/register`, userData)
+      .pipe(
+        tap(response => {
+          if (response && response.token) {
+            this.setToken(response.token, true);
             this.currentUserSubject.next(response.user);
           }
         })
@@ -53,6 +70,7 @@ export class AuthService {
     return this.http.put(`${this.apiUrl}/users/profile`, userData).pipe(
       tap(updatedUser => {
         localStorage.setItem('user', JSON.stringify(updatedUser));
+        this.currentUserSubject.next(updatedUser);
       })
     );
   }
@@ -65,5 +83,7 @@ export class AuthService {
     return this.http.put(`${this.apiUrl}/users/preferences`, preferences);
   }
 
-  // Add more user-related methods as needed
+  getCurrentUser(): Observable<any> {
+    return this.currentUserSubject.asObservable();
+  }
 }

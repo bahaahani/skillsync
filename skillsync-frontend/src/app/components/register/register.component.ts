@@ -19,11 +19,18 @@ export class RegisterComponent {
   ) {}
 
   onSubmit() {
-    this.authService.register({ username: this.username, email: this.email, password: this.password }).subscribe({
-      next: () => {
+    const userData = {
+      name: this.username,
+      email: this.email,
+      password: this.password
+    };
+
+    this.authService.register(userData).subscribe({
+      next: (response: any) => {
+        console.log('Registration successful', response);
         this.router.navigate(['/login']);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.error = 'Registration failed. Please try again.';
         console.error('Registration error:', err);
       }
