@@ -1,0 +1,18 @@
+.course-recommendations {
+  padding: 20px;
+}
+
+.course-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+mat-card {
+  max-width: 300px;
+}
+
+mat-card-content {
+  height: 100px;
+  overflow: hidden;
+}

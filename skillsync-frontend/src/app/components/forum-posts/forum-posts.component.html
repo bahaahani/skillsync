@@ -1,0 +1,32 @@
+<div class="forum-posts">
+  <h2>{{ 'FORUM.POSTS' | translate }}</h2>
+
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+  <div *ngIf="!isLoading">
+    <mat-card *ngFor="let post of posts">
+      <mat-card-header>
+        <mat-card-title>{{ post.author }}</mat-card-title>
+        <mat-card-subtitle>{{ post.createdAt | date }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ post.content }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ 'FORUM.REPLY' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form (ngSubmit)="createPost(contentInput.value)">
+          <mat-form-field appearance="fill">
+            <mat-label>{{ 'FORUM.POST_CONTENT' | translate }}</mat-label>
+            <textarea matInput #contentInput required></textarea>
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="submit">{{ 'FORUM.SUBMIT' | translate }}</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

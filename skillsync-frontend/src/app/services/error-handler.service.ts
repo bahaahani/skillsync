@@ -1,27 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NotificationService } from './notification.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ErrorHandlerService {
-  constructor(private notificationService: NotificationService) {}
+  constructor(private snackBar: MatSnackBar) {}
 
   handleError(error: Error | HttpErrorResponse) {
     let errorMessage: string;
 
     if (error instanceof HttpErrorResponse) {
       // Server or connection error happened
-      errorMessage = error.error instanceof ErrorEvent 
-        ? `Error: ${error.error.message}`
-        : `Error Code: ${error.status}\nMessage: ${error.message}`;
+      if (!navigator.onLine) {
+        errorMessage = 'No Internet Connection';
+      } else {
+        // Http Error
+        errorMessage = `${error.status} - ${error.message}`;
+      }
     } else {
-      // Client-side error
+      // Client Error
       errorMessage = error.message ? error.message : error.toString();
     }
 
-    console.error(errorMessage);
-    this.notificationService.showError(errorMessage);
+    this.showErrorMessage(errorMessage);
+  }
+
+  private showErrorMessage(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      panelClass: ['error-snackbar']
+    });
   }
 }

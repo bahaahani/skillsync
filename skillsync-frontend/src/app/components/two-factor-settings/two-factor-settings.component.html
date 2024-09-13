@@ -1,0 +1,40 @@
+<div class="two-factor-settings">
+  <h2>{{ 'TWO_FACTOR.TITLE' | translate }}</h2>
+  
+  <ng-container *ngIf="!twoFactorEnabled">
+    <p>{{ 'TWO_FACTOR.NOT_ENABLED' | translate }}</p>
+    <button mat-raised-button color="primary" (click)="enableTwoFactor()">
+      {{ 'TWO_FACTOR.ENABLE' | translate }}
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="twoFactorEnabled">
+    <p>{{ 'TWO_FACTOR.ENABLED' | translate }}</p>
+    <button mat-raised-button color="warn" (click)="disableTwoFactor()">
+      {{ 'TWO_FACTOR.DISABLE' | translate }}
+    </button>
+  </ng-container>
+
+  <ng-container *ngIf="qrCodeUrl">
+    <h3>{{ 'TWO_FACTOR.SETUP' | translate }}</h3>
+    <p>{{ 'TWO_FACTOR.SCAN_QR' | translate }}</p>
+    <img [src]="qrCodeUrl" alt="QR Code">
+    <p>{{ 'TWO_FACTOR.MANUAL_ENTRY' | translate }}: {{ secret }}</p>
+    
+    <form [formGroup]="setupForm" (ngSubmit)="verifySetup()">
+      <mat-form-field appearance="fill">
+        <mat-label>{{ 'TWO_FACTOR.VERIFICATION_CODE' | translate }}</mat-label>
+        <input matInput formControlName="code" required>
+        <mat-error *ngIf="setupForm.get('code')?.hasError('required')">
+          {{ 'TWO_FACTOR.CODE_REQUIRED' | translate }}
+        </mat-error>
+        <mat-error *ngIf="setupForm.get('code')?.hasError('minlength') || setupForm.get('code')?.hasError('maxlength')">
+          {{ 'TWO_FACTOR.CODE_LENGTH' | translate }}
+        </mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="setupForm.invalid">
+        {{ 'TWO_FACTOR.VERIFY' | translate }}
+      </button>
+    </form>
+  </ng-container>
+</div>

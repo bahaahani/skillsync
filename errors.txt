@@ -1,0 +1,1009 @@
+    src/app/components/login/login.component.html:45:6:
+      45 │       <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component LoginComponent.
+
+    src/app/components/login/login.component.ts:12:15:
+      12 │   templateUrl: './login.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/login/login.component.html:46:51:
+      46 │ ...  <span *ngIf="!isLoading">{{ 'LOGIN.VERIFY' | translate }}</span>
+         ╵                                                   ~~~~~~~~~
+
+  Error occurs in the template of component LoginComponent.
+
+    src/app/components/login/login.component.ts:12:15:
+      12 │   templateUrl: './login.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-icon' is not a known element:
+1. If 'mat-icon' is an Angular component, then verify that it is part of this module.
+2. If 'mat-icon' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/login/login.component.html:53:4:
+      53 │     <mat-icon svgIcon="google-logo"></mat-icon>
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component LoginComponent.
+
+    src/app/components/login/login.component.ts:12:15:
+      12 │   templateUrl: './login.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/login/login.component.html:54:32:
+      54 │     {{ 'LOGIN.GOOGLE_SIGN_IN' | translate }}
+         ╵                                 ~~~~~~~~~
+
+  Error occurs in the template of component LoginComponent.
+
+    src/app/components/login/login.component.ts:12:15:
+      12 │   templateUrl: './login.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-icon' is not a known element:
+1. If 'mat-icon' is an Angular component, then verify that it is part of this module.
+2. If 'mat-icon' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/login/login.component.html:57:4:
+      57 │     <mat-icon svgIcon="facebook-logo"></mat-icon>
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component LoginComponent.
+
+    src/app/components/login/login.component.ts:12:15:
+      12 │   templateUrl: './login.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/login/login.component.html:58:34:
+      58 │     {{ 'LOGIN.FACEBOOK_SIGN_IN' | translate }}
+         ╵                                   ~~~~~~~~~
+
+  Error occurs in the template of component LoginComponent.
+
+    src/app/components/login/login.component.ts:12:15:
+      12 │   templateUrl: './login.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2341: Property 'showErrorMessage' is private and only accessible within class 'ErrorHandlingService'. [plugin angular-compiler]
+
+    src/app/components/login/login.component.ts:68:24:
+      68 │       this.errorHandler.showErrorMessage('LOGIN.FILL_ALL_FIELDS');
+         ╵                         ~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'formGroup' since it isn't a known property of 'form'. [plugin angular-compiler]
+
+    src/app/components/password-reset/password-reset.component.html:3:8:
+      3 │   <form [formGroup]="resetForm" (ngSubmit)="onSubmit()">
+        ╵         ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PasswordResetComponent.
+
+    src/app/components/password-reset/password-reset.component.ts:10:15:
+      10 │   templateUrl: './password-reset.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-form-field' is not a known element:
+1. If 'mat-form-field' is an Angular component, then verify that it is part of this module.
+2. If 'mat-form-field' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/password-reset/password-reset.component.html:4:4:
+      4 │     <mat-form-field appearance="fill">
+        ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PasswordResetComponent.
+
+    src/app/components/password-reset/password-reset.component.ts:10:15:
+      10 │   templateUrl: './password-reset.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-label' is not a known element:
+1. If 'mat-label' is an Angular component, then verify that it is part of this module.
+2. If 'mat-label' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/password-reset/password-reset.component.html:5:6:
+      5 │       <mat-label>New Password</mat-label>
+        ╵       ~~~~~~~~~~~
+
+  Error occurs in the template of component PasswordResetComponent.
+
+    src/app/components/password-reset/password-reset.component.ts:10:15:
+      10 │   templateUrl: './password-reset.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/password-reset/password-reset.component.html:7:6:
+      7 │       <mat-error *ngIf="resetForm.get('password')?.hasError('requir...
+        ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PasswordResetComponent.
+
+    src/app/components/password-reset/password-reset.component.ts:10:15:
+      10 │   templateUrl: './password-reset.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/password-reset/password-reset.component.html:8:6:
+      8 │       <mat-error *ngIf="resetForm.get('password')?.hasError('minlen...
+        ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PasswordResetComponent.
+
+    src/app/components/password-reset/password-reset.component.ts:10:15:
+      10 │   templateUrl: './password-reset.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-form-field' is not a known element:
+1. If 'mat-form-field' is an Angular component, then verify that it is part of this module.
+2. If 'mat-form-field' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/password-reset/password-reset.component.html:11:4:
+      11 │     <mat-form-field appearance="fill">
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PasswordResetComponent.
+
+    src/app/components/password-reset/password-reset.component.ts:10:15:
+      10 │   templateUrl: './password-reset.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-label' is not a known element:
+1. If 'mat-label' is an Angular component, then verify that it is part of this module.
+2. If 'mat-label' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/password-reset/password-reset.component.html:12:6:
+      12 │       <mat-label>Confirm Password</mat-label>
+         ╵       ~~~~~~~~~~~
+
+  Error occurs in the template of component PasswordResetComponent.
+
+    src/app/components/password-reset/password-reset.component.ts:10:15:
+      10 │   templateUrl: './password-reset.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/password-reset/password-reset.component.html:14:6:
+      14 │       <mat-error *ngIf="resetForm.get('confirmPassword')?.hasError...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PasswordResetComponent.
+
+    src/app/components/password-reset/password-reset.component.ts:10:15:
+      10 │   templateUrl: './password-reset.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/password-reset/password-reset.component.html:15:6:
+      15 │       <mat-error *ngIf="resetForm.hasError('notSame')">Passwords d...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component PasswordResetComponent.
+
+    src/app/components/password-reset/password-reset.component.ts:10:15:
+      10 │   templateUrl: './password-reset.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'formGroup' since it isn't a known property of 'form'. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:3:8:
+      3 │   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-form-field' is not a known element:
+1. If 'mat-form-field' is an Angular component, then verify that it is part of this module.
+2. If 'mat-form-field' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:4:4:
+      4 │     <mat-form-field appearance="fill">
+        ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-label' is not a known element:
+1. If 'mat-label' is an Angular component, then verify that it is part of this module.
+2. If 'mat-label' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:5:6:
+      5 │       <mat-label>Name</mat-label>
+        ╵       ~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:7:6:
+      7 │       <mat-error *ngIf="registerForm.get('name')?.hasError('require...
+        ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-form-field' is not a known element:
+1. If 'mat-form-field' is an Angular component, then verify that it is part of this module.
+2. If 'mat-form-field' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:10:4:
+      10 │     <mat-form-field appearance="fill">
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-label' is not a known element:
+1. If 'mat-label' is an Angular component, then verify that it is part of this module.
+2. If 'mat-label' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:11:6:
+      11 │       <mat-label>Email</mat-label>
+         ╵       ~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:13:6:
+      13 │       <mat-error *ngIf="registerForm.get('email')?.hasError('requi...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:14:6:
+      14 │       <mat-error *ngIf="registerForm.get('email')?.hasError('email...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-form-field' is not a known element:
+1. If 'mat-form-field' is an Angular component, then verify that it is part of this module.
+2. If 'mat-form-field' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:17:4:
+      17 │     <mat-form-field appearance="fill">
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-label' is not a known element:
+1. If 'mat-label' is an Angular component, then verify that it is part of this module.
+2. If 'mat-label' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:18:6:
+      18 │       <mat-label>Password</mat-label>
+         ╵       ~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:20:6:
+      20 │       <mat-error *ngIf="registerForm.get('password')?.hasError('re...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:21:6:
+      21 │       <mat-error *ngIf="registerForm.get('password')?.hasError('mi...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:22:6:
+      22 │       <mat-error *ngIf="registerForm.get('password')?.hasError('we...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-form-field' is not a known element:
+1. If 'mat-form-field' is an Angular component, then verify that it is part of this module.
+2. If 'mat-form-field' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:25:4:
+      25 │     <mat-form-field appearance="fill">
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-label' is not a known element:
+1. If 'mat-label' is an Angular component, then verify that it is part of this module.
+2. If 'mat-label' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:26:6:
+      26 │       <mat-label>Confirm Password</mat-label>
+         ╵       ~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:28:6:
+      28 │       <mat-error *ngIf="registerForm.get('confirmPassword')?.hasEr...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:29:6:
+      29 │       <mat-error *ngIf="registerForm.hasError('notSame')">Password...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-spinner' is not a known element:
+1. If 'mat-spinner' is an Angular component, then verify that it is part of this module.
+2. If 'mat-spinner' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/register/register.component.html:33:6:
+      33 │       <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component RegisterComponent.
+
+    src/app/components/register/register.component.ts:10:15:
+      10 │   templateUrl: './register.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:2:30:
+      2 │   <h2>{{ 'TWO_FACTOR.TITLE' | translate }}</h2>
+        ╵                               ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:5:37:
+      5 │     <p>{{ 'TWO_FACTOR.NOT_ENABLED' | translate }}</p>
+        ╵                                      ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:7:31:
+      7 │       {{ 'TWO_FACTOR.ENABLE' | translate }}
+        ╵                                ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:12:33:
+      12 │     <p>{{ 'TWO_FACTOR.ENABLED' | translate }}</p>
+         ╵                                  ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:14:32:
+      14 │       {{ 'TWO_FACTOR.DISABLE' | translate }}
+         ╵                                 ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:19:32:
+      19 │     <h3>{{ 'TWO_FACTOR.SETUP' | translate }}</h3>
+         ╵                                 ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:20:33:
+      20 │     <p>{{ 'TWO_FACTOR.SCAN_QR' | translate }}</p>
+         ╵                                  ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:22:38:
+      22 │     <p>{{ 'TWO_FACTOR.MANUAL_ENTRY' | translate }}: {{ secret }}</p>
+         ╵                                       ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'formGroup' since it isn't a known property of 'form'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:24:10:
+      24 │     <form [formGroup]="setupForm" (ngSubmit)="verifySetup()">
+         ╵           ~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-form-field' is not a known element:
+1. If 'mat-form-field' is an Angular component, then verify that it is part of this module.
+2. If 'mat-form-field' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:25:6:
+      25 │       <mat-form-field appearance="fill">
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-label' is not a known element:
+1. If 'mat-label' is an Angular component, then verify that it is part of this module.
+2. If 'mat-label' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:26:8:
+      26 │         <mat-label>{{ 'TWO_FACTOR.VERIFICATION_CODE' | translate }...
+         ╵         ~~~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:26:55:
+      26 │ ...label>{{ 'TWO_FACTOR.VERIFICATION_CODE' | translate }}</mat-label>
+         ╵                                              ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:28:8:
+      28 │         <mat-error *ngIf="setupForm.get('code')?.hasError('require...
+         ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:29:42:
+      29 │           {{ 'TWO_FACTOR.CODE_REQUIRED' | translate }}
+         ╵                                           ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:31:8:
+      31 │         <mat-error *ngIf="setupForm.get('code')?.hasError('minleng...
+         ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:32:40:
+      32 │           {{ 'TWO_FACTOR.CODE_LENGTH' | translate }}
+         ╵                                         ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/two-factor-settings/two-factor-settings.component.html:36:33:
+      36 │         {{ 'TWO_FACTOR.VERIFY' | translate }}
+         ╵                                  ~~~~~~~~~
+
+  Error occurs in the template of component TwoFactorSettingsComponent.
+
+    src/app/components/two-factor-settings/two-factor-settings.component.ts:9:15:
+      9 │   templateUrl: './two-factor-settings.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-icon' is not a known element:
+1. If 'mat-icon' is an Angular component, then verify that it is part of this module.
+2. If 'mat-icon' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/unauthorized/unauthorized.component.html:2:2:
+      2 │   <mat-icon class="warning-icon">warning</mat-icon>
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component UnauthorizedComponent.
+
+    src/app/components/unauthorized/unauthorized.component.ts:7:15:
+      7 │   templateUrl: './unauthorized.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/unauthorized/unauthorized.component.html:3:32:
+      3 │   <h1>{{ 'UNAUTHORIZED.TITLE' | translate }}</h1>
+        ╵                                 ~~~~~~~~~
+
+  Error occurs in the template of component UnauthorizedComponent.
+
+    src/app/components/unauthorized/unauthorized.component.ts:7:15:
+      7 │   templateUrl: './unauthorized.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/unauthorized/unauthorized.component.html:4:33:
+      4 │   <p>{{ 'UNAUTHORIZED.MESSAGE' | translate }}</p>
+        ╵                                  ~~~~~~~~~
+
+  Error occurs in the template of component UnauthorizedComponent.
+
+    src/app/components/unauthorized/unauthorized.component.ts:7:15:
+      7 │   templateUrl: './unauthorized.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/unauthorized/unauthorized.component.html:6:44:
+      6 │     {{ 'UNAUTHORIZED.RETURN_TO_DASHBOARD' | translate }}
+        ╵                                             ~~~~~~~~~
+
+  Error occurs in the template of component UnauthorizedComponent.
+
+    src/app/components/unauthorized/unauthorized.component.ts:7:15:
+      7 │   templateUrl: './unauthorized.component.html',
+        ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:2:27:
+      2 │   <h2>{{ 'PROFILE.TITLE' | translate }}</h2>
+        ╵                            ~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:8:36:
+      8 │       {{ 'PROFILE.DELETE_PICTURE' | translate }}
+        ╵                                     ~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8002: Can't bind to 'formGroup' since it isn't a known property of 'form'. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:12:8:
+      12 │   <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+         ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-form-field' is not a known element:
+1. If 'mat-form-field' is an Angular component, then verify that it is part of this module.
+2. If 'mat-form-field' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:13:4:
+      13 │     <mat-form-field appearance="fill">
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-label' is not a known element:
+1. If 'mat-label' is an Angular component, then verify that it is part of this module.
+2. If 'mat-label' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:14:6:
+      14 │       <mat-label>{{ 'PROFILE.NAME' | translate }}</mat-label>
+         ╵       ~~~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:14:37:
+      14 │       <mat-label>{{ 'PROFILE.NAME' | translate }}</mat-label>
+         ╵                                      ~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:16:6:
+      16 │       <mat-error *ngIf="profileForm.get('name')?.hasError('require...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:17:37:
+      17 │         {{ 'PROFILE.NAME_REQUIRED' | translate }}
+         ╵                                      ~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-form-field' is not a known element:
+1. If 'mat-form-field' is an Angular component, then verify that it is part of this module.
+2. If 'mat-form-field' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:21:4:
+      21 │     <mat-form-field appearance="fill">
+         ╵     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-label' is not a known element:
+1. If 'mat-label' is an Angular component, then verify that it is part of this module.
+2. If 'mat-label' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:22:6:
+      22 │       <mat-label>{{ 'PROFILE.EMAIL' | translate }}</mat-label>
+         ╵       ~~~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:22:38:
+      22 │       <mat-label>{{ 'PROFILE.EMAIL' | translate }}</mat-label>
+         ╵                                       ~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:24:6:
+      24 │       <mat-error *ngIf="profileForm.get('email')?.hasError('requir...
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:25:38:
+      25 │         {{ 'PROFILE.EMAIL_REQUIRED' | translate }}
+         ╵                                       ~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8001: 'mat-error' is not a known element:
+1. If 'mat-error' is an Angular component, then verify that it is part of this module.
+2. If 'mat-error' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@NgModule.schemas' of this component to suppress this message. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:27:6:
+      27 │       <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+         ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:28:37:
+      28 │         {{ 'PROFILE.INVALID_EMAIL' | translate }}
+         ╵                                      ~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'translate'. [plugin angular-compiler]
+
+    src/app/components/user-profile/user-profile.component.html:33:26:
+      33 │       {{ 'PROFILE.SAVE' | translate }}
+         ╵                           ~~~~~~~~~
+
+  Error occurs in the template of component UserProfileComponent.
+
+    src/app/components/user-profile/user-profile.component.ts:9:17:
+      9 │     templateUrl: './user-profile.component.html',
+        ╵                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] TS2322: Type 'Observable<null>' is not assignable to type 'Observable<never>'.
+  Type 'null' is not assignable to type 'never'. [plugin angular-compiler]
+
+    src/app/services/api.service.ts:368:4:
+      368 │     return of(null as never);
+          ╵     ~~~~~~
+
+
+X [ERROR] TS2305: Module '"rxjs/operators"' has no exported member 'from'. [plugin angular-compiler]
+
+    src/app/services/auth.service.ts:8:9:
+      8 │ import { from, switchMap } from 'rxjs/operators';
+        ╵          ~~~~
+
+
+Watch mode enabled. Watching for file changes...

@@ -1,20 +1,36 @@
 <div class="user-profile-container">
-  <h2>User Profile</h2>
-  <mat-spinner *ngIf="isLoading"></mat-spinner>
-  <p *ngIf="error" class="error-message">{{ error }}</p>
-  <form *ngIf="!isLoading && !error" (ngSubmit)="updateProfile()">
+  <h2>{{ 'PROFILE.TITLE' | translate }}</h2>
+  
+  <div class="profile-picture-section">
+    <img [src]="user?.profilePictureUrl || 'assets/default-profile.png'" alt="Profile Picture">
+    <input type="file" (change)="onFileSelected($event)" accept="image/*">
+    <button mat-raised-button color="warn" (click)="deleteProfilePicture()" [disabled]="!user?.profilePictureUrl">
+      {{ 'PROFILE.DELETE_PICTURE' | translate }}
+    </button>
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="fill">
-      <mat-label>Name</mat-label>
-      <input matInput [(ngModel)]="user.name" name="name" required>
+      <mat-label>{{ 'PROFILE.NAME' | translate }}</mat-label>
+      <input matInput formControlName="name" required>
+      <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
+        {{ 'PROFILE.NAME_REQUIRED' | translate }}
+      </mat-error>
     </mat-form-field>
+
     <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input matInput [(ngModel)]="user.email" name="email" required type="email">
+      <mat-label>{{ 'PROFILE.EMAIL' | translate }}</mat-label>
+      <input matInput formControlName="email" required type="email">
+      <mat-error *ngIf="profileForm.get('email')?.hasError('required')">
+        {{ 'PROFILE.EMAIL_REQUIRED' | translate }}
+      </mat-error>
+      <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+        {{ 'PROFILE.INVALID_EMAIL' | translate }}
+      </mat-error>
     </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Bio</mat-label>
-      <textarea matInput [(ngModel)]="user.bio" name="bio"></textarea>
-    </mat-form-field>
-    <button mat-raised-button color="primary" type="submit">Update Profile</button>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid || isLoading">
+      {{ 'PROFILE.SAVE' | translate }}
+    </button>
   </form>
 </div>

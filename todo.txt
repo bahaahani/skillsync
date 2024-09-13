@@ -1,0 +1,87 @@
+TODO: Improvements and Refinements
+
+Completed:
+✓ Implement a global error handling mechanism for HTTP requests.
+✓ Create custom error types for different API errors.
+✓ Add more specific error messages in the AuthService and ApiService.
+✓ Implement a token refresh mechanism in the AuthService to handle token expiration.
+✓ Add an interceptor to automatically refresh the token when it's close to expiration.
+✓ Consider using a more secure storage method for the token instead of localStorage (switched to sessionStorage).
+✓ Implement a server-side logout endpoint to invalidate the token.
+✓ Clear all user-related data from local storage on logout.
+✓ Add more robust form validation in the login component (e.g., email format validation).
+✓ Implement custom validators if needed.
+✓ Create a global loading indicator service to manage loading states across the application.
+✓ Move the API URL to an environment file for easy configuration across different environments.
+✓ Implement route guards to protect routes that require authentication.
+✓ Implement a role-based access control system.
+✓ Add checks for user permissions in relevant components and services.
+✓ Add functionality for password reset and email verification.
+✓ Implement the "Remember Me" feature in the AuthService.
+✓ Implement caching for frequently accessed data to reduce API calls.
+✓ Improve accessibility of the login form (e.g., proper labels, ARIA attributes).
+✓ Implement password strength requirements and validation.
+✓ Add email verification for new user registrations.
+✓ Implement forgot password functionality.
+✓ Implement CSRF token handling for POST, PUT, and DELETE requests.
+✓ Implement lazy loading for modules to improve initial load time.
+✓ Prepare the application for internationalization (i18n) if multi-language support is needed.
+✓ Fix linter errors related to @ngx-translate/core imports
+✓ Update components to use TranslateService for internationalization
+✓ Resolve remaining Material component issues in templates.
+✓ Update translation files with new keys.
+✓ Write unit tests for AuthService, ApiService, and LoginComponent.
+✓ Use OnPush change detection strategy where applicable.
+✓ Implement rate limiting on the login endpoint to prevent brute force attacks (frontend part).
+✓ Add two-factor authentication option for enhanced security.
+✓ Resolve linter errors for two-factor authentication component.
+✓ Create unit tests for the TwoFactorSettingsComponent.
+✓ Create unit tests for the RegisterComponent.
+✓ Create unit tests for the PasswordResetComponent.
+✓ Create unit tests for the AdminDashboardComponent.
+✓ Create unit tests for the UnauthorizedComponent.
+✓ Enhance the user interface for the admin dashboard and unauthorized pages.
+✓ Update tests for AdminDashboardComponent and UnauthorizedComponent.
+✓ Implement more comprehensive unit tests for the new components and services.
+   - Wrote tests for AdminDashboardComponent
+   - Wrote tests for UnauthorizedComponent
+   - Wrote tests for TwoFactorSettingsComponent
+   - Wrote tests for PasswordResetComponent
+
+✓ Review and refactor code for better readability and maintainability (AuthService).
+✓ Review and refactor code for better readability and maintainability (ApiService).
+✓ Ensure consistent coding style and naming conventions across the project (ApiService).
+
+✓ Create comprehensive API documentation using JSDoc comments for ApiService.
+
+✓ Implement end-to-end tests for critical user flows.
+
+✓ Add more robust error handling and user feedback throughout the application.
+
+✓ Add user profile picture upload and management.
+
+✓ Implement social media login options (Google and Facebook).
+
+✓ Implement backend rate limiting for the login endpoint (frontend handling).
+
+✓ Implement real-time notifications for user activities and course updates.
+✓ Implement advanced analytics and reporting features for administrators.
+✓ Develop a mobile-friendly version of the platform (PWA).
+✓ Implement a recommendation system for personalized course suggestions.
+
+✓ Implement a feature flagging system for gradual rollout of new features.
+
+Prioritized tasks:
+
+1. Add support for more social login providers (e.g., Twitter, LinkedIn).
+2. Implement advanced search functionality with filters and sorting options.
+3. Add support for video conferencing integration for live online classes.
+4. Implement a content management system for course creators.
+5. Develop an API for third-party integrations and extensions.
+
+Remaining tasks:
+6. Implement a gamification system to increase user engagement.
+7. Add support for multiple payment gateways for course purchases.
+8. Implement an affiliate program for course promotions.
+9. Implement real-time collaboration features for group projects.
+10. Add support for course certificates and badges.

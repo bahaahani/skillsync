@@ -1,0 +1,77 @@
+<div class="admin-dashboard">
+  <h1>{{ 'ADMIN.DASHBOARD_TITLE' | translate }}</h1>
+  
+  <mat-form-field>
+    <mat-label>{{ 'ADMIN.SELECT_PERIOD' | translate }}</mat-label>
+    <mat-select [(ngModel)]="selectedPeriod" (selectionChange)="onPeriodChange()">
+      <mat-option value="week">{{ 'ADMIN.WEEK' | translate }}</mat-option>
+      <mat-option value="month">{{ 'ADMIN.MONTH' | translate }}</mat-option>
+      <mat-option value="year">{{ 'ADMIN.YEAR' | translate }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+  <div *ngIf="!isLoading" class="analytics-grid">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ 'ADMIN.OVERVIEW' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ 'ADMIN.TOTAL_USERS' | translate }}: {{ overviewStats?.totalUsers }}</p>
+        <p>{{ 'ADMIN.TOTAL_COURSES' | translate }}: {{ overviewStats?.totalCourses }}</p>
+        <p>{{ 'ADMIN.ACTIVE_USERS' | translate }}: {{ overviewStats?.activeUsers }}</p>
+        <p>{{ 'ADMIN.TOTAL_REVENUE' | translate }}: {{ overviewStats?.totalRevenue | currency }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ 'ADMIN.USER_GROWTH' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Add a chart or graph here to display user growth -->
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ 'ADMIN.COURSE_ENROLLMENTS' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Add a chart or graph here to display course enrollments -->
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ 'ADMIN.COURSE_COMPLETION_RATES' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Add a chart or graph here to display course completion rates -->
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ 'ADMIN.USER_ENGAGEMENT' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Add a chart or graph here to display user engagement -->
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ 'ADMIN.REVENUE_STATS' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- Add a chart or graph here to display revenue stats -->
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <button mat-raised-button color="primary" (click)="loadAllAnalytics()">
+    {{ 'ADMIN.REFRESH_DATA' | translate }}
+  </button>
+</div>

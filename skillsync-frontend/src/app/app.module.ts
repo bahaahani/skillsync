@@ -1,49 +1,51 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider, FacebookLoginProvider } from '@abacritt/angularx-social-login';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
-// Angular Material Imports
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatListModule } from '@angular/material/list';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { MatModules } from './modules/mat-modules';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CourseCatalogComponent } from './course-catalog/course-catalog.component';
-import { CourseDetailsComponent } from './course-details/course-details.component';
-import { CourseRatingComponent } from './components/course-rating/course-rating.component';
-import { CourseReviewComponent } from './components/course-review/course-review.component';
 import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { CourseRecommendationsComponent } from './components/course-recommendations/course-recommendations.component';
+import { ForumTopicsComponent } from './components/forum-topics/forum-topics.component';
+import { ForumPostsComponent } from './components/forum-posts/forum-posts.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { PasswordResetComponent } from './components/password-reset/password-reset.component';
+import { TwoFactorSettingsComponent } from './components/two-factor-settings/two-factor-settings.component';
+
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { FeatureFlagService } from './services/feature-flag.service';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
     AppComponent,
-    CourseCatalogComponent,
-    CourseDetailsComponent,
-    CourseRatingComponent,
-    CourseReviewComponent,
     LoginComponent,
+    RegisterComponent,
     DashboardComponent,
+    AdminDashboardComponent,
     UserProfileComponent,
+    CourseRecommendationsComponent,
+    ForumTopicsComponent,
+    ForumPostsComponent,
+    UnauthorizedComponent,
+    PasswordResetComponent,
+    TwoFactorSettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -52,26 +54,41 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatToolbarModule,
-    MatInputModule,
-    MatSelectModule,
-    MatChipsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatPaginatorModule,
-    MatSnackBarModule,
-    MatDialogModule,
-    MatTooltipModule,
-    MatExpansionModule,
-    MatProgressSpinnerModule,
-    MatFormFieldModule,
-    MatListModule,
-    MatCheckboxModule,
+    MatModules,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      },
+      defaultLanguage: 'en'
+    }),
+    SocialLoginModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    FeatureFlagService,
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider('your_google_client_id')
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider('your_facebook_app_id')
+          }
+        ]
+      } as SocialAuthServiceConfig,
+    }
   ],
   bootstrap: [AppComponent]
 })

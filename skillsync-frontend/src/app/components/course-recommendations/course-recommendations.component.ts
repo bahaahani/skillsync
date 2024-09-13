@@ -1,28 +1,60 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../services/api.service';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { RecommendationService } from '../../services/recommendation.service';
+import { FeatureFlagService } from '../../services/feature-flag.service';
 
 @Component({
   selector: 'app-course-recommendations',
-  template: `
-    <div *ngIf="recommendations">
-      <h2>Recommended Courses</h2>
-      <ul>
-        <li *ngFor="let course of recommendations">
-          {{ course.title }}
-        </li>
-      </ul>
-    </div>
-  `
+  templateUrl: './course-recommendations.component.html',
+  styleUrls: ['./course-recommendations.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CourseRecommendationsComponent implements OnInit {
-  recommendations: any[] = [];
+  personalizedRecommendations: any[] = [];
+  popularCourses: any[] = [];
+  isLoading = false;
+  showNewRecommendationAlgorithm = false;
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private recommendationService: RecommendationService,
+    private featureFlagService: FeatureFlagService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.apiService.getCourseRecommendations().subscribe(
-      data => this.recommendations = data,
-      error => console.error('Error fetching recommendations:', error)
-    );
+    this.loadRecommendations();
+    this.checkFeatureFlags();
+  }
+
+  loadRecommendations() {
+    this.isLoading = true;
+    this.cdr.markForCheck();
+
+    this.recommendationService.getPersonalizedRecommendations().subscribe({
+      next: (recommendations) => {
+        this.personalizedRecommendations = recommendations;
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
+
+    this.recommendationService.getPopularCourses().subscribe({
+      next: (courses) => {
+        this.popularCourses = courses;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  checkFeatureFlags() {
+    this.featureFlagService.isFeatureEnabled('newRecommendationAlgorithm').subscribe({
+      next: (isEnabled) => {
+        this.showNewRecommendationAlgorithm = isEnabled;
+        this.cdr.markForCheck();
+      }
+    });
   }
 }

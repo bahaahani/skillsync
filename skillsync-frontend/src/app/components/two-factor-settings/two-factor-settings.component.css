@@ -1,0 +1,28 @@
+.two-factor-settings {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2, h3 {
+  margin-bottom: 20px;
+}
+
+button {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+img {
+  max-width: 200px;
+  margin: 20px 0;
+}
+
+form {
+  margin-top: 20px;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
