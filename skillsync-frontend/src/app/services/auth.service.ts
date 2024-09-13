@@ -86,4 +86,13 @@ export class AuthService {
   getCurrentUser(): Observable<any> {
     return this.currentUserSubject.asObservable();
   }
+
+  getAuthToken(): string | null {
+    return this.getToken();
+  }
+  getCurrentUserId(): string | null {
+    const user = this.currentUserSubject.getValue();
+    return user ? user._id : null;
+  }
+
 }

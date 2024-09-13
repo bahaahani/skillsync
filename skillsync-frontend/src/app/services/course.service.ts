@@ -70,12 +70,7 @@ export class CourseService {
     return this.http.get<Course>(`${this.apiUrl}/courses/${courseId}`);
   }
 
-  // Existing methods
-  getEnrolledCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>(`${this.apiUrl}/courses/enrolled`).pipe(
-      catchError(this.handleError.bind(this))
-    );
-  }
+
 
   getRecommendedCourses(): Observable<Course[]> {
     return this.http.get<Course[]>(`${this.apiUrl}/courses/recommended`).pipe(
@@ -121,10 +116,6 @@ export class CourseService {
     return this.http.post(`${this.apiUrl}/courses/${courseId}/join`, {});
   }
 
-  // Add a method to get course progress
-  getCourseProgress(courseId: string): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/courses/${courseId}/progress`);
-  }
 
   addToWishlist(courseId: string): Observable<Course> {
     return this.http.post<Course>(`${this.apiUrl}/courses/${courseId}/wishlist`, {});
