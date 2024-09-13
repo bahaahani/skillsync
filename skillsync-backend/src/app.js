@@ -21,7 +21,6 @@ import courseRecommendationRoutes from "./routes/courseRecommendations.js";
 import courseFeedbackRoutes from "./routes/courseFeedback.js";
 import instructorDashboardRoutes from "./routes/instructorDashboard.js";
 import apiV1Routes from "./routes/api.js";
-
 // Load environment variables
 dotenv.config();
 
@@ -76,6 +75,8 @@ app.use("/api/progress", studentProgressRoutes);
 app.use("/api/course-recommendations", courseRecommendationRoutes);
 app.use("/api/course-feedback", courseFeedbackRoutes);
 app.use("/api/instructor-dashboard", instructorDashboardRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/instructor", instructorDashboardRoutes);
 
 // API routes
 app.use("/api/v1", apiV1Routes);

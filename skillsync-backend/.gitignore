@@ -3,3 +3,5 @@ node_modules
 # .gitignore
 config/private-key.pem
 config/certificate.pem
+error.log
+combined.log

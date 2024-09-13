@@ -1,12 +1,32 @@
 import express from 'express';
-import { getUserById, getCurrentUser, getUserSettings, getProfile, getActivities } from '../controllers/userController.js';
+import { authenticateToken } from '../middleware/auth.js';
+import {
+  getProfile,
+  updateProfile,
+  getUserStats,
+  deleteProfile,
+  uploadAvatar,
+  getActivities
+} from '../controllers/userController.js';
 
 const router = express.Router();
 
-router.get('/current', getCurrentUser);
-router.get('/settings', getUserSettings);
-router.get('/:id', getUserById);
-router.get('/profile', getProfile);
-router.get('/activities', getActivities);
+// Get user profile
+router.get('/profile', authenticateToken, getProfile);
+
+// Update user profile
+router.put('/profile', authenticateToken, updateProfile);
+
+// Get user statistics
+router.get('/stats', authenticateToken, getUserStats);
+
+// Delete user profile
+router.delete('/profile', authenticateToken, deleteProfile);
+
+// Upload user avatar
+router.post('/avatar', authenticateToken, uploadAvatar);
+
+// Get user activities
+router.get('/activities', authenticateToken, getActivities);
 
 export default router;

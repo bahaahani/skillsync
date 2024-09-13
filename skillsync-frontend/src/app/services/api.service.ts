@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Course } from '../models/course.model';
 import { User, CourseStats, AssessmentStats, Activity } from '../models/dashboard.model';
+import { AuthService } from './auth.service'; // Add this import
 
 @Injectable({
   providedIn: 'root'

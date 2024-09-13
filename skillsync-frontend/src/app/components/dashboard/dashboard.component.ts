@@ -5,6 +5,8 @@ import { Course } from '../../models/course.model';
 import { User, CourseStats, AssessmentStats, Activity } from '../../models/dashboard.model';
 import { Chart } from 'chart.js/auto';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,11 +29,17 @@ export class DashboardComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private courseService: CourseService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    this.loadDashboardData();
+    if (this.authService.isLoggedIn()) {
+      this.loadDashboardData();
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   loadDashboardData() {

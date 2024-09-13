@@ -29,15 +29,14 @@ export class LoginComponent {
   login() {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      const { username, password } = this.loginForm.value;
-      this.authService.login(username, password, this.rememberMe).subscribe({
-        next: (response) => {
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (response: any) => {
           this.isLoading = false;
           this.showSuccessMessage('Login successful');
           // Navigate to a protected route
           this.router.navigate(['/dashboard']);
         },
-        error: (error) => {
+        error: (error: any) => {
           this.isLoading = false;
           console.error('Login failed:', error);
           this.showErrorMessage('Invalid username or password');

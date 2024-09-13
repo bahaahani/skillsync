@@ -1,7 +1,6 @@
-import mongoose from 'mongoose';
-import Course from '../models/Course.js';
-import Review from '../models/Review.js';
-import User from '../models/User.js';
+import mongoose from "mongoose";
+import Course from "../models/Course.js";
+import User from "../models/User.js";
 
 export const getAllCourses = async (req, res, next) => {
   try {
@@ -18,49 +17,89 @@ export const getAllCourses = async (req, res, next) => {
   }
 };
 
-export const getCourseById = async (req, res) => {
+export const getCourseById = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    
-    // Check if the id is 'stats' and handle it separately
-    if (id === 'stats') {
-      // Handle the stats route here
-      // For example:
-      return res.json({ message: 'Course stats endpoint' });
+    const courseId = req.params.id;
+
+    // Check if the request is for course stats
+    if (courseId === "stats") {
+      // Handle the stats request here
+      const totalCourses = await Course.countDocuments();
+      const totalEnrollments = await User.aggregate([
+        {
+          $project: {
+            enrolledCoursesCount: {
+              $cond: {
+                if: { $isArray: "$enrolledCourses" },
+                then: { $size: "$enrolledCourses" },
+                else: 0,
+              },
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$enrolledCoursesCount" },
+          },
+        },
+      ]);
+      return res.json({
+        totalCourses,
+        totalEnrollments: totalEnrollments[0]?.total || 0,
+      });
     }
 
-    // Validate if the id is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: 'Invalid course ID' });
+    // If it's not 'stats', proceed with finding the course by ID
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ message: "Invalid course ID" });
     }
 
-    // For normal course IDs, proceed with finding the course
-    const course = await Course.findById(id);
+    const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      return res.status(404).json({ message: "Course not found" });
     }
     res.json(course);
   } catch (error) {
-    console.error('Error in getCourseById:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error in getCourseById:", error);
+    next(error);
   }
 };
 
 export const createCourse = async (req, res, next) => {
   try {
-    const course = new Course(req.body);
+    const courseData = req.body;
+
+    // Validate instructor ID
+    if (!mongoose.Types.ObjectId.isValid(courseData.instructor)) {
+      return res.status(400).json({ message: "Invalid instructor ID" });
+    }
+
+    // Set a default price if not provided
+    if (courseData.price === undefined || courseData.price === null) {
+      courseData.price = 0; // or any other default value
+    }
+
+    const course = new Course(courseData);
     await course.save();
     res.status(201).json(course);
   } catch (error) {
+    if (error.name === "ValidationError") {
+      const errors = Object.values(error.errors).map((err) => err.message);
+      return res.status(400).json({ message: "Validation Error", errors });
+    }
     next(error);
   }
 };
 
 export const updateCourse = async (req, res, next) => {
   try {
-    const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const courseId = req.params.id;
+    const course = await Course.findByIdAndUpdate(courseId, req.body, {
+      new: true,
+    });
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      return res.status(404).json({ message: "Course not found" });
     }
     res.json(course);
   } catch (error) {
@@ -70,149 +109,12 @@ export const updateCourse = async (req, res, next) => {
 
 export const deleteCourse = async (req, res, next) => {
   try {
-    const course = await Course.findByIdAndDelete(req.params.id);
+    const courseId = req.params.id;
+    const course = await Course.findByIdAndDelete(courseId);
     if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
+      return res.status(404).json({ message: "Course not found" });
     }
-    res.json({ message: 'Course deleted successfully' });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const rateCourse = async (req, res, next) => {
-  try {
-    const { rating } = req.body;
-    const course = await Course.findById(req.params.id);
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
-    }
-
-    const existingRating = course.ratings.find(r => r.user.toString() === req.user._id.toString());
-    if (existingRating) {
-      existingRating.rating = rating;
-    } else {
-      course.ratings.push({ user: req.user._id, rating });
-    }
-
-    course.rating = course.ratings.reduce((sum, r) => sum + r.rating, 0) / course.ratings.length;
-    await course.save();
-
     res.json(course);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getUserRating = async (req, res, next) => {
-  try {
-    const course = await Course.findById(req.params.id);
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
-    }
-
-    const userRating = course.ratings.find(r => r.user.toString() === req.user._id.toString());
-    res.json({ rating: userRating ? userRating.rating : null });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const getCourseReviews = async (req, res, next) => {
-  try {
-    const courseId = req.params.id;
-    const page = parseInt(req.query.page) || 0;
-    const pageSize = parseInt(req.query.pageSize) || 10;
-    const sortBy = req.query.sortBy || 'date';
-
-    const sortOptions = sortBy === 'rating' ? { rating: -1 } : { createdAt: -1 };
-
-    const reviews = await Review.find({ courseId })
-      .sort(sortOptions)
-      .skip(page * pageSize)
-      .limit(pageSize)
-      .populate('userId', 'username');
-
-    const totalCount = await Review.countDocuments({ courseId });
-
-    res.json({ reviews, totalCount });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const addCourseReview = async (req, res, next) => {
-  try {
-    const { content, rating } = req.body;
-    const courseId = req.params.id;
-    const userId = req.user._id;
-
-    const newReview = new Review({
-      courseId,
-      userId,
-      content,
-      rating
-    });
-
-    await newReview.save();
-
-    const populatedReview = await Review.findById(newReview._id).populate('userId', 'username');
-
-    res.status(201).json(populatedReview);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const updateCourseReview = async (req, res, next) => {
-  try {
-    const { content, rating } = req.body;
-    const reviewId = req.params.reviewId;
-
-    const updatedReview = await Review.findOneAndUpdate(
-      { _id: reviewId, userId: req.user._id },
-      { content, rating },
-      { new: true }
-    ).populate('userId', 'username');
-
-    if (!updatedReview) {
-      return res.status(404).json({ message: 'Review not found or you are not authorized to update it' });
-    }
-
-    res.json(updatedReview);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const deleteCourseReview = async (req, res, next) => {
-  try {
-    const reviewId = req.params.reviewId;
-
-    const deletedReview = await Review.findOneAndDelete({ _id: reviewId, userId: req.user._id });
-
-    if (!deletedReview) {
-      return res.status(404).json({ message: 'Review not found or you are not authorized to delete it' });
-    }
-
-    res.json({ message: 'Review deleted successfully' });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const addToWishlist = async (req, res, next) => {
-  try {
-    const courseId = req.params.id;
-    const userId = req.user._id;
-
-    const user = await User.findById(userId);
-    if (!user.wishlist.includes(courseId)) {
-      user.wishlist.push(courseId);
-      await user.save();
-    }
-
-    res.json({ message: 'Course added to wishlist' });
   } catch (error) {
     next(error);
   }
@@ -222,24 +124,17 @@ export const removeFromWishlist = async (req, res, next) => {
   try {
     const courseId = req.params.id;
     const userId = req.user._id;
-
-    const user = await User.findById(userId);
-    user.wishlist = user.wishlist.filter(id => id.toString() !== courseId);
-    await user.save();
-
-    res.json({ message: 'Course removed from wishlist' });
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { wishlist: courseId } },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({ message: "Course removed from wishlist" });
   } catch (error) {
-    next(error);
-  }
-};
-
-export const getWishlistedCourses = async (req, res, next) => {
-  try {
-    const userId = req.user._id;
-
-    const user = await User.findById(userId).populate('wishlist');
-    res.json(user.wishlist);
-  } catch (error) {
+    console.error("Error in removeFromWishlist:", error);
     next(error);
   }
 };
@@ -250,7 +145,9 @@ export const getCourseProgress = async (req, res, next) => {
     const userId = req.user._id;
 
     const user = await User.findById(userId);
-    const courseProgress = user.courseProgress.find(cp => cp.course.toString() === courseId);
+    const courseProgress = user.courseProgress.find(
+      (cp) => cp.course.toString() === courseId
+    );
 
     if (!courseProgress) {
       return res.json({ progress: 0 });
@@ -276,7 +173,9 @@ export const updateLessonProgress = async (req, res, next) => {
     const { completed } = req.body;
 
     const user = await User.findById(userId);
-    let courseProgress = user.courseProgress.find(cp => cp.course.toString() === courseId);
+    let courseProgress = user.courseProgress.find(
+      (cp) => cp.course.toString() === courseId
+    );
 
     if (!courseProgress) {
       courseProgress = { course: courseId, completedLessons: [] };
@@ -286,7 +185,9 @@ export const updateLessonProgress = async (req, res, next) => {
     if (completed && !courseProgress.completedLessons.includes(lessonId)) {
       courseProgress.completedLessons.push(lessonId);
     } else if (!completed) {
-      courseProgress.completedLessons = courseProgress.completedLessons.filter(id => id.toString() !== lessonId);
+      courseProgress.completedLessons = courseProgress.completedLessons.filter(
+        (id) => id.toString() !== lessonId
+      );
     }
 
     await user.save();
@@ -302,24 +203,38 @@ export const updateLessonProgress = async (req, res, next) => {
   }
 };
 
-export const getRecommendedCourses = async (req, res) => {
+export const getRecommendedCourses = async (req, res, next) => {
   try {
-    // Implement logic to fetch and return recommended courses
-    res.json({ message: 'Recommended courses data' });
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const enrolledCourseIds = user.enrolledCourses || [];
+    const recommendedCourses = await Course.find({
+      _id: { $nin: enrolledCourseIds },
+    }).limit(5);
+    res.json(recommendedCourses);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching recommended courses' });
+    console.error("Error in getRecommendedCourses:", error);
+    next(error);
   }
 };
 
-export const getEnrolledCourses = async (userId) => {
+export const getEnrolledCourses = async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const user = await User.findById(userId).populate('enrolledCourses');
     if (!user) {
-      throw new Error('User not found');
+      return res.status(404).json({ message: "User not found" });
     }
-    return user.enrolledCourses;
+    res.json(user.enrolledCourses || []);
   } catch (error) {
-    console.error('Error in getEnrolledCourses:', error);
-    throw error;
+    console.error("Error in getEnrolledCourses:", error);
+    next(error);
   }
 };

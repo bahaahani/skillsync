@@ -4,9 +4,30 @@ import mongoose from 'mongoose';
 
 export const getProfile = async (req, res) => {
   try {
-    // Implement logic to fetch and return user profile
-    res.json({ message: 'User profile data' });
+    const userId = req.user.id;
+    const user = await User.findById(userId).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      bio: user.bio,
+      skills: user.skills,
+      interests: user.interests,
+      avatar: user.avatar,
+      score: user.score,
+      achievements: user.achievements,
+      enrolledCourses: user.enrolledCourses,
+      completedCourses: user.completedCourses
+    });
   } catch (error) {
+    console.error('Error in getProfile:', error);
     res.status(500).json({ message: 'Error fetching user profile' });
   }
 };
@@ -152,9 +173,16 @@ export const deleteUser = async (req, res, next) => {
 
 export const getActivities = async (req, res) => {
   try {
-    // Implement logic to fetch and return user activities
-    res.json({ message: 'User activities data' });
+    const userId = req.user.id;
+    const user = await User.findById(userId).select('activities');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user.activities || []);
   } catch (error) {
+    console.error('Error in getActivities:', error);
     res.status(500).json({ message: 'Error fetching user activities' });
   }
 };
