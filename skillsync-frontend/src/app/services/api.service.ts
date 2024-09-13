@@ -24,7 +24,7 @@ export class ApiService {
     private authService: AuthService,
     private cacheService: CacheService,
     private errorHandler: ErrorHandlingService
-  ) {}
+  ) { }
 
   /**
    * Retrieves analytics data from the server.
@@ -365,6 +365,6 @@ export class ApiService {
    */
   private handleError(error: any): Observable<never> {
     this.errorHandler.handleError(error);
-    return of(null as never);
+    throw error;
   }
 }

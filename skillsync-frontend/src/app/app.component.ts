@@ -16,7 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { code: 'es', name: 'Español' }
   ];
   notifications: Notification[] = [];
-  private notificationSubscription: Subscription;
+  private notificationSubscription!: Subscription;
 
   constructor(
     private authService: AuthService,

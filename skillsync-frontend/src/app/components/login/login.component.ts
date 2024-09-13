@@ -65,7 +65,7 @@ export class LoginComponent {
         }
       });
     } else {
-      this.errorHandler.showErrorMessage('LOGIN.FILL_ALL_FIELDS');
+      this.errorHandler.handleError({ message: 'LOGIN.FILL_ALL_FIELDS' }, 'LOGIN.FILL_ALL_FIELDS');
     }
   }
 

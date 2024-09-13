@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { Observable, BehaviorSubject, throwError, from } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../environments/environment';
 import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
-import { from, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 interface AuthResponse {
   token: string;

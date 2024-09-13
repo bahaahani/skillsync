@@ -27,6 +27,7 @@ import { TwoFactorSettingsComponent } from './components/two-factor-settings/two
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { FeatureFlagService } from './services/feature-flag.service';
+import { SharedModule } from './shared.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -45,7 +46,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ForumPostsComponent,
     UnauthorizedComponent,
     PasswordResetComponent,
-    TwoFactorSettingsComponent
+    TwoFactorSettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,6 +56,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     BrowserAnimationsModule,
     MatModules,
+    SharedModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
