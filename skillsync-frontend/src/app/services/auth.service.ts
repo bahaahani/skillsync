@@ -1,61 +1,33 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, BehaviorSubject } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api';
-  private tokenKey = 'auth_token';
-  private currentUserSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  private tokenSubject = new BehaviorSubject<string | null>(localStorage.getItem('token'));
 
-  constructor(private http: HttpClient) {
-    const user = this.getToken() ? JSON.parse(localStorage.getItem('user') || '{}') : null;
-    this.currentUserSubject = new BehaviorSubject<any>(user);
-  }
+  constructor(private http: HttpClient) { }
 
-  login(username: string, password: string, rememberMe: boolean): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/login`, { username, password })
-      .pipe(
-        tap(response => {
-          if (response && response.token) {
-            this.setToken(response.token, rememberMe);
-            this.currentUserSubject.next(response.user);
-          }
-        })
-      );
-  }
-
-  register(userData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/register`, userData)
-      .pipe(
-        tap(response => {
-          if (response && response.token) {
-            this.setToken(response.token, true);
-            this.currentUserSubject.next(response.user);
-          }
-        })
-      );
+  login(credentials: { email: string; password: string }) {
+    return this.http.post<{ token: string }>(`${this.apiUrl}/auth/login`, credentials).pipe(
+      tap(response => {
+        localStorage.setItem('token', response.token);
+        this.tokenSubject.next(response.token);
+      })
+    );
   }
 
   logout() {
-    localStorage.removeItem(this.tokenKey);
-    sessionStorage.removeItem(this.tokenKey);
-    this.currentUserSubject.next(null);
+    localStorage.removeItem('token');
+    this.tokenSubject.next(null);
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey) || sessionStorage.getItem(this.tokenKey);
-  }
-
-  private setToken(token: string, rememberMe: boolean) {
-    if (rememberMe) {
-      localStorage.setItem(this.tokenKey, token);
-    } else {
-      sessionStorage.setItem(this.tokenKey, token);
-    }
+    return this.tokenSubject.value;
   }
 
   isLoggedIn(): boolean {
@@ -91,8 +63,11 @@ export class AuthService {
     return this.getToken();
   }
   getCurrentUserId(): string | null {
-    const user = this.currentUserSubject.getValue();
-    return user ? user._id : null;
+    const token = this.getToken();
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.id;
+    }
+    return null;
   }
-
 }

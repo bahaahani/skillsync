@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Course } from '../models/course.model';
 import { User, CourseStats, AssessmentStats, Activity } from '../models/dashboard.model';
@@ -8,9 +8,9 @@ import { User, CourseStats, AssessmentStats, Activity } from '../models/dashboar
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:3000/api'; // Update with your actual API URL
+  private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   // Analytics
   getAnalytics(): Observable<any> {
@@ -56,7 +56,7 @@ export class ApiService {
 
   // User Profile
   getUserProfile(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/user/profile`);
+    return this.http.get<User>(`${this.apiUrl}/user/profile`, { headers: this.getHeaders() });
   }
 
   updateUserProfile(profileData: any): Observable<any> {
@@ -111,7 +111,7 @@ export class ApiService {
 
   // Dashboard
   getEnrolledCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>(`${this.apiUrl}/courses/enrolled`);
+    return this.http.get<Course[]>(`${this.apiUrl}/courses/enrolled`, { headers: this.getHeaders() });
   }
 
   getCourseStats(): Observable<CourseStats> {
@@ -123,8 +123,15 @@ export class ApiService {
   }
 
   getRecentActivities(): Observable<Activity[]> {
-    return this.http.get<Activity[]>(`${this.apiUrl}/user/activities`);
+    return this.http.get<Activity[]>(`${this.apiUrl}/user/activities`, { headers: this.getHeaders() });
   }
 
-  // Add more methods for other controllers...
+  private getHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    if (!token) {
+      console.warn('No token found. User might not be logged in.');
+      return new HttpHeaders();
+    }
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
 }
