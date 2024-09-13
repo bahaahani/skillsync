@@ -10,9 +10,7 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
 import { PasswordResetComponent } from './components/password-reset/password-reset.component';
 import { RegisterComponent } from './components/register/register.component';
 import { TwoFactorSettingsComponent } from './components/two-factor-settings/two-factor-settings.component';
-import { CourseRecommendationsComponent } from './components/course-recommendations/course-recommendations.component';
-import { ForumTopicsComponent } from './components/forum-topics/forum-topics.component';
-import { ForumPostsComponent } from './components/forum-posts/forum-posts.component';
+
 
 const routes: Routes = [
   { path: 'courses', loadChildren: () => import('./modules/course/course.module').then(m => m.CourseModule) },
@@ -20,11 +18,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] },
-  { 
-    path: 'admin', 
-    component: AdminDashboardComponent, 
-    canActivate: [AuthGuard, RoleGuard], 
-    data: { requiredRole: 'ADMIN' } 
+  {
+    path: 'admin',
+    component: AdminDashboardComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { requiredRole: 'ADMIN' }
   },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: 'password-reset', component: PasswordResetComponent },
@@ -33,6 +31,17 @@ const routes: Routes = [
   { path: 'recommendations', component: CourseRecommendationsComponent, canActivate: [AuthGuard] },
   { path: 'courses/:courseId/forum', component: ForumTopicsComponent, canActivate: [AuthGuard] },
   { path: 'courses/:courseId/forum/:topicId', component: ForumPostsComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'admin-dashboard', component: AdminDashboardComponent },
+  { path: 'course-recommendations', component: CourseRecommendationsComponent },
+  { path: 'forum-topics', component: ForumTopicsComponent },
+  { path: 'forum-posts', component: ForumPostsComponent },
+  { path: 'unauthorized', component: UnauthorizedComponent },
+  { path: 'login', loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule) },
+  { path: 'register', loadChildren: () => import('./components/register/register.module').then(m => m.RegisterModule) },
+  { path: 'password-reset', loadChildren: () => import('./components/password-reset/password-reset.module').then(m => m.PasswordResetModule) },
+  { path: 'two-factor-settings', loadChildren: () => import('./components/two-factor-settings/two-factor-settings.module').then(m => m.TwoFactorSettingsModule) },
 ];
 
 @NgModule({
