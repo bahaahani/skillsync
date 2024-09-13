@@ -7,12 +7,15 @@ import { CourseService } from '../services/course.service';
 import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Course } from '../models/course.model';
+import { Course, CourseReview } from '../models/course.model';
+import { CourseReviewComponent } from '../components/course-review/course-review.component';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-course-catalog',
   templateUrl: './course-catalog.component.html',
-  styleUrls: ['./course-catalog.component.css']
+  styleUrls: ['./course-catalog.component.css'],
 })
 export class CourseCatalogComponent implements OnInit {
   courses: Course[] = [];
@@ -29,11 +32,17 @@ export class CourseCatalogComponent implements OnInit {
   pageIndex: number = 0;
   totalCourses: number = 0;
 
+  newReviewContent: string = '';
+  newReviewRating: number = 0;
+  reviewPageSize: number = 5;
+  reviewPageIndex: number = 0;
+
   constructor(
     private authService: AuthService,
     private courseService: CourseService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -46,6 +55,11 @@ export class CourseCatalogComponent implements OnInit {
       next: (data) => {
         this.courses = data.courses || []; // Ensure courses is always an array
         this.totalCourses = data.totalCount;
+        this.courses.forEach(course => {
+          if (course.isEnrolled) {
+            this.loadCourseProgress(course);
+          }
+        });
         this.applyFilters();
         this.isLoading = false;
       },
@@ -55,6 +69,22 @@ export class CourseCatalogComponent implements OnInit {
         this.isLoading = false;
         this.courses = []; // Initialize as empty array in case of error
         this.applyFilters(); // Still apply filters to show empty state
+        if (error.status === 401 || error.status === 403) {
+          // Token is invalid or expired
+          console.log('Authentication failed. Redirecting to login.');
+          this.router.navigate(['/login']);
+        }
+      }
+    });
+  }
+
+  loadCourseProgress(course: Course) {
+    this.courseService.getCourseProgress(course._id).subscribe({
+      next: (progress) => {
+        course.progress = progress;
+      },
+      error: (error) => {
+        console.error('Error fetching course progress:', error);
       }
     });
   }
@@ -70,10 +100,10 @@ export class CourseCatalogComponent implements OnInit {
       this.filteredCourses = [];
       return;
     }
-  
+
     this.filteredCourses = this.courses.filter(course =>
       (course.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-       course.description.toLowerCase().includes(this.searchTerm.toLowerCase())) &&
+        course.description.toLowerCase().includes(this.searchTerm.toLowerCase())) &&
       (this.levelFilter === 'all' || course.level === this.levelFilter) &&
       (this.durationFilter === null || course.duration <= this.durationFilter) &&
       (this.tagFilter.length === 0 || this.tagFilter.every(tag => course.tags.includes(tag)))
@@ -192,14 +222,18 @@ export class CourseCatalogComponent implements OnInit {
   }
 
   enrollCourse(courseId: string) {
-    this.authService.enrollInCourse(courseId).subscribe({
+    this.courseService.enrollInCourse(courseId).subscribe({
       next: () => {
         this.enrollmentMessage = 'Successfully enrolled in the course';
         this.updateCourseEnrollmentStatus(courseId, true);
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         this.enrollmentMessage = 'Error enrolling in the course';
         console.error('Error enrolling in course:', error);
+        if (error.status === 401 || error.status === 403) {
+          console.log('Authentication failed. Redirecting to login.');
+          this.router.navigate(['/login']);
+        }
       }
     });
   }
@@ -230,9 +264,12 @@ export class CourseCatalogComponent implements OnInit {
       next: (updatedCourse) => {
         const index = this.courses.findIndex(c => c._id === updatedCourse._id);
         if (index !== -1) {
-          this.courses[index] = updatedCourse;
+          this.courses[index] = {
+            ...updatedCourse,
+            userRating: rating
+          };
+          this.applyFilters();
         }
-        this.applyFilters(); // Use applyFilters instead of filterCourses
         this.showSuccessMessage('Course rated successfully');
       },
       error: (error) => {
@@ -267,7 +304,7 @@ export class CourseCatalogComponent implements OnInit {
   newCourse: Course = {
     _id: '',
     title: '',
-    description: '', 
+    description: '',
     instructor: '',
     duration: 0,
     level: '',
@@ -280,4 +317,69 @@ export class CourseCatalogComponent implements OnInit {
   editingCourse: Course | null = null;
 
   enrollmentMessage: string = ''; // Add this property
+
+  onRatingChange(courseId: string, newRating: number) {
+    if (newRating !== undefined && newRating !== null) {
+      this.rateCourse(courseId, newRating);
+    }
+  }
+
+  loadUserRating(course: Course) {
+    this.courseService.getUserRating(course._id).subscribe({
+      next: (data) => {
+        course.userRating = data.rating;
+      },
+      error: (error) => {
+        console.error('Error fetching user rating:', error);
+      }
+    });
+  }
+
+  updateCourseProgress(courseId: string, progress: number) {
+    const course = this.courses.find(c => c._id === courseId);
+    if (course) {
+      course.progress = progress;
+    }
+  }
+
+  toggleWishlist(course: Course) {
+    if (course.isWishlisted) {
+      this.courseService.removeFromWishlist(course._id).subscribe({
+        next: (updatedCourse) => {
+          course.isWishlisted = false;
+          this.showSuccessMessage('Course removed from wishlist');
+        },
+        error: (error) => {
+          console.error('Error removing course from wishlist:', error);
+          this.showErrorMessage('Error removing course from wishlist. Please try again.');
+        }
+      });
+    } else {
+      this.courseService.addToWishlist(course._id).subscribe({
+        next: (updatedCourse) => {
+          course.isWishlisted = true;
+          this.showSuccessMessage('Course added to wishlist');
+        },
+        error: (error) => {
+          console.error('Error adding course to wishlist:', error);
+          this.showErrorMessage('Error adding course to wishlist. Please try again.');
+        }
+      });
+    }
+  }
+
+  onReviewAdded(course: Course, newReview: CourseReview) {
+    if (!course.reviews) {
+      course.reviews = [];
+    }
+    course.reviews.unshift(newReview);
+    this.updateCourseAverageRating(course);
+  }
+
+  private updateCourseAverageRating(course: Course) {
+    if (course.reviews && course.reviews.length > 0) {
+      const sum = course.reviews.reduce((total, review) => total + review.rating, 0);
+      course.rating = sum / course.reviews.length;
+    }
+  }
 }

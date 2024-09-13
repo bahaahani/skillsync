@@ -2,16 +2,33 @@ import User from '../models/User.js';
 import cloudinary from '../utils/cloudinary.js';
 import mongoose from 'mongoose';
 
-export const getProfile = async (req, res, next) => {
+export const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id)
-      .select('-password')
-      .populate('coursesEnrolled', 'title')
-      .populate('coursesCompleted', 'title')
-      .populate('assessmentsTaken', 'title');
-    res.json(user);
+    const userId = req.user.id;
+    const user = await User.findById(userId).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      bio: user.bio,
+      skills: user.skills,
+      interests: user.interests,
+      avatar: user.avatar,
+      score: user.score,
+      achievements: user.achievements,
+      enrolledCourses: user.enrolledCourses,
+      completedCourses: user.completedCourses
+    });
   } catch (error) {
-    next(error);
+    console.error('Error in getProfile:', error);
+    res.status(500).json({ message: 'Error fetching user profile' });
   }
 };
 
@@ -151,5 +168,21 @@ export const deleteUser = async (req, res, next) => {
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getActivities = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).select('activities');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user.activities || []);
+  } catch (error) {
+    console.error('Error in getActivities:', error);
+    res.status(500).json({ message: 'Error fetching user activities' });
   }
 };

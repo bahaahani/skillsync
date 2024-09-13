@@ -1,58 +1,80 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-
-interface UserProfile {
-  username: string;
-  email: string;
-  // Add any other fields that are part of the user profile
-}
+import { tap, BehaviorSubject, Observable } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/auth`;
+  private apiUrl = 'http://localhost:3000/api';
+  private tokenSubject = new BehaviorSubject<string | null>(localStorage.getItem('token'));
+  private currentUserSubject = new BehaviorSubject<any>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // Initialize currentUserSubject with stored user data if available
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      this.currentUserSubject.next(JSON.parse(storedUser));
+    }
+  }
 
-  login(credentials: { username: string, password: string }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+  login(credentials: { email: string; password: string }) {
+    return this.http.post<{ token: string }>(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap(response => {
-        if (response && response.token) {
-          localStorage.setItem('token', response.token);
-        }
+        localStorage.setItem('token', response.token);
+        this.tokenSubject.next(response.token);
       })
     );
   }
 
-  register(user: { username: string; email: string; password: string }) {
-    return this.http.post(`${this.apiUrl}/auth/register`, user);
-  }
-
   logout() {
     localStorage.removeItem('token');
+    this.tokenSubject.next(null);
   }
 
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
-  }
-
-  enrollInCourse(courseId: string) {
-    return this.http.post(`${this.apiUrl}/enroll/${courseId}`, {});
-  }
-
-  getUserProfile(): Observable<UserProfile> {
-    return this.http.get<UserProfile>(`${this.apiUrl}/user/profile`);
-  }
-
-  updateUserProfile(user: Partial<UserProfile>): Observable<UserProfile> {
-    return this.http.put<UserProfile>(`${this.apiUrl}/user/profile`, user);
+  getToken(): string | null {
+    return this.tokenSubject.value;
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return !!this.getToken();
+  }
+
+  getUserProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/profile`);
+  }
+
+  updateUserProfile(userData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/profile`, userData).pipe(
+      tap(updatedUser => {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        this.currentUserSubject.next(updatedUser);
+      })
+    );
+  }
+
+  changePassword(passwordData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/change-password`, passwordData);
+  }
+
+  updateUserPreferences(preferences: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/preferences`, preferences);
+  }
+
+  getCurrentUser(): Observable<any> {
+    return this.currentUserSubject.asObservable();
+  }
+
+  getAuthToken(): string | null {
+    return this.getToken();
+  }
+  getCurrentUserId(): string | null {
+    const token = this.getToken();
+    if (token) {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.id;
+    }
+    return null;
   }
 }

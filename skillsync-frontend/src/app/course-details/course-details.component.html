@@ -1,15 +1,54 @@
-<div *ngIf="courseDetails" class="course-details">
-  <h1>{{ courseDetails?.title }}</h1>
-  <p>{{ courseDetails?.description }}</p>
+<div class="course-details" *ngIf="course">
+  <h2>{{ course.title }}</h2>
   
-  <app-course-enrollment [courseId]="courseId"></app-course-enrollment>
-  <app-course-content [courseId]="courseId"></app-course-content>
-  <app-course-progress [courseId]="courseId"></app-course-progress>
-  <app-course-rating [courseId]="courseId"></app-course-rating>
-  <app-course-feedback [courseId]="courseId"></app-course-feedback>
-  <app-course-forum [courseId]="courseId"></app-course-forum>
-</div>
+  <mat-card>
+    <mat-card-content>
+      <p>{{ course.description }}</p>
+      <p><strong>Instructor:</strong> {{ course.instructor }}</p>
+      <p><strong>Duration:</strong> {{ course.duration }} hours</p>
+      <p><strong>Level:</strong> {{ course.level }}</p>
+      <p><strong>Category:</strong> {{ course.category }}</p>
+      <p><strong>Tags:</strong> {{ course.tags.join(', ') }}</p>
+      <p><strong>Rating:</strong> {{ course.rating | number:'1.1-1' }}/5</p>
 
-<p *ngIf="!isLoading && !courseDetails">Course not found.</p>
+      <app-course-rating
+        [rating]="course.userRating || 0"
+        [readOnly]="!isEnrolled"
+        (ratingChange)="onRatingChange($event)"
+      ></app-course-rating>
+
+      <ng-container *ngIf="isEnrolled">
+        <h3>Your Progress</h3>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="progress"
+        ></mat-progress-bar>
+        <p>{{ progress | number:'1.0-0' }}% complete</p>
+      </ng-container>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="enrollCourse()" *ngIf="!isEnrolled">
+        Enroll
+      </button>
+      <button mat-raised-button color="accent" (click)="toggleWishlist()">
+        {{ course.isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Course Reviews
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <app-course-review
+      [course]="course"
+      (reviewAdded)="onReviewAdded($event)"
+    ></app-course-review>
+  </mat-expansion-panel>
+</div>
 
 <mat-spinner *ngIf="isLoading"></mat-spinner>

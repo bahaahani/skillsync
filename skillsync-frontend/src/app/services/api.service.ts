@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from './auth.service'; // Add this import
 import { Observable } from 'rxjs';
 import { Course } from '../models/course.model';
+import { User, CourseStats, AssessmentStats, Activity } from '../models/dashboard.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:3000/api'; // Adjust this to your backend URL
+  private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService // Correct the injection
+  ) { }
 
   // Analytics
   getAnalytics(): Observable<any> {
@@ -54,8 +59,8 @@ export class ApiService {
   }
 
   // User Profile
-  getUserProfile(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user-profile`);
+  getUserProfile(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/user/profile`, { headers: this.getHeaders() });
   }
 
   updateUserProfile(profileData: any): Observable<any> {
@@ -110,20 +115,27 @@ export class ApiService {
 
   // Dashboard
   getEnrolledCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>(`${this.apiUrl}/user/enrolled-courses`);
+    return this.http.get<Course[]>(`${this.apiUrl}/courses/enrolled`, { headers: this.getHeaders() });
   }
 
-  getCourseStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user/course-stats`);
+  getCourseStats(): Observable<CourseStats> {
+    return this.http.get<CourseStats>(`${this.apiUrl}/courses/stats`);
   }
 
-  getAssessmentStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user/assessment-stats`);
+  getAssessmentStats(): Observable<AssessmentStats> {
+    return this.http.get<AssessmentStats>(`${this.apiUrl}/assessments/stats`);
   }
 
-  getRecentActivities(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user/recent-activities`);
+  getRecentActivities(): Observable<Activity[]> {
+    return this.http.get<Activity[]>(`${this.apiUrl}/user/activities`, { headers: this.getHeaders() });
   }
 
-  // Add more methods for other controllers...
+  private getHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    if (!token) {
+      console.warn('No token found. User might not be logged in.');
+      return new HttpHeaders();
+    }
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
 }

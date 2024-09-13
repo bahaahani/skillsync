@@ -1,48 +1,39 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { UserService } from '../../../services/user.service';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
-  styleUrls: ['./user-profile.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule]
+  imports: [CommonModule],
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  profileForm: FormGroup;
   user: any;
+  isLoading = false;
 
   constructor(
-    private fb: FormBuilder,
-    private userService: UserService
-  ) {
-    this.profileForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      bio: ['']
-    });
-  }
+    private authService: AuthService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
-    this.userService.getCurrentUser().subscribe(
-      user => {
-        this.user = user;
-        this.profileForm.patchValue(user);
-      },
-      error => console.error('Error fetching user profile', error)
-    );
+    this.loadUserProfile();
   }
 
-  onSubmit() {
-    if (this.profileForm.valid) {
-      this.userService.updateProfile(this.profileForm.value).subscribe(
-        updatedUser => {
-          this.user = updatedUser;
-          console.log('Profile updated successfully');
-        },
-        error => console.error('Error updating profile', error)
-      );
-    }
+  loadUserProfile() {
+    this.isLoading = true;
+    this.authService.getUserProfile().subscribe({
+      next: (user) => {
+        this.user = user;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.snackBar.open('Error loading user profile', 'Close', { duration: 3000 });
+        this.isLoading = false;
+      }
+    });
   }
 }

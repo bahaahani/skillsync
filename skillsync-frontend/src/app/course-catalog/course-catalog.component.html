@@ -1,33 +1,55 @@
 <div class="course-catalog">
   <h2>Course Catalog</h2>
-  
+
   <!-- Search and filter inputs -->
   <div class="search-filter">
     <mat-form-field>
-      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" placeholder="Search courses...">
+      <input
+        matInput
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Search courses..."
+      />
     </mat-form-field>
     <mat-form-field>
-      <mat-select [(ngModel)]="levelFilter" (ngModelChange)="onLevelFilterChange()" placeholder="Filter by level">
+      <mat-select
+        [(ngModel)]="levelFilter"
+        (ngModelChange)="onLevelFilterChange()"
+        placeholder="Filter by level"
+      >
         <mat-option value="all">All Levels</mat-option>
-        <mat-option *ngFor="let level of levels" [value]="level">{{ level }}</mat-option>
+        <mat-option *ngFor="let level of levels" [value]="level">{{
+          level
+        }}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field>
-      <input matInput type="number" [(ngModel)]="durationFilter" (ngModelChange)="onDurationFilterChange()" placeholder="Max duration (hours)">
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="durationFilter"
+        (ngModelChange)="onDurationFilterChange()"
+        placeholder="Max duration (hours)"
+      />
     </mat-form-field>
     <mat-form-field *ngIf="!isLoading">
       <mat-label>Tags</mat-label>
       <mat-chip-grid #chipGrid aria-label="Tag selection">
-        <mat-chip-row *ngFor="let tag of tagFilter" (removed)="removeTagFilter(tag)">
-          {{tag}}
+        <mat-chip-row
+          *ngFor="let tag of tagFilter"
+          (removed)="removeTagFilter(tag)"
+        >
+          {{ tag }}
           <button matChipRemove [attr.aria-label]="'remove ' + tag">
             <mat-icon>cancel</mat-icon>
           </button>
         </mat-chip-row>
-        <input placeholder="New tag..."
-               [matChipInputFor]="chipGrid"
-               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-               (matChipInputTokenEnd)="addTagFilter($event)">
+        <input
+          placeholder="New tag..."
+          [matChipInputFor]="chipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="addTagFilter($event)"
+        />
       </mat-chip-grid>
     </mat-form-field>
   </div>
@@ -37,27 +59,63 @@
     <h2>Create New Course</h2>
 
     <mat-form-field>
-      <input matInput placeholder="Title" [(ngModel)]="newCourse.title" name="title" required>
+      <input
+        matInput
+        placeholder="Title"
+        [(ngModel)]="newCourse.title"
+        name="title"
+        required
+      />
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput placeholder="Category" [(ngModel)]="newCourse.category" name="category" required>
+      <input
+        matInput
+        placeholder="Category"
+        [(ngModel)]="newCourse.category"
+        name="category"
+        required
+      />
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput placeholder="Instructor" [(ngModel)]="newCourse.instructor" name="instructor" required>
+      <input
+        matInput
+        placeholder="Instructor"
+        [(ngModel)]="newCourse.instructor"
+        name="instructor"
+        required
+      />
     </mat-form-field>
 
     <mat-form-field>
-      <textarea matInput placeholder="Description" [(ngModel)]="newCourse.description" name="description" required></textarea>
+      <textarea
+        matInput
+        placeholder="Description"
+        [(ngModel)]="newCourse.description"
+        name="description"
+        required
+      ></textarea>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput type="number" placeholder="Duration (hours)" [(ngModel)]="newCourse.duration" name="duration" required>
+      <input
+        matInput
+        type="number"
+        placeholder="Duration (hours)"
+        [(ngModel)]="newCourse.duration"
+        name="duration"
+        required
+      />
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="Level" [(ngModel)]="newCourse.level" name="level" required>
+      <mat-select
+        placeholder="Level"
+        [(ngModel)]="newCourse.level"
+        name="level"
+        required
+      >
         <mat-option value="Beginner">Beginner</mat-option>
         <mat-option value="Intermediate">Intermediate</mat-option>
         <mat-option value="Advanced">Advanced</mat-option>
@@ -65,19 +123,28 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-chip-list #chipList>
+      <mat-chip-grid #chipGrid>
         <mat-chip *ngFor="let tag of newCourse.tags" (removed)="removeTag(tag)">
-          {{tag}}
+          {{ tag }}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
-        <input placeholder="Tags"
-               [matChipInputFor]="chipList"
-               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-               (matChipInputTokenEnd)="addTag($event)">
-      </mat-chip-list>
+        <input
+          placeholder="Tags"
+          [matChipInputFor]="chipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="addTag($event)"
+        />
+      </mat-chip-grid>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="!courseForm.form.valid">Create Course</button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!courseForm.form.valid"
+    >
+      Create Course
+    </button>
   </form>
 
   <!-- Loading indicator -->
@@ -92,33 +159,77 @@
         </mat-card-title>
         <mat-card-content>
           <p>{{ course.description }}</p>
-          <p *ngIf="course.instructor"><strong>Instructor:</strong> {{ course.instructor }}</p>
-          <p *ngIf="course.duration"><strong>Duration:</strong> {{ course.duration }} hours</p>
+          <p *ngIf="course.instructor">
+            <strong>Instructor:</strong> {{ course.instructor }}
+          </p>
+          <p *ngIf="course.duration">
+            <strong>Duration:</strong> {{ course.duration }} hours
+          </p>
           <p *ngIf="course.level"><strong>Level:</strong> {{ course.level }}</p>
-          <p *ngIf="course.tags && course.tags.length > 0"><strong>Tags:</strong> {{ course.tags.join(', ') }}</p>
-          <p *ngIf="course.rating !== undefined"><strong>Rating:</strong> {{ course.rating | number:'1.1-1' }}/5</p>
-          <app-course-rating [rating]="course.rating || 0" [readonly]="true"></app-course-rating>
+          <p *ngIf="course.tags && course.tags.length > 0">
+            <strong>Tags:</strong> {{ course.tags.join(", ") }}
+          </p>
+          <p *ngIf="course.rating !== undefined">
+            <strong>Average Rating:</strong> {{ course.rating | number : "1.1-1" }}/5
+          </p>
+          <p *ngIf="course.userRating !== undefined">
+            <strong>Your Rating:</strong> {{ course.userRating }}/5
+          </p>
+          <app-course-rating
+            [rating]="course.userRating || 0"
+            [readOnly]="!course.isEnrolled"
+            (ratingChange)="onRatingChange(course._id, $event)"
+          ></app-course-rating>
+          <ng-container *ngIf="course.isEnrolled">
+            <p><strong>Progress:</strong></p>
+            <mat-progress-bar
+              mode="determinate"
+              [value]="course.progress || 0"
+            ></mat-progress-bar>
+            <p>{{ course.progress | number:'1.0-0' }}% complete</p>
+          </ng-container>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button (click)="enrollCourse(course._id)" [disabled]="course.isEnrolled">
-            {{ course.isEnrolled ? 'Enrolled' : 'Enroll' }}
+          <button
+            mat-button
+            (click)="enrollCourse(course._id)"
+            [disabled]="course.isEnrolled"
+          >
+            {{ course.isEnrolled ? "Enrolled" : "Enroll" }}
           </button>
           <button mat-button (click)="startEdit(course)">Edit</button>
           <button mat-button (click)="deleteCourse(course._id)">Delete</button>
+          <button mat-button (click)="toggleWishlist(course)">
+            <mat-icon>{{ course.isWishlisted ? 'favorite' : 'favorite_border' }}</mat-icon>
+            {{ course.isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist' }}
+          </button>
         </mat-card-actions>
       </ng-container>
       <ng-template #editForm>
         <mat-form-field>
-          <input matInput [(ngModel)]="editingCourse!.title" name="editTitle">
+          <input matInput [(ngModel)]="editingCourse!.title" name="editTitle" />
         </mat-form-field>
         <mat-form-field>
-          <textarea matInput [(ngModel)]="editingCourse!.description" name="editDescription"></textarea>
+          <textarea
+            matInput
+            [(ngModel)]="editingCourse!.description"
+            name="editDescription"
+          ></textarea>
         </mat-form-field>
         <mat-form-field>
-          <input matInput [(ngModel)]="editingCourse!.instructor" name="editInstructor">
+          <input
+            matInput
+            [(ngModel)]="editingCourse!.instructor"
+            name="editInstructor"
+          />
         </mat-form-field>
         <mat-form-field>
-          <input matInput type="number" [(ngModel)]="editingCourse!.duration" name="editDuration">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="editingCourse!.duration"
+            name="editDuration"
+          />
         </mat-form-field>
         <mat-form-field>
           <mat-select [(ngModel)]="editingCourse!.level" name="editLevel">
@@ -134,10 +245,26 @@
   </div>
 
   <!-- Pagination -->
-  <mat-paginator [length]="totalCourses"
-                 [pageSize]="pageSize"
-                 [pageSizeOptions]="[5, 10, 25, 100]"
-                 (page)="onPageChange($event)"
-                 aria-label="Select page">
+  <mat-paginator
+    [length]="totalCourses"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    (page)="onPageChange($event)"
+    aria-label="Select page"
+  >
   </mat-paginator>
+
+  <!-- Course reviews -->
+  <mat-expansion-panel *ngFor="let course of filteredCourses">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Reviews for {{ course.title }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <app-course-review
+      [course]="course"
+      (reviewAdded)="onReviewAdded(course, $event)"
+    ></app-course-review>
+  </mat-expansion-panel>
 </div>

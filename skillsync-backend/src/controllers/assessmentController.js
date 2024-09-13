@@ -3,6 +3,7 @@ import Course from '../models/Course.js';
 import User from '../models/User.js';
 import createNotification from '../utils/createNotification.js';
 import { achievementTypes, checkAndAwardAchievement } from '../utils/achievements.js';
+import mongoose from 'mongoose';
 
 export const getAllAssessments = async (req, res, next) => {
   try {
@@ -15,7 +16,22 @@ export const getAllAssessments = async (req, res, next) => {
 
 export const getAssessmentById = async (req, res, next) => {
   try {
-    const assessment = await Assessment.findById(req.params.id).populate('course', 'title');
+    const { id } = req.params;
+    
+    // Check if the id is 'stats' and handle it separately
+    if (id === 'stats') {
+      // Handle the stats route here
+      // For example:
+      return res.json({ message: 'Assessment stats endpoint' });
+    }
+
+    // Validate if the id is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid assessment ID' });
+    }
+
+    // For normal assessment IDs, proceed with finding the assessment
+    const assessment = await Assessment.findById(id);
     if (!assessment) {
       return res.status(404).json({ message: 'Assessment not found' });
     }

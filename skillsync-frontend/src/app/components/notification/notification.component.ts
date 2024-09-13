@@ -1,54 +1,51 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NotificationService, Notification } from '../../services/notification.service';
-import { Subscription } from 'rxjs';
+import { NotificationService } from '../../services/notification.service';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-notification',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <div *ngFor="let notification of notifications" class="notification" [ngClass]="notification.type">
-      {{ notification.message }}
-    </div>
-  `,
-  styles: [`
-    .notification {
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-      color: white;
-    }
-    .success { background-color: #4CAF50; }
-    .error { background-color: #f44336; }
-    .info { background-color: #2196F3; }
-  `]
+  imports: [CommonModule, MatListModule, MatIconModule],
+  templateUrl: './notification.component.html',
+  styleUrls: ['./notification.component.css']
 })
-export class NotificationComponent implements OnInit, OnDestroy {
-  notifications: Notification[] = [];
-  private subscription!: Subscription;
+export class NotificationComponent implements OnInit {
+  notifications: any[] = [];
+  isLoading = false;
 
   constructor(private notificationService: NotificationService) {}
 
   ngOnInit() {
-    this.subscription = this.notificationService.notifications$.subscribe(
-      notification => {
-        this.notifications.push(notification);
-        setTimeout(() => this.removeNotification(notification), 5000);
+    this.loadNotifications();
+  }
+
+  loadNotifications() {
+    this.isLoading = true;
+    this.notificationService.getNotifications().subscribe({
+      next: (notifications) => {
+        this.notifications = notifications;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading notifications:', error);
+        this.isLoading = false;
       }
-    );
+    });
   }
 
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  removeNotification(notification: Notification) {
-    const index = this.notifications.indexOf(notification);
-    if (index > -1) {
-      this.notifications.splice(index, 1);
-    }
+  markAsRead(notificationId: string) {
+    this.notificationService.markAsRead(notificationId).subscribe({
+      next: () => {
+        const notification = this.notifications.find(n => n.id === notificationId);
+        if (notification) {
+          notification.read = true;
+        }
+      },
+      error: (error) => {
+        console.error('Error marking notification as read:', error);
+      }
+    });
   }
 }

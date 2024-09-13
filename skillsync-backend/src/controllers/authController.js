@@ -2,18 +2,19 @@ import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import { updateRealTimeAnalytics } from "./analyticsController.js";
 import bcrypt from "bcryptjs";
+import dotenv from 'dotenv';
 
-// Fallback JWT secret
-const FALLBACK_JWT_SECRET = "fallback_secret_do_not_use_in_production";
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  console.error("JWT_SECRET is not set in the environment variables");
+  process.exit(1);
+}
 
 const generateToken = (userId) => {
-  const secret = process.env.JWT_SECRET || FALLBACK_JWT_SECRET;
-  if (secret === FALLBACK_JWT_SECRET) {
-    console.warn(
-      "Warning: Using fallback JWT secret. This is not secure for production use."
-    );
-  }
-  return jwt.sign({ id: userId }, secret, {
+  return jwt.sign({ id: userId }, JWT_SECRET, {
     expiresIn: "30d",
   });
 };
@@ -52,27 +53,28 @@ export const register = async (req, res, next) => {
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
-
-    // Find user by username
     const user = await User.findOne({ username });
+
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Create and sign JWT
-    const token = jwt.sign(
-      { id: user._id, username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = generateToken(user._id);
 
-    res.json({ token, user: { id: user._id, username: user.username } });
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });

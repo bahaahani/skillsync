@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Course } from '../models/course.model';
+import { Course, CourseReview } from '../models/course.model'; // Add CourseReview import
 import { Router } from '@angular/router';
 
 export interface Lesson {
@@ -70,12 +70,7 @@ export class CourseService {
     return this.http.get<Course>(`${this.apiUrl}/courses/${courseId}`);
   }
 
-  // Existing methods
-  getEnrolledCourses(): Observable<Course[]> {
-    return this.http.get<Course[]>(`${this.apiUrl}/courses/enrolled`).pipe(
-      catchError(this.handleError.bind(this))
-    );
-  }
+
 
   getRecommendedCourses(): Observable<Course[]> {
     return this.http.get<Course[]>(`${this.apiUrl}/courses/recommended`).pipe(
@@ -92,7 +87,11 @@ export class CourseService {
   }
 
   rateCourse(courseId: string, rating: number): Observable<Course> {
-    return this.http.post<Course>(`${this.apiUrl}/courses/${courseId}/rate`, { rating });
+    return this.http.post<Course>(`${this.apiUrl}/${courseId}/rate`, { rating });
+  }
+
+  getUserRating(courseId: string): Observable<{ rating: number }> {
+    return this.http.get<{ rating: number }>(`${this.apiUrl}/${courseId}/user-rating`);
   }
 
   updateLessonProgress(courseId: string, lessonId: string, completed: boolean): Observable<Course> {
@@ -117,8 +116,54 @@ export class CourseService {
     return this.http.post(`${this.apiUrl}/courses/${courseId}/join`, {});
   }
 
-  // Add a method to get course progress
+
+  addToWishlist(courseId: string): Observable<Course> {
+    return this.http.post<Course>(`${this.apiUrl}/courses/${courseId}/wishlist`, {});
+  }
+
+  removeFromWishlist(courseId: string): Observable<Course> {
+    return this.http.delete<Course>(`${this.apiUrl}/courses/${courseId}/wishlist`);
+  }
+
+  getWishlistedCourses(): Observable<Course[]> {
+    return this.http.get<Course[]>(`${this.apiUrl}/courses/wishlisted`);
+  }
+
+  getCourseReviews(courseId: string, page: number = 0, pageSize: number = 10, sortBy: string = 'date'): Observable<{ reviews: CourseReview[], totalCount: number }> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString())
+      .set('sortBy', sortBy);
+    return this.http.get<{ reviews: CourseReview[], totalCount: number }>(`${this.apiUrl}/courses/${courseId}/reviews`, { params });
+  }
+
+  addCourseReview(courseId: string, review: Omit<CourseReview, '_id' | 'courseId' | 'userId' | 'username' | 'createdAt'>): Observable<CourseReview> {
+    return this.http.post<CourseReview>(`${this.apiUrl}/courses/${courseId}/reviews`, review);
+  }
+
+  updateCourseReview(courseId: string, reviewId: string, review: Partial<CourseReview>): Observable<CourseReview> {
+    return this.http.put<CourseReview>(`${this.apiUrl}/courses/${courseId}/reviews/${reviewId}`, review);
+  }
+
+  deleteCourseReview(courseId: string, reviewId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/courses/${courseId}/reviews/${reviewId}`);
+  }
+
+  enrollInCourse(courseId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${courseId}/enroll`, {});
+  }
+
+  getEnrolledCourses(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/courses/enrolled`);
+  }
+
+  getRecentActivities(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/users/recent-activities`);
+  }
+
   getCourseProgress(courseId: string): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/courses/${courseId}/progress`);
   }
+
+  // Add more course-related methods as needed
 }
