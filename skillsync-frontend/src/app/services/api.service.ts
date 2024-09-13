@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from './auth.service'; // Add this import
 import { Observable } from 'rxjs';
 import { Course } from '../models/course.model';
 import { User, CourseStats, AssessmentStats, Activity } from '../models/dashboard.model';
-import { AuthService } from './auth.service'; // Add this import
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,10 @@ import { AuthService } from './auth.service'; // Add this import
 export class ApiService {
   private apiUrl = 'http://localhost:3000/api';
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService // Correct the injection
+  ) { }
 
   // Analytics
   getAnalytics(): Observable<any> {

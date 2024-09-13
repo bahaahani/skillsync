@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, BehaviorSubject, Observable } from 'rxjs'; // Add Observable here
+import { tap, BehaviorSubject, Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
@@ -9,9 +9,15 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api';
   private tokenSubject = new BehaviorSubject<string | null>(localStorage.getItem('token'));
-  private currentUserSubject = new BehaviorSubject<any>(null); // Add this line
+  private currentUserSubject = new BehaviorSubject<any>(null);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // Initialize currentUserSubject with stored user data if available
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      this.currentUserSubject.next(JSON.parse(storedUser));
+    }
+  }
 
   login(credentials: { email: string; password: string }) {
     return this.http.post<{ token: string }>(`${this.apiUrl}/auth/login`, credentials).pipe(

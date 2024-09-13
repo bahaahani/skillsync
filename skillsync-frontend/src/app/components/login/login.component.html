@@ -5,21 +5,38 @@
       <form [formGroup]="loginForm" (ngSubmit)="login()">
         <mat-form-field appearance="fill">
           <mat-label>Username</mat-label>
-          <input matInput formControlName="username" required>
-          <mat-error *ngIf="loginForm.get('username')?.hasError('required')">Username is required</mat-error>
-          <mat-error *ngIf="loginForm.get('username')?.hasError('minlength')">Username must be at least 3 characters long</mat-error>
+          <input matInput formControlName="username" required />
+          <mat-error *ngIf="loginForm.get('username')?.hasError('required')"
+            >Username is required</mat-error
+          >
+          <mat-error *ngIf="loginForm.get('username')?.hasError('minlength')"
+            >Username must be at least 3 characters long</mat-error
+          >
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" required>
-          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
-          <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">Password must be at least 6 characters long</mat-error>
+          <input matInput type="password" formControlName="password" required />
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')"
+            >Password is required</mat-error
+          >
+          <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')"
+            >Password must be at least 6 characters long</mat-error
+          >
         </mat-form-field>
 
-        <mat-checkbox [(ngModel)]="rememberMe" [ngModelOptions]="{standalone: true}">Remember me</mat-checkbox>
+        <mat-checkbox
+          [(ngModel)]="rememberMe"
+          [ngModelOptions]="{ standalone: true }"
+          >Remember me</mat-checkbox
+        >
 
-        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || isLoading">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="loginForm.invalid || isLoading"
+        >
           <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
           <span *ngIf="!isLoading">Login</span>
         </button>
