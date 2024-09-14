@@ -1,0 +1,116 @@
+{
+  "NAV": {
+    "COURSES": "Courses",
+    "RECOMMENDATIONS": "Recommendations",
+    "DASHBOARD": "Dashboard",
+    "PROFILE": "Profile",
+    "TWO_FACTOR_SETTINGS": "2FA Settings",
+    "ADMIN": "Admin",
+    "LOGIN": "Login",
+    "REGISTER": "Register",
+    "LOGOUT": "Logout"
+  },
+  "AUTH": {
+    "LOGIN": {
+      "TITLE": "Login",
+      "EMAIL": "Email",
+      "PASSWORD": "Password",
+      "SUBMIT": "Login",
+      "FORGOT_PASSWORD": "Forgot Password?",
+      "NO_ACCOUNT": "Don't have an account?",
+      "SIGN_UP": "Sign up"
+    },
+    "REGISTER": {
+      "TITLE": "Register",
+      "NAME": "Name",
+      "USERNAME": "Username",
+      "EMAIL": "Email",
+      "PASSWORD": "Password",
+      "CONFIRM_PASSWORD": "Confirm Password",
+      "SUBMIT": "Register",
+      "HAVE_ACCOUNT": "Already have an account?",
+      "LOGIN": "Login",
+      "SUCCESS": "Registration successful",
+      "FAILURE": "Registration failed. Please try again.",
+      "ALREADY_HAVE_ACCOUNT": "Already have an account?",
+      "LOGIN_LINK": "Log in here"
+    },
+    "LOGOUT": {
+      "SUCCESS": "You have been successfully logged out"
+    }
+  },
+  "COMMON": {
+    "CLOSE": "Close",
+    "SAVE": "Save",
+    "CANCEL": "Cancel",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "LOADING": "Loading...",
+    "ERROR": "An error occurred. Please try again.",
+    "SUCCESS": "Operation successful"
+  },
+  "ERRORS": {
+    "REQUIRED": "This field is required",
+    "EMAIL_INVALID": "Please enter a valid email address",
+    "PASSWORD_MISMATCH": "Passwords do not match",
+    "PASSWORD_WEAK": "Password must contain at least 3 of the following: uppercase, lowercase, number, and special character",
+    "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters long",
+    "USERNAME_TAKEN": "This username is already taken",
+    "EMAIL_TAKEN": "This email is already registered",
+    "TOO_MANY_REQUESTS": "Too many requests. Please try again later."
+  },
+  "PROFILE": {
+    "TITLE": "User Profile",
+    "UPDATE_SUCCESS": "Profile updated successfully",
+    "UPDATE_ERROR": "Failed to update profile",
+    "DELETE_PICTURE": "Delete Picture",
+    "NAME": "Name",
+    "NAME_REQUIRED": "Name is required",
+    "EMAIL": "Email",
+    "EMAIL_REQUIRED": "Email is required",
+    "INVALID_EMAIL": "Please enter a valid email address",
+    "SAVE": "Save Changes"
+  },
+  "DASHBOARD": {
+    "TITLE": "Dashboard",
+    "WELCOME": "Welcome, {{name}}!"
+  },
+  "COURSES": {
+    "TITLE": "Courses",
+    "NO_COURSES": "No courses available"
+  },
+  "RECOMMENDATIONS": {
+    "TITLE": "Course Recommendations",
+    "NO_RECOMMENDATIONS": "No recommendations available",
+    "PERSONALIZED": "Personalized Recommendations",
+    "POPULAR": "Popular Courses"
+  },
+  "ADMIN": {
+    "TITLE": "Admin Dashboard"
+  },
+  "TWO_FACTOR": {
+    "TITLE": "Two-Factor Authentication",
+    "NOT_ENABLED": "Two-factor authentication is not enabled.",
+    "ENABLE": "Enable 2FA",
+    "ENABLED": "Two-factor authentication is enabled.",
+    "DISABLE": "Disable 2FA",
+    "SETUP": "Two-Factor Authentication Setup",
+    "SCAN_QR": "Scan this QR code with your authenticator app:",
+    "MANUAL_ENTRY": "Or enter this code manually",
+    "VERIFICATION_CODE": "Verification Code",
+    "CODE_REQUIRED": "Verification code is required",
+    "CODE_LENGTH": "Verification code must be 6 digits",
+    "VERIFY": "Verify"
+  },
+  "FORM": {
+    "SUBMIT": "Submit"
+  },
+  "APP": {
+    "NAME": "SkillSync"
+  },
+  "UNAUTHORIZED": {
+    "TITLE": "Unauthorized Access",
+    "MESSAGE": "You do not have permission to access this page.",
+    "RETURN_TO_DASHBOARD": "Return to Dashboard"
+  }
+}

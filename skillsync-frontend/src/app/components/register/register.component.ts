@@ -27,7 +27,8 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8), this.passwordStrengthValidator]],
       confirmPassword: ['', Validators.required],
-      name: ['', Validators.required]
+      name: ['', Validators.required],
+      username: ['', Validators.required]  // Add this line
     }, { validator: this.checkPasswords });
   }
 

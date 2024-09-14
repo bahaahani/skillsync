@@ -29,6 +29,10 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { FeatureFlagService } from './services/feature-flag.service';
 import { SharedModule } from './shared.module';
 
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
@@ -36,6 +40,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
+    NavBarComponent,
     LoginComponent,
     RegisterComponent,
     DashboardComponent,
@@ -69,7 +74,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    MatToolbarModule,
+    MatButtonModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

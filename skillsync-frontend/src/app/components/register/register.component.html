@@ -1,37 +1,66 @@
 <div class="register-container">
-  <h2>Register</h2>
+  <h2>{{ 'AUTH.REGISTER.TITLE' | translate }}</h2>
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="fill">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" required>
-      <mat-error *ngIf="registerForm.get('name')?.hasError('required')">Name is required</mat-error>
+      <mat-label>{{ 'AUTH.REGISTER.NAME' | translate }}</mat-label>
+      <input matInput formControlName="name" required />
+      <mat-error *ngIf="registerForm.get('name')?.hasError('required')">
+        {{ 'ERRORS.REQUIRED' | translate }}
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input matInput type="email" formControlName="email" required>
-      <mat-error *ngIf="registerForm.get('email')?.hasError('required')">Email is required</mat-error>
-      <mat-error *ngIf="registerForm.get('email')?.hasError('email')">Please enter a valid email address</mat-error>
+      <mat-label>{{ 'AUTH.REGISTER.USERNAME' | translate }}</mat-label>
+      <input matInput formControlName="username" required />
+      <mat-error *ngIf="registerForm.get('username')?.hasError('required')">
+        {{ 'ERRORS.REQUIRED' | translate }}
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Password</mat-label>
-      <input matInput type="password" formControlName="password" required>
-      <mat-error *ngIf="registerForm.get('password')?.hasError('required')">Password is required</mat-error>
-      <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">Password must be at least 8 characters long</mat-error>
-      <mat-error *ngIf="registerForm.get('password')?.hasError('weakPassword')">Password must contain at least 3 of the following: uppercase, lowercase, number, and special character</mat-error>
+      <mat-label>{{ 'AUTH.REGISTER.EMAIL' | translate }}</mat-label>
+      <input matInput type="email" formControlName="email" required />
+      <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
+        {{ 'ERRORS.REQUIRED' | translate }}
+      </mat-error>
+      <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
+        {{ 'ERRORS.EMAIL_INVALID' | translate }}
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Confirm Password</mat-label>
-      <input matInput type="password" formControlName="confirmPassword" required>
-      <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('required')">Confirm password is required</mat-error>
-      <mat-error *ngIf="registerForm.hasError('notSame')">Passwords do not match</mat-error>
+      <mat-label>{{ 'AUTH.REGISTER.PASSWORD' | translate }}</mat-label>
+      <input matInput type="password" formControlName="password" required />
+      <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
+        {{ 'ERRORS.REQUIRED' | translate }}
+      </mat-error>
+      <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
+        {{ 'ERRORS.PASSWORD_MIN_LENGTH' | translate }}
+      </mat-error>
+      <mat-error *ngIf="registerForm.get('password')?.hasError('weakPassword')">
+        {{ 'ERRORS.PASSWORD_WEAK' | translate }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'AUTH.REGISTER.CONFIRM_PASSWORD' | translate }}</mat-label>
+      <input matInput type="password" formControlName="confirmPassword" required />
+      <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
+        {{ 'ERRORS.REQUIRED' | translate }}
+      </mat-error>
+      <mat-error *ngIf="registerForm.hasError('notSame')">
+        {{ 'ERRORS.PASSWORD_MISMATCH' | translate }}
+      </mat-error>
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid || isLoading">
       <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
-      <span *ngIf="!isLoading">Register</span>
+      <span *ngIf="!isLoading">{{ 'FORM.SUBMIT' | translate }}</span>
     </button>
   </form>
+  
+  <p>
+    {{ 'AUTH.REGISTER.ALREADY_HAVE_ACCOUNT' | translate }}
+    <a routerLink="/login">{{ 'AUTH.REGISTER.LOGIN_LINK' | translate }}</a>
+  </p>
 </div>

@@ -61,7 +61,15 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    // Implement your logic to check if the user is logged in
+    // For example, check if there's a valid token in localStorage
+    return !!localStorage.getItem('token');
+  }
+
+  isAdmin(): boolean {
+    // Implement your logic to check if the logged-in user is an admin
+    // This might involve checking a role stored in localStorage or making an API call
+    return this.isLoggedIn() && localStorage.getItem('userRole') === 'ADMIN';
   }
 
   getUserProfile(): Observable<any> {
