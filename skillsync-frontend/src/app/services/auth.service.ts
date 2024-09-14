@@ -18,7 +18,7 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
   private tokenSubject = new BehaviorSubject<string | null>(this.getStoredToken());
   private currentUserSubject = new BehaviorSubject<any>(this.getStoredUser());
   private userRoleSubject = new BehaviorSubject<string | null>(null);
@@ -46,7 +46,7 @@ export class AuthService {
     );
   }
 
-  logout(): void {
+  logout2(): void {
     this.clearAuthData();
     this.stopRefreshTokenTimer();
   }
@@ -63,12 +63,6 @@ export class AuthService {
 
   getToken(): string | null {
     return this.tokenSubject.value;
-  }
-
-  isLoggedIn(): boolean {
-    // Implement your logic to check if the user is logged in
-    // For example, check if there's a valid token in localStorage
-    return !!localStorage.getItem('token');
   }
 
   isAdmin(): boolean {
@@ -171,7 +165,7 @@ export class AuthService {
   socialLogin(provider: string): Observable<any> {
     return from(this.socialAuthService.signIn(provider)).pipe(
       switchMap((socialUser: SocialUser) => {
-        return this.http.post<AuthResponse>(`${this.apiUrl}/auth/social-login`, {
+        return this.http.post<any>(`${this.apiUrl}/social-login`, {
           provider: socialUser.provider,
           token: socialUser.idToken
         }).pipe(
@@ -179,6 +173,35 @@ export class AuthService {
         );
       })
     );
+  }
+
+  googleLogin(): Observable<AuthResponse> {
+    return this.http.get<AuthResponse>(`${this.apiUrl}/google`).pipe(
+      tap((response: AuthResponse) => this.setSession(response))
+    );
+  }
+  
+  facebookLogin(): Observable<AuthResponse> {
+    return this.http.get<AuthResponse>(`${this.apiUrl}/facebook`).pipe(
+      tap((response: AuthResponse) => this.setSession(response))
+    );
+  }
+  logout() {
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('expires_at');
+  }
+
+  isLoggedIn() {
+    return Date.now() < this.getExpiration();
+  }
+
+  isLoggedOut() {
+    return !this.isLoggedIn();
+  }
+
+  getExpiration() {
+    const expiration = localStorage.getItem('expires_at');
+    return expiration ? JSON.parse(expiration) : 0;
   }
 
   // Private methods
@@ -265,5 +288,21 @@ export class AuthService {
 
   private storeUser(user: any): void {
     sessionStorage.setItem('user', JSON.stringify(user));
+  }
+
+  enable2FA(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/enable-2fa`, {});
+  }
+
+  disable2FA(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/disable-2fa`, {});
+  }
+
+  verify2FA(token: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/verify-2fa`, { token });
+  }
+
+  is2FAEnabled(): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/2fa-status`);
   }
 }

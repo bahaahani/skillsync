@@ -1,40 +1,30 @@
-<div class="forum-container">
-  <h1>Forum</h1>
+<div class="forum">
+  <h2>{{ 'FORUM.TITLE' | translate }}</h2>
+  
+  <!-- Create new topic form -->
+  <form (ngSubmit)="createTopic()">
+    <input [(ngModel)]="newTopic.title" name="title" placeholder="{{ 'FORUM.NEW_TOPIC_TITLE' | translate }}">
+    <textarea [(ngModel)]="newTopic.content" name="content" placeholder="{{ 'FORUM.NEW_TOPIC_CONTENT' | translate }}"></textarea>
+    <button type="submit">{{ 'FORUM.CREATE_TOPIC' | translate }}</button>
+  </form>
 
-  <!-- Create New Topic Form -->
-  <div class="new-topic-form">
-    <h2>Create New Topic</h2>
-    <form (ngSubmit)="createTopic()">
-      <div>
-        <label for="topicTitle">Title:</label>
-        <input type="text" id="topicTitle" [(ngModel)]="newTopic.title" name="title" required>
-      </div>
-      <div>
-        <label for="topicContent">Content:</label>
-        <textarea id="topicContent" [(ngModel)]="newTopic.content" name="content" required></textarea>
-      </div>
-      <button type="submit">Create Topic</button>
-    </form>
-  </div>
-
-  <!-- List of Topics -->
-  <div class="topics-list">
-    <h2>Topics</h2>
-    <div *ngFor="let post of posts" class="topic-item">
-      <h3><a [routerLink]="['/forum', post._id]">{{ post.title }}</a></h3>
-      <p>{{ post.content | slice:0:100 }}...</p>
-      <div class="topic-meta">
-        <span>By: {{ post.author.username }}</span>
-        <span>Created: {{ post.createdAt | date }}</span>
-        <span>Replies: {{ post.replies?.length || 0 }}</span>
-      </div>
-    </div>
+  <!-- List of posts/threads -->
+  <div *ngFor="let post of posts">
+    <h3>{{ post.title }}</h3>
+    <p>{{ post.content }}</p>
+    <!-- Add more details like author, date, etc. -->
   </div>
 
   <!-- Pagination -->
   <div class="pagination">
-    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
-    <span>Page {{ currentPage }} of {{ totalPages }}</span>
-    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+    <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">{{ 'FORUM.PREVIOUS' | translate }}</button>
+    <span>{{ currentPage }} / {{ totalPages }}</span>
+    <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">{{ 'FORUM.NEXT' | translate }}</button>
   </div>
+
+  <!-- Quick post form -->
+  <form (ngSubmit)="submitPost()">
+    <textarea [(ngModel)]="newPost" name="newPost" placeholder="{{ 'FORUM.QUICK_POST' | translate }}"></textarea>
+    <button type="submit">{{ 'FORUM.SUBMIT' | translate }}</button>
+  </form>
 </div>

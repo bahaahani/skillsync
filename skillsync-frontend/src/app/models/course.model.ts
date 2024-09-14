@@ -1,5 +1,14 @@
 import { Lesson } from '../services/course.service';
 
+export interface Lesson {
+  _id: string;
+  title: string;
+  description: string;
+  duration: number;
+  content: string;
+  // Add any other properties that a Lesson should have
+}
+
 export interface CourseReview {
   _id: string;
   courseId: string;
@@ -27,4 +36,5 @@ export interface Course {
   reviews?: CourseReview[];
   newReviewContent?: string;
   newReviewRating?: number;
+  lessons?: Lesson[]; // Add this line if courses can have lessons
 }

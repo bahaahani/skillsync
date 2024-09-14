@@ -1,101 +1,47 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CourseService } from '../../services/course.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ErrorHandlingService } from '../../services/error-handling.service';
 
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.component.html',
-  styleUrls: ['./courses.component.css'],
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule]
+  styleUrls: ['./courses.component.css']
 })
 export class CoursesComponent implements OnInit {
   courses: any[] = [];
-  filteredCourses: any[] = [];
-  enrolledCourses: any[] = [];
-  recommendedCourses: any[] = [];
-  searchTerm: string = '';
-  courseForm: FormGroup;
+  searchQuery: string = '';
+  currentPage: number = 1;
+  totalPages: number = 1;
+  pageSize: number = 10;
 
   constructor(
     private courseService: CourseService,
-    private fb: FormBuilder
-  ) {
-    this.courseForm = this.fb.group({
-      title: ['', Validators.required],
-      category: ['', Validators.required],
-      duration: ['', Validators.required],
-      skills: ['', Validators.required]
-    });
-  }
+    private errorHandler: ErrorHandlingService
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadCourses();
-    this.loadEnrolledCourses();
-    this.loadRecommendedCourses();
   }
 
   loadCourses() {
-    this.courseService.getCourses().subscribe(
-      (courses) => {
-        this.courses = courses;
-        this.filteredCourses = courses;
+    this.courseService.getCourses(this.currentPage, this.pageSize, this.searchQuery).subscribe(
+      (response: any) => {
+        this.courses = response.courses;
+        this.totalPages = response.totalPages;
       },
-      (error) => console.error('Error loading courses', error)
-    );
-  }
-
-  loadEnrolledCourses() {
-    this.courseService.getEnrolledCourses().subscribe(
-      (courses) => {
-        this.enrolledCourses = courses;
-      },
-      (error) => console.error('Error loading enrolled courses', error)
-    );
-  }
-
-  loadRecommendedCourses() {
-    this.courseService.getRecommendedCourses().subscribe(
-      (courses) => {
-        this.recommendedCourses = courses;
-      },
-      (error) => console.error('Error loading recommended courses', error)
+      error => this.errorHandler.handleError(error, 'COURSES.LOAD_ERROR')
     );
   }
 
   searchCourses() {
-    this.filteredCourses = this.courses.filter(course =>
-      course.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      course.category.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+    this.currentPage = 1;
+    this.loadCourses();
   }
 
-  enrollInCourse(courseId: string) {
-    this.courseService.enrollInCourse(courseId).subscribe(
-      (enrolledCourse) => {
-        this.enrolledCourses.push(enrolledCourse);
-        // Remove from recommended courses if present
-        this.recommendedCourses = this.recommendedCourses.filter(course => course.id !== courseId);
-      },
-      (error) => console.error('Error enrolling in course', error)
-    );
-  }
-
-  addCourse() {
-    if (this.courseForm.valid) {
-      const courseData = {
-        ...this.courseForm.value,
-        skills: this.courseForm.value.skills.split(',').map((skill: string) => skill.trim())
-      };
-      this.courseService.addCourse(courseData).subscribe(
-        (newCourse) => {
-          this.courses.push(newCourse);
-          this.courseForm.reset();
-        },
-        (error) => console.error('Error adding course', error)
-      );
+  changePage(newPage: number) {
+    if (newPage >= 1 && newPage <= this.totalPages) {
+      this.currentPage = newPage;
+      this.loadCourses();
     }
   }
 }

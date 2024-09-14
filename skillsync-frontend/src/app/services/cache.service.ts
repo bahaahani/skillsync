@@ -4,31 +4,27 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class CacheService {
-  private cache: { [key: string]: { data: any; timestamp: number } } = {};
-  private readonly MAX_AGE = 5 * 60 * 1000; // 5 minutes
+  private cache: { [key: string]: any } = {};
 
-  constructor() { }
-
-  set(key: string, data: any): void {
-    this.cache[key] = {
-      data: data,
-      timestamp: Date.now()
+  set(key: string, data: any, ttl: number = 60000): void {
+    const now = new Date();
+    const item = {
+      value: data,
+      expiry: now.getTime() + ttl,
     };
+    this.cache[key] = item;
   }
 
-  get(key: string): any | null {
-    const cached = this.cache[key];
-    if (!cached) {
-      return null;
-    }
+  get(key: string): any {
+    const item = this.cache[key];
+    if (!item) return null;
 
-    const age = Date.now() - cached.timestamp;
-    if (age > this.MAX_AGE) {
+    const now = new Date();
+    if (now.getTime() > item.expiry) {
       delete this.cache[key];
       return null;
     }
-
-    return cached.data;
+    return item.value;
   }
 
   clear(key?: string): void {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MentorshipService } from '../../services/mentorship.service';
+import { ErrorHandlingService } from '../../services/error-handling.service';
 
 @Component({
     selector: 'app-mentorship',
@@ -11,72 +12,50 @@ import { MentorshipService } from '../../services/mentorship.service';
     styleUrls: ['./mentorship.component.css']
 })
 export class MentorshipComponent implements OnInit {
-    availableMentors: any[] = [];
+    mentors: any[] = [];
     mentorshipRequests: any[] = [];
-    userIsMentor: boolean = false;
+    isMentor: boolean = false; // This should be set based on user role
 
-    constructor(private mentorshipService: MentorshipService) { }
+    constructor(
+        private mentorshipService: MentorshipService,
+        private errorHandler: ErrorHandlingService
+    ) { }
 
     ngOnInit() {
-        this.loadAvailableMentors();
-        this.loadMentorshipRequests();
-        this.checkMentorStatus();
+        this.loadMentors();
+        if (this.isMentor) {
+            this.loadMentorshipRequests();
+        }
     }
 
-    loadAvailableMentors() {
-        this.mentorshipService.getAvailableMentors().subscribe(
-            (mentors) => {
-                this.availableMentors = mentors;
-            },
-            (error) => console.error('Error loading available mentors', error)
+    loadMentors() {
+        this.mentorshipService.getMentors().subscribe(
+            data => this.mentors = data,
+            error => this.errorHandler.handleError(error, 'MENTORSHIP.LOAD_MENTORS_ERROR')
         );
     }
 
     loadMentorshipRequests() {
         this.mentorshipService.getMentorshipRequests().subscribe(
-            (requests) => {
-                this.mentorshipRequests = requests;
-            },
-            (error) => console.error('Error loading mentorship requests', error)
+            data => this.mentorshipRequests = data,
+            error => this.errorHandler.handleError(error, 'MENTORSHIP.LOAD_REQUESTS_ERROR')
         );
     }
 
-    checkMentorStatus() {
-        this.mentorshipService.getUserMentorStatus().subscribe(
-            (status) => {
-                this.userIsMentor = status.isMentor;
-            },
-            (error) => console.error('Error checking mentor status', error)
+    requestMentor(mentorId: string) {
+        this.mentorshipService.requestMentor(mentorId).subscribe(
+            () => this.errorHandler.showSuccessMessage('MENTORSHIP.REQUEST_SENT'),
+            error => this.errorHandler.handleError(error, 'MENTORSHIP.REQUEST_ERROR')
         );
     }
 
-    requestMentorship(mentorId: string) {
-        this.mentorshipService.requestMentorship(mentorId).subscribe(
-            (response) => {
-                console.log('Mentorship request sent successfully');
-                // Update the UI or show a notification
-            },
-            (error) => console.error('Error requesting mentorship', error)
-        );
-    }
-
-    acceptMentorshipRequest(requestId: string) {
+    acceptRequest(requestId: string) {
         this.mentorshipService.acceptMentorshipRequest(requestId).subscribe(
-            (response) => {
-                console.log('Mentorship request accepted');
+            () => {
+                this.errorHandler.showSuccessMessage('MENTORSHIP.REQUEST_ACCEPTED');
                 this.loadMentorshipRequests();
             },
-            (error) => console.error('Error accepting mentorship request', error)
-        );
-    }
-
-    becomeMentor() {
-        this.mentorshipService.becomeMentor().subscribe(
-            (response) => {
-                console.log('You are now a mentor');
-                this.userIsMentor = true;
-            },
-            (error) => console.error('Error becoming a mentor', error)
+            error => this.errorHandler.handleError(error, 'MENTORSHIP.ACCEPT_ERROR')
         );
     }
 }

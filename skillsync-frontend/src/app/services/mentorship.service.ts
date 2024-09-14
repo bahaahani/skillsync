@@ -1,36 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MentorshipService {
-  private apiUrl = 'http://localhost:3000/api'; // Adjust this to your backend URL
+  private apiUrl = `${environment.apiUrl}/mentorship`;
 
   constructor(private http: HttpClient) { }
 
-  getAvailableMentors(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/mentorship/mentors`);
+  getMentors(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/mentors`);
   }
 
-  getMentorshipRequests(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/mentorship/requests`);
+  requestMentor(mentorId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/request`, { mentorId });
   }
 
-  getUserMentorStatus(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/mentorship/status`);
-  }
-
-  requestMentorship(mentorId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/mentorship/request`, { mentorId });
+  getMentorshipRequests(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/requests`);
   }
 
   acceptMentorshipRequest(requestId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/mentorship/accept`, { requestId });
-  }
-
-  becomeMentor(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/mentorship/become-mentor`, {});
+    return this.http.post(`${this.apiUrl}/accept`, { requestId });
   }
 }

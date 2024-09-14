@@ -1,64 +1,58 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ApiService } from '../../services/api.service';
-import { Course } from '../../models/course.model';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { Component, OnInit } from '@angular/core';
+import { CourseService } from '../../services/course.service';
 
 @Component({
   selector: 'app-course-catalog',
-  templateUrl: './course-catalog.component.html'
+  template: `
+    <div class="course-catalog">
+      <h2>{{ 'COURSES.CATALOG' | translate }}</h2>
+      <div class="categories">
+        <button *ngFor="let category of categories" (click)="selectCategory(category)">
+          {{ category }}
+        </button>
+      </div>
+      <div class="courses">
+        <div *ngFor="let course of filteredCourses">
+          <h3>{{ course.title }}</h3>
+          <p>{{ course.description }}</p>
+          <a [routerLink]="['/courses', course._id]">{{ 'COURSES.VIEW_DETAILS' | translate }}</a>
+        </div>
+      </div>
+    </div>
+  `
 })
 export class CourseCatalogComponent implements OnInit {
-  courses: Course[] = [];
-  filteredCourses: Course[] = [];
-  pagedCourses: Course[] = [];
-  isLoading: boolean = false;
-  error: string | null = null;
-  searchTerm: string = '';
+  categories: string[] = [];
+  allCourses: any[] = [];
+  filteredCourses: any[] = [];
 
-  // Pagination
-  pageSize: number = 10;
-  pageSizeOptions: number[] = [5, 10, 25, 50];
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  constructor(private apiService: ApiService) {}
+  constructor(private courseService: CourseService) {}
 
   ngOnInit() {
+    this.loadCategories();
     this.loadCourses();
   }
 
+  loadCategories() {
+    // Implement this when you have a method to fetch categories
+    this.categories = ['All', 'Programming', 'Design', 'Business'];
+  }
+
   loadCourses() {
-    this.isLoading = true;
-    this.error = null;
-    this.apiService.getCourses().subscribe(
-      (data: Course[]) => {
-        this.courses = data;
-        this.filteredCourses = data;
-        this.updatePagedCourses();
-        this.isLoading = false;
+    this.courseService.getCourses().subscribe(
+      (data: any) => {
+        this.allCourses = data.courses;
+        this.filteredCourses = this.allCourses;
       },
-      error => {
-        console.error('Error fetching courses:', error);
-        this.error = 'Failed to load courses. Please try again later.';
-        this.isLoading = false;
-      }
+      error => console.error('Error fetching courses:', error)
     );
   }
 
-  searchCourses() {
-    this.filteredCourses = this.courses.filter(course =>
-      course.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      course.description.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-    this.updatePagedCourses();
-    this.paginator.firstPage();
-  }
-
-  updatePagedCourses() {
-    const startIndex = this.paginator ? this.paginator.pageIndex * this.paginator.pageSize : 0;
-    this.pagedCourses = this.filteredCourses.slice(startIndex, startIndex + this.pageSize);
-  }
-
-  onPageChange(event: PageEvent) {
-    this.updatePagedCourses();
+  selectCategory(category: string) {
+    if (category === 'All') {
+      this.filteredCourses = this.allCourses;
+    } else {
+      this.filteredCourses = this.allCourses.filter(course => course.category === category);
+    }
   }
 }

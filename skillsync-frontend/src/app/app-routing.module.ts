@@ -13,13 +13,21 @@ import { TwoFactorSettingsComponent } from './components/two-factor-settings/two
 import { CourseRecommendationsComponent } from './components/course-recommendations/course-recommendations.component';
 import { ForumTopicsComponent } from './components/forum-topics/forum-topics.component';
 import { ForumPostsComponent } from './components/forum-posts/forum-posts.component';
-
+import { CoursesComponent } from './components/courses/courses.component';
+import { CourseDetailsComponent } from './components/course-details/course-details.component';
+import { CourseForumComponent } from './components/course-forum/course-forum.component';
+import { CourseCatalogComponent } from './components/course-catalog/course-catalog.component';
+import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
+import { InstructorDashboardComponent } from './components/instructor-dashboard/instructor-dashboard.component';
 
 const routes: Routes = [
-  { path: 'courses', component: CourseRecommendationsComponent },
+  { 
+    path: 'courses',
+    loadChildren: () => import('./modules/courses/courses.module').then(m => m.CoursesModule)
+  },
   { path: '', redirectTo: '/courses', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'dashboard', component: UserDashboardComponent, canActivate: [AuthGuard] },
   { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard] },
   {
     path: 'admin',
@@ -34,6 +42,8 @@ const routes: Routes = [
   { path: 'recommendations', component: CourseRecommendationsComponent, canActivate: [AuthGuard] },
   { path: 'courses/:courseId/forum', component: ForumTopicsComponent, canActivate: [AuthGuard] },
   { path: 'courses/:courseId/forum/:topicId', component: ForumPostsComponent, canActivate: [AuthGuard] },
+  { path: 'courses/catalog', component: CourseCatalogComponent },
+  { path: 'instructor', component: InstructorDashboardComponent, canActivate: [AuthGuard, RoleGuard], data: { requiredRole: 'INSTRUCTOR' } },
 ];
 
 @NgModule({

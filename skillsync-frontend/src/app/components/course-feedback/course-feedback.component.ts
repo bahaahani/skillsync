@@ -1,36 +1,57 @@
-import { Component, Input } from '@angular/core';
-import { ApiService } from '../../services/api.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CourseService } from '../../services/course.service';
+import { ErrorHandlingService } from '../../services/error-handling.service';
 
 @Component({
   selector: 'app-course-feedback',
-  templateUrl: './course-feedback.component.html',
+  template: `
+    <div class="course-feedback">
+      <h3>{{ 'COURSES.FEEDBACK' | translate }}</h3>
+      <form [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
+        <mat-form-field>
+          <textarea matInput formControlName="content" placeholder="{{ 'COURSES.WRITE_FEEDBACK' | translate }}"></textarea>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="rating" placeholder="{{ 'COURSES.SELECT_RATING' | translate }}">
+            <mat-option *ngFor="let rating of [1,2,3,4,5]" [value]="rating">
+              {{rating}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="feedbackForm.invalid">
+          {{ 'COURSES.SUBMIT_FEEDBACK' | translate }}
+        </button>
+      </form>
+    </div>
+  `
 })
-export class CourseFeedbackComponent {
-  @Input() courseId!: string;
-  feedback: string = '';
+export class CourseFeedbackComponent implements OnInit {
+  @Input() courseId: string;
+  feedbackForm: FormGroup;
 
-  constructor(private apiService: ApiService, private dialog: MatDialog) {}
+  constructor(
+    private courseService: CourseService,
+    private fb: FormBuilder,
+    private errorHandler: ErrorHandlingService
+  ) {
+    this.feedbackForm = this.fb.group({
+      content: ['', Validators.required],
+      rating: ['', Validators.required]
+    });
+  }
+
+  ngOnInit() {}
 
   submitFeedback() {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: {
-        title: 'Submit Feedback',
-        message: 'Are you sure you want to submit this feedback?'
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.apiService.submitCourseFeedback(this.courseId, { feedback: this.feedback }).subscribe(
-          response => {
-            console.log('Feedback submitted:', response);
-            this.feedback = ''; // Clear the feedback after submission
-          },
-          error => console.error('Error submitting feedback:', error)
-        );
-      }
-    });
+    if (this.feedbackForm.valid) {
+      this.courseService.addCourseFeedback(this.courseId, this.feedbackForm.value).subscribe(
+        () => {
+          this.errorHandler.showSuccessMessage('COURSES.FEEDBACK_SUBMITTED');
+          this.feedbackForm.reset();
+        },
+        error => this.errorHandler.handleError(error, 'COURSES.FEEDBACK_SUBMIT_ERROR')
+      );
+    }
   }
 }

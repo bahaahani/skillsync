@@ -1,48 +1,24 @@
 <div class="course-recommendations">
-  <h2>{{ 'RECOMMENDATIONS.TITLE' | translate }}</h2>
-
-  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-
-  <div *ngIf="!isLoading">
-    <section>
-      <h3>{{ 'RECOMMENDATIONS.PERSONALIZED' | translate }}</h3>
-      <div class="course-list">
-        <mat-card *ngFor="let course of personalizedRecommendations">
-          <mat-card-header>
-            <mat-card-title>{{ course.title }}</mat-card-title>
-            <mat-card-subtitle>{{ course.instructor }}</mat-card-subtitle>
-          </mat-card-header>
-          <img mat-card-image [src]="course.imageUrl" [alt]="course.title">
-          <mat-card-content>
-            <p>{{ course.description }}</p>
-            <p *ngIf="showNewRecommendationAlgorithm">{{ 'RECOMMENDATIONS.NEW_ALGORITHM' | translate }}</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-button color="primary">{{ 'RECOMMENDATIONS.ENROLL' | translate }}</button>
-            <button mat-button>{{ 'RECOMMENDATIONS.LEARN_MORE' | translate }}</button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-    </section>
-
-    <section>
-      <h3>{{ 'RECOMMENDATIONS.POPULAR' | translate }}</h3>
-      <div class="course-list">
-        <mat-card *ngFor="let course of popularCourses">
-          <mat-card-header>
-            <mat-card-title>{{ course.title }}</mat-card-title>
-            <mat-card-subtitle>{{ course.instructor }}</mat-card-subtitle>
-          </mat-card-header>
-          <img mat-card-image [src]="course.imageUrl" [alt]="course.title">
-          <mat-card-content>
-            <p>{{ course.description }}</p>
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-button color="primary">{{ 'RECOMMENDATIONS.ENROLL' | translate }}</button>
-            <button mat-button>{{ 'RECOMMENDATIONS.LEARN_MORE' | translate }}</button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-    </section>
+  <h2>{{ 'COURSES.RECOMMENDATIONS' | translate }}</h2>
+  <div class="recommendation-filters">
+    <mat-form-field>
+      <mat-label>{{ 'COURSES.CATEGORY' | translate }}</mat-label>
+      <mat-select [(ngModel)]="selectedCategory" (selectionChange)="updateRecommendations()">
+        <mat-option *ngFor="let category of categories" [value]="category">
+          {{ category }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>{{ 'COURSES.DIFFICULTY' | translate }}</mat-label>
+      <mat-select [(ngModel)]="selectedDifficulty" (selectionChange)="updateRecommendations()">
+        <mat-option *ngFor="let difficulty of difficulties" [value]="difficulty">
+          {{ difficulty }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="recommended-courses">
+    <app-course-card *ngFor="let course of recommendedCourses" [course]="course"></app-course-card>
   </div>
 </div>

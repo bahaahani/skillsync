@@ -11,27 +11,46 @@ export class AnalyticsService {
 
   constructor(private http: HttpClient) {}
 
-  getOverviewStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/overview`);
+  trackUserActivity(activity: string) {
+    return this.http.post(`${this.apiUrl}/track`, { activity });
   }
 
-  getUserGrowth(period: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user-growth?period=${period}`);
+  getCourseEngagement(courseId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/course-engagement/${courseId}`);
   }
 
-  getCourseEnrollments(period: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/course-enrollments?period=${period}`);
+  getCompletionRates(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/completion-rates`);
   }
 
-  getCourseCompletionRates(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/course-completion-rates`);
+  getUserBehaviorAnalytics(userId?: string): Observable<any> {
+    const url = userId 
+      ? `${this.apiUrl}/user-behavior/${userId}` 
+      : `${this.apiUrl}/aggregated-behavior`;
+    return this.http.get<any>(url);
   }
 
-  getUserEngagement(period: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user-engagement?period=${period}`);
+  getCoursePerformanceMetrics(courseId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/course-performance/${courseId}`);
   }
 
-  getRevenueStats(period: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/revenue?period=${period}`);
+  generateCustomReport(params: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/custom-report`, params);
+  }
+
+  trackUserBehavior(event: string, metadata: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/track-behavior`, { event, metadata });
+  }
+
+  getCoursePerformanceMetrics(courseId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/course-performance/${courseId}`);
+  }
+
+  generateCustomReport(params: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/custom-report`, params);
+  }
+
+  trackUserBehavior(event: string, metadata: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/track-behavior`, { event, metadata });
   }
 }

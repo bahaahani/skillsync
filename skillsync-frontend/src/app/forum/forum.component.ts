@@ -1,71 +1,57 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { ForumService } from '../services/forum.service';
-import { Router } from '@angular/router';
+import { ErrorHandlingService } from '../services/error-handling.service';
 
 @Component({
   selector: 'app-forum',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './forum.component.html',
   styleUrls: ['./forum.component.css']
 })
 export class ForumComponent implements OnInit {
   posts: any[] = [];
+  newTopic: any = { title: '', content: '' };
   newPost: string = '';
-  newTopic: { title: string, content: string } = { title: '', content: '' };
-  user: any;
   currentPage: number = 1;
   totalPages: number = 1;
   pageSize: number = 10;
 
-  constructor(private forumService: ForumService, private router: Router) { }
+  constructor(
+    private forumService: ForumService,
+    private errorHandler: ErrorHandlingService
+  ) {}
 
   ngOnInit() {
     this.loadPosts();
   }
 
   loadPosts() {
-    this.forumService.getAllPosts(this.currentPage, this.pageSize).subscribe({
-      next: (response: any) => {
+    this.forumService.getThreads(this.currentPage, this.pageSize).subscribe(
+      (response: any) => {
         this.posts = response.posts;
         this.totalPages = response.totalPages;
       },
-      error: (error: any) => {
-        console.error('Error fetching posts:', error);
-      }
-    });
-  }
-
-  submitPost() {
-    if (this.newPost.trim()) {
-      this.forumService.createPost({ content: this.newPost }).subscribe({
-        next: () => {
-          this.loadPosts();
-          this.newPost = '';
-        },
-        error: (error: any) => {
-          console.error('Error submitting post:', error);
-        }
-      });
-    }
+      error => this.errorHandler.handleError(error, 'FORUM.LOAD_ERROR')
+    );
   }
 
   createTopic() {
-    if (this.newTopic.title.trim() && this.newTopic.content.trim()) {
-      this.forumService.createTopic(this.newTopic).subscribe({
-        next: (createdTopic) => {
-          this.loadPosts();
-          this.newTopic = { title: '', content: '' };
-          this.router.navigate(['/forum', createdTopic._id]);
-        },
-        error: (error: any) => {
-          console.error('Error creating topic:', error);
-        }
-      });
-    }
+    this.forumService.createThread(this.newTopic).subscribe(
+      () => {
+        this.loadPosts();
+        this.newTopic = { title: '', content: '' };
+      },
+      error => this.errorHandler.handleError(error, 'FORUM.CREATE_TOPIC_ERROR')
+    );
+  }
+
+  submitPost() {
+    this.forumService.createPost({ content: this.newPost }).subscribe(
+      () => {
+        this.loadPosts();
+        this.newPost = '';
+      },
+      error => this.errorHandler.handleError(error, 'FORUM.SUBMIT_POST_ERROR')
+    );
   }
 
   changePage(newPage: number) {
