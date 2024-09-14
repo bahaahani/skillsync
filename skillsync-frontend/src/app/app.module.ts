@@ -12,7 +12,7 @@ import { environment } from '../environments/environment';
 import { MatModules } from './modules/mat-modules';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
@@ -32,6 +32,8 @@ import { SharedModule } from './shared.module';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+
+import { ErrorHandlingService } from './services/error-handling.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -82,6 +84,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     FeatureFlagService,
+    ErrorHandlingService,
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
@@ -89,11 +92,11 @@ export function HttpLoaderFactory(http: HttpClient) {
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider('your_google_client_id')
+            provider: new GoogleLoginProvider(environment.googleClientId)
           },
           {
             id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider('your_facebook_app_id')
+            provider: new FacebookLoginProvider(environment.facebookAppId)
           }
         ]
       } as SocialAuthServiceConfig,

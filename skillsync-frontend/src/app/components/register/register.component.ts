@@ -67,7 +67,7 @@ export class RegisterComponent {
       this.authService.register(this.registerForm.value).subscribe({
         next: () => {
           this.isLoading = false;
-          this.translate.get('REGISTER.SUCCESS').subscribe((res: string) => {
+          this.translate.get('AUTH.REGISTER.SUCCESS').subscribe((res: string) => {
             this.snackBar.open(res, this.translate.instant('COMMON.CLOSE'), { duration: 5000 });
           });
           this.router.navigate(['/login']);
@@ -75,7 +75,11 @@ export class RegisterComponent {
         },
         error: (error) => {
           this.isLoading = false;
-          this.translate.get('REGISTER.FAILURE').subscribe((res: string) => {
+          let errorMessage = 'AUTH.REGISTER.FAILURE';
+          if (error.message === 'ERRORS.INVALID_CREDENTIALS') {
+            errorMessage = error.message;
+          }
+          this.translate.get(errorMessage).subscribe((res: string) => {
             this.snackBar.open(res, this.translate.instant('COMMON.CLOSE'), { duration: 5000 });
           });
           this.cdr.markForCheck();

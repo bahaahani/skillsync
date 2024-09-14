@@ -26,7 +26,7 @@ describe('AuthService', () => {
 
   it('should login and store token', () => {
     const mockResponse = { token: 'fake-token', expiresIn: 3600, role: 'USER' };
-    const credentials = { email: 'test@example.com', password: 'password' };
+    const credentials = { username: 'test@example.com', password: 'password' };
 
     service.login(credentials).subscribe(response => {
       expect(response).toEqual(mockResponse);

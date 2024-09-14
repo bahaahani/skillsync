@@ -30,14 +30,19 @@ export class AuthService {
 
   // Public methods
 
-  login(credentials: { email: string; password: string }): Observable<AuthResponse> {
+  login(credentials: { username: string; password: string }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap(response => {
         if (!response.requiresTwoFactor) {
           this.handleSuccessfulAuth(response);
         }
       }),
-      catchError(this.handleLoginError)
+      catchError((error: HttpErrorResponse) => {
+        if (error.error && error.error.message === 'Invalid credentials') {
+          return throwError(() => new Error('ERRORS.INVALID_CREDENTIALS'));
+        }
+        return throwError(() => error);
+      })
     );
   }
 
@@ -141,7 +146,14 @@ export class AuthService {
   }
 
   register(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register`, userData);
+    return this.http.post(`${this.apiUrl}/auth/register`, userData).pipe(
+      catchError((error) => {
+        if (error.error && error.error.message === 'Invalid credentials') {
+          return throwError(() => new Error('ERRORS.INVALID_CREDENTIALS'));
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
   verifyEmail(token: string): Observable<any> {

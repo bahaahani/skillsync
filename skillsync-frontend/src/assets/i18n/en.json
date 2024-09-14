@@ -13,12 +13,24 @@
   "AUTH": {
     "LOGIN": {
       "TITLE": "Login",
-      "EMAIL": "Email",
+      "USERNAME": "Username",
       "PASSWORD": "Password",
       "SUBMIT": "Login",
       "FORGOT_PASSWORD": "Forgot Password?",
       "NO_ACCOUNT": "Don't have an account?",
-      "SIGN_UP": "Sign up"
+      "SIGN_UP": "Sign up",
+      "VERIFICATION_CODE": "Verification Code",
+      "VERIFICATION_CODE_REQUIRED": "Verification code is required",
+      "VERIFICATION_CODE_LENGTH": "Verification code must be 6 digits",
+      "VERIFY": "Verify",
+      "GOOGLE_SIGN_IN": "Sign in with Google",
+      "FACEBOOK_SIGN_IN": "Sign in with Facebook",
+      "RATE_LIMIT_EXCEEDED": "Too many login attempts. Please try again later.",
+      "INVALID_CREDENTIALS": "Invalid username or password. Please try again.",
+      "UNKNOWN_ERROR": "An unknown error occurred. Please try again.",
+      "FILL_ALL_FIELDS": "Please fill in all fields",
+      "SUCCESS": "Login successful",
+      "SOCIAL_LOGIN_ERROR": "Error occurred during social login. Please try again."
     },
     "REGISTER": {
       "TITLE": "Register",
@@ -57,7 +69,8 @@
     "PASSWORD_MIN_LENGTH": "Password must be at least 8 characters long",
     "USERNAME_TAKEN": "This username is already taken",
     "EMAIL_TAKEN": "This email is already registered",
-    "TOO_MANY_REQUESTS": "Too many requests. Please try again later."
+    "TOO_MANY_REQUESTS": "Too many requests. Please try again later.",
+    "INVALID_CREDENTIALS": "Invalid username or password. Please try again."
   },
   "PROFILE": {
     "TITLE": "User Profile",

@@ -364,7 +364,7 @@ export class ApiService {
    * @private
    */
   private handleError(error: any): Observable<never> {
-    this.errorHandler.handleError(error);
+    this.errorHandler.handleError(error, 'API.ERROR');
     throw error;
   }
 }

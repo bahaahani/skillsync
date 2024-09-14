@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { LoginComponent } from './login.component';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { of, throwError } from 'rxjs';
 
 describe('LoginComponent', () => {
@@ -16,7 +16,7 @@ describe('LoginComponent', () => {
     const spy = jasmine.createSpyObj('AuthService', ['login', 'verifyTwoFactor']);
 
     await TestBed.configureTestingModule({
-      declarations: [ LoginComponent ],
+      declarations: [LoginComponent],
       imports: [
         ReactiveFormsModule,
         RouterTestingModule,
@@ -44,7 +44,7 @@ describe('LoginComponent', () => {
 
   it('should call login method on form submit', () => {
     authServiceSpy.login.and.returnValue(of({ token: 'fake-token', expiresIn: 3600, requiresTwoFactor: false }));
-    
+
     component.loginForm.setValue({
       email: 'test@example.com',
       password: 'password'
@@ -59,7 +59,7 @@ describe('LoginComponent', () => {
 
   it('should show two-factor form when required', () => {
     authServiceSpy.login.and.returnValue(of({ requiresTwoFactor: true }));
-    
+
     component.loginForm.setValue({
       email: 'test@example.com',
       password: 'password'
@@ -71,7 +71,7 @@ describe('LoginComponent', () => {
 
   it('should handle login error', () => {
     authServiceSpy.login.and.returnValue(throwError(() => new Error('Login failed')));
-    
+
     component.loginForm.setValue({
       email: 'test@example.com',
       password: 'password'
