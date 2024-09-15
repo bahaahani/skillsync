@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { io, Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { io, Socket } from 'socket.io-client';
 import { environment } from '../../environments/environment';
 
 export interface Notification {
@@ -8,22 +8,23 @@ export interface Notification {
   type: string;
   message: string;
   timestamp: Date;
+  read: boolean;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private socket: Socket;
   private notifications = new BehaviorSubject<Notification[]>([]);
+  private socket: Socket;
 
   constructor() {
-    this.socket = io(environment.apiUrl);
+    this.socket = io(environment.wsUrl);
     this.setupSocketListeners();
   }
 
   private setupSocketListeners(): void {
-    this.socket.on('notification', (notification: Notification) => {
+    this.socket.on('newNotification', (notification: Notification) => {
       const currentNotifications = this.notifications.value;
       this.notifications.next([...currentNotifications, notification]);
     });
@@ -33,13 +34,22 @@ export class NotificationService {
     return this.notifications.asObservable();
   }
 
+  addNotification(notification: Notification): void {
+    const currentNotifications = this.notifications.value;
+    this.notifications.next([...currentNotifications, notification]);
+  }
+
   markAsRead(notificationId: string): void {
-    // Implement logic to mark notification as read
-    // This might involve sending a request to the server
-    // and updating the local notifications array
+    const currentNotifications = this.notifications.value;
+    const updatedNotifications = currentNotifications.map(notification => 
+      notification.id === notificationId ? { ...notification, read: true } : notification
+    );
+    this.notifications.next(updatedNotifications);
+    this.socket.emit('markAsRead', notificationId);
   }
 
   clearNotifications(): void {
     this.notifications.next([]);
+    this.socket.emit('clearNotifications');
   }
 }

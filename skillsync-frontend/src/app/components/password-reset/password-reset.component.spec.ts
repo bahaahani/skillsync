@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { PasswordResetComponent } from './password-reset.component';
 import { AuthService } from '../../services/auth.service';
-import { MatModules } from '../../modules/mat-modules';
+import { MatModules } from '../../modules/shared/mat-modules';
 
 describe('PasswordResetComponent', () => {
   let component: PasswordResetComponent;
@@ -20,7 +20,7 @@ describe('PasswordResetComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [ PasswordResetComponent ],
+      declarations: [PasswordResetComponent],
       imports: [
         ReactiveFormsModule,
         MatSnackBarModule,

@@ -1,30 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CourseService } from '../../services/course.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ErrorHandlingService } from '../../services/error-handling.service';
 
 @Component({
   selector: 'app-course-details',
-  template: `
-    <div class="course-details" *ngIf="course">
-      <h2>{{ course.title }}</h2>
-      <p>{{ course.description }}</p>
-      <div class="course-rating">
-        <h3>{{ 'COURSES.AVERAGE_RATING' | translate }}: {{ course.averageRating | number:'1.1-1' }}/5</h3>
-        <p>{{ 'COURSES.TOTAL_REVIEWS' | translate }}: {{ course.totalReviews }}</p>
-      </div>
-      <h3>{{ 'COURSES.LESSONS' | translate }}</h3>
-      <ul>
-        <li *ngFor="let lesson of course.lessons">
-          {{ lesson.title }}
-        </li>
-      </ul>
-      <button (click)="enrollInCourse()" *ngIf="!isEnrolled">{{ 'COURSES.ENROLL' | translate }}</button>
-      <app-course-reviews [courseId]="course._id"></app-course-reviews>
-      <app-course-feedback [courseId]="course._id"></app-course-feedback>
-      <app-course-forum [courseId]="course._id"></app-course-forum>
-      <app-social-share [courseId]="course._id" [courseTitle]="course.title"></app-social-share>
-    </div>
-  `
+  templateUrl: './course-details.component.html',
+  styleUrls: ['./course-details.component.css']
 })
 export class CourseDetailsComponent implements OnInit {
   course: any;
@@ -32,8 +15,10 @@ export class CourseDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private courseService: CourseService
-  ) {}
+    private courseService: CourseService,
+    private translateService: TranslateService,
+    private errorHandler: ErrorHandlingService,
+  ) { }
 
   ngOnInit() {
     const courseId = this.route.snapshot.paramMap.get('id');
@@ -43,7 +28,7 @@ export class CourseDetailsComponent implements OnInit {
   }
 
   loadCourseDetails(courseId: string) {
-    this.courseService.getCourseById(courseId).subscribe(
+    this.courseService.getCourseDetails(courseId).subscribe(
       data => {
         this.course = data;
         this.checkEnrollmentStatus();

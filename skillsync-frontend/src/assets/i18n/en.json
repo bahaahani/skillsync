@@ -128,7 +128,6 @@
     "ADD_ERROR": "Failed to add course",
     "LESSONS": "Lessons",
     "VIEW_DETAILS": "View Details",
-    "CATALOG": "Course Catalog",
     "ENROLLED_STUDENTS": "Enrolled Students",
     "CONTINUE": "Continue Course",
     "REVIEWS": "Reviews",
@@ -174,9 +173,7 @@
     "DIFFICULTY": "Difficulty",
     "SEARCH_ERROR": "Error occurred while searching courses",
     "PREVIEW_LOAD_ERROR": "Error loading course preview",
-    "VIDEO_NOT_SUPPORTED": "Your browser does not support the video tag.",
-    "ENROLL_SUCCESS": "Successfully enrolled in the course",
-    "ENROLL_ERROR": "Error enrolling in the course"
+    "VIDEO_NOT_SUPPORTED": "Your browser does not support the video tag."
   },
   "RECOMMENDATIONS": {
     "TITLE": "Course Recommendations",
@@ -240,5 +237,36 @@
     "BADGES": "Badges",
     "NEW_BADGE": "You've earned a new badge!",
     "POINTS_EARNED": "You've earned {points} points!"
-  }
+  },
+  "REFERRAL": {
+    "TITLE": "Referral Program",
+    "GENERATE_CODE": "Generate Referral Code",
+    "YOUR_CODE": "Your Referral Code",
+    "APPLY_CODE": "Apply Referral Code",
+    "ENTER_CODE": "Enter referral code",
+    "APPLY": "Apply",
+    "YOUR_STATS": "Your Referral Stats",
+    "TOTAL_REFERRALS": "Total Referrals",
+    "SUCCESSFUL_REFERRALS": "Successful Referrals",
+    "GENERATE_ERROR": "Error generating referral code",
+    "APPLY_SUCCESS": "Referral code applied successfully",
+    "APPLY_ERROR": "Error applying referral code",
+    "STATS_LOAD_ERROR": "Error loading referral stats"
+  },
+  "COURSE_CATALOG": {
+    "TITLE": "Course Catalog",
+    "SEARCH": "Search courses",
+    "MAX_DURATION": "Max duration (hours)",
+    "ADD_TAG": "Add tag",
+    "LEVEL": "Level",
+    "DURATION": "Duration",
+    "HOURS": "hours",
+    "ENROLL": "Enroll",
+    "REMOVE_WISHLIST": "Remove from Wishlist",
+    "ADD_WISHLIST": "Add to Wishlist"
+  },
+  "all": "All",
+  "Beginner": "Beginner",
+  "Intermediate": "Intermediate",
+  "Advanced": "Advanced"
 }

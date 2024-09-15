@@ -1,18 +1,16 @@
 import { Component, Input } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-social-share',
-  template: `
-    <div class="social-share">
-      <button (click)="shareOnFacebook()">{{ 'SOCIAL.SHARE_FACEBOOK' | translate }}</button>
-      <button (click)="shareOnTwitter()">{{ 'SOCIAL.SHARE_TWITTER' | translate }}</button>
-      <button (click)="shareOnLinkedIn()">{{ 'SOCIAL.SHARE_LINKEDIN' | translate }}</button>
-    </div>
-  `
+  templateUrl: './social-share.component.html',
+  styleUrls: ['./social-share.component.css']
 })
 export class SocialShareComponent {
-  @Input() courseId: string;
-  @Input() courseTitle: string;
+  @Input() courseId: string = '';
+  @Input() courseTitle: string = '';
+
+  constructor(private translateService: TranslateService) {}
 
   shareOnFacebook() {
     const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;

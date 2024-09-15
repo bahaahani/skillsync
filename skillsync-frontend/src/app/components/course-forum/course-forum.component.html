@@ -2,17 +2,19 @@
   <h3>Course Forum</h3>
   <mat-spinner *ngIf="isLoading"></mat-spinner>
   <p *ngIf="error" class="error-message">{{ error }}</p>
-  <div *ngIf="!isLoading && !error" class="posts">
-    <mat-card *ngFor="let post of posts" class="post">
-      <mat-card-content>
-        <p>{{ post.content }}</p>
-        <small>Posted by: {{ post.author }} on {{ post.createdAt | date:'short' }}</small>
-      </mat-card-content>
-    </mat-card>
+  <div *ngIf="!isLoading && !error" class="threads">
+    <div *ngFor="let thread of threads" class="thread">
+      <!-- ... rest of the template ... -->
+    </div>
   </div>
   <form (ngSubmit)="createPost()" class="new-post-form">
     <mat-form-field appearance="fill">
-      <textarea matInput [(ngModel)]="newPost" name="newPost" placeholder="Write your post here"></textarea>
+      <textarea
+        matInput
+        [(ngModel)]="newPost"
+        name="newPost"
+        placeholder="Write your post here"
+      ></textarea>
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit">Post</button>
   </form>

@@ -1,96 +1,94 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Course, CourseReview } from '../../models/course.model';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CourseService } from '../../services/course.service';
-import { AuthService } from '../../services/auth.service';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-course-review',
-  templateUrl: './course-review.component.html'
+  templateUrl: './course-review.component.html',
+  styleUrls: ['./course-review.component.css']
 })
 export class CourseReviewComponent implements OnInit {
-  @Input() course!: Course;
-  @Output() reviewAdded = new EventEmitter<CourseReview>();
-
-  reviews: CourseReview[] = [];
-  newReviewContent: string = '';
-  newReviewRating: number = 0;
-  currentUserId: string = '';
-  pageSize: number = 5;
-  pageIndex: number = 0;
-  totalReviews: number = 0;
-  sortBy: 'date' | 'rating' = 'date';
+  @Input() courseId!: string;
+  course: any;
+  sortBy: string = 'date';
+  reviewForm: FormGroup;
+  reviews: any[] = [];
+  pageSize = 10;
+  pageIndex = 0;
+  totalReviews = 0;
+  newReviewRating = 0;
+  newReviewContent = '';
+  isLoading = false;
+  errorMessage: string = '';
+  showAddReview = false;
 
   constructor(
-    private courseService: CourseService,
-    private authService: AuthService
+    private formBuilder: FormBuilder,
+    private courseService: CourseService
   ) {
-    this.currentUserId = this.authService.getCurrentUserId() ?? '';
+    this.reviewForm = this.formBuilder.group({
+      rating: ['', Validators.required],
+      comment: ['', Validators.required]
+    });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.loadCourseDetails();
     this.loadReviews();
   }
 
-  loadReviews() {
-    this.courseService.getCourseReviews(this.course._id, this.pageIndex, this.pageSize, this.sortBy).subscribe({
-      next: (data) => {
-        this.reviews = data.reviews;
-        this.totalReviews = data.totalCount;
+  loadCourseDetails(): void {
+    this.courseService.getCourseDetails(this.courseId).subscribe(
+      (course) => {
+        this.course = course;
       },
-      error: (error) => console.error('Error loading reviews:', error)
-    });
+      (error) => {
+        console.error('Error loading course details:', error);
+      }
+    );
   }
 
-  addReview() {
-    if (this.newReviewContent && this.newReviewRating > 0) {
-      const review = { content: this.newReviewContent, rating: this.newReviewRating };
-      this.courseService.addCourseReview(this.course._id, review).subscribe({
-        next: (newReview) => {
-          this.reviews.unshift(newReview);
-          this.newReviewContent = '';
-          this.newReviewRating = 0;
-          this.reviewAdded.emit(newReview);
-        },
-        error: (error) => console.error('Error adding review:', error)
-      });
-    }
+  loadReviews(): void {
+    // Implement the logic to load reviews
   }
 
-  editReview(review: CourseReview) {
-    const updatedReview = { content: review.content, rating: review.rating };
-    this.courseService.updateCourseReview(this.course._id, review._id, updatedReview).subscribe({
-      next: (updatedReview) => {
-        const index = this.reviews.findIndex(r => r._id === updatedReview._id);
-        if (index !== -1) {
-          this.reviews[index] = updatedReview;
-        }
-      },
-      error: (error) => console.error('Error updating review:', error)
-    });
-  }
-
-  deleteReview(reviewId: string) {
-    this.courseService.deleteCourseReview(this.course._id, reviewId).subscribe({
-      next: () => {
-        this.reviews = this.reviews.filter(r => r._id !== reviewId);
-      },
-      error: (error) => console.error('Error deleting review:', error)
-    });
-  }
-
-  onPageChange(event: PageEvent) {
+  onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadReviews();
   }
 
-  onSortChange() {
-    this.pageIndex = 0;
+  submitReview(): void {
+    if (this.reviewForm.valid) {
+      // Implement the logic to submit a review
+    }
+  }
+
+  onRatingChange(rating: number): void {
+    this.reviewForm.patchValue({ rating });
+  }
+
+  onSortChange(): void {
     this.loadReviews();
   }
 
-  canEditReview(review: CourseReview): boolean {
-    return review.userId === this.currentUserId;
+  canEditReview(review: any): boolean {
+    // Implement logic to check if the current user can edit the review
+    return false; // Placeholder
+  }
+
+  editReview(review: any): void {
+    // Implement edit review logic
+  }
+
+  deleteReview(reviewId: string): void {
+    // Implement delete review logic
+  }
+
+  addReview(): void {
+    if (this.reviewForm.valid) {
+      // Implement add review logic
+    }
   }
 }

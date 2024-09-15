@@ -1,100 +1,109 @@
 import { Component, OnInit } from '@angular/core';
 import { AnalyticsService } from '../../services/analytics.service';
-import { TranslateService } from '@ngx-translate/core';
+import { OverviewStats, UserGrowth, CourseEnrollment, CompletionRate, CourseEngagement, RevenueStats } from '../../models/analytics.model';
 
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.css']
+  styleUrls: ['./admin-dashboard.component.css'],
 })
 export class AdminDashboardComponent implements OnInit {
-  overviewStats: any;
-  userGrowth: any;
-  courseEnrollments: any;
-  courseCompletionRates: any;
-  userEngagement: any;
-  revenueStats: any;
-  isLoading = false;
-  selectedPeriod = 'month';
+  overviewStats: OverviewStats | null = null;
+  userGrowth: UserGrowth[] = [];
+  courseEnrollments: CourseEnrollment[] = [];
+  completionRates: CompletionRate[] = [];
+  courseEngagement: CourseEngagement[] = [];
+  revenueStats: RevenueStats | null = null;
+  isLoading: boolean = false;
+  selectedPeriod: string = 'week';
 
-  constructor(
-    private analyticsService: AnalyticsService,
-    private translateService: TranslateService
-  ) {}
+  constructor(private analyticsService: AnalyticsService) { }
 
-  ngOnInit() {
-    this.loadAllAnalytics();
+  ngOnInit(): void {
+    this.loadDashboardData();
   }
 
-  loadAllAnalytics() {
+  loadDashboardData(): void {
     this.isLoading = true;
-    this.loadOverviewStats();
-    this.loadUserGrowth();
-    this.loadCourseEnrollments();
-    this.loadCourseCompletionRates();
-    this.loadUserEngagement();
-    this.loadRevenueStats();
+    this.getOverviewStats();
+    this.getUserGrowth();
+    this.getCourseEnrollments();
+    this.getCourseCompletionRates();
+    this.getCourseEngagement();
+    this.getRevenueStats();
   }
 
-  loadOverviewStats() {
-    this.analyticsService.getOverviewStats().subscribe({
-      next: (data) => {
+  onPeriodChange(): void {
+    this.loadDashboardData();
+  }
+
+  loadAllAnalytics(): void {
+    this.loadDashboardData();
+  }
+
+  getOverviewStats(): void {
+    this.analyticsService.getOverallStats().subscribe({
+      next: (data: OverviewStats) => {
         this.overviewStats = data;
-        this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error loading overview stats:', error);
-        this.isLoading = false;
+      error: (error: any) => {
+        console.error('Error fetching overview stats:', error);
       }
     });
   }
 
-  loadUserGrowth() {
-    this.analyticsService.getUserGrowth(this.selectedPeriod).subscribe({
-      next: (data) => {
+  getUserGrowth(): void {
+    this.analyticsService.getUserGrowthStats().subscribe({
+      next: (data: UserGrowth[]) => {
         this.userGrowth = data;
       },
-      error: (error) => console.error('Error loading user growth:', error)
+      error: (error: any) => {
+        console.error('Error fetching user growth:', error);
+      }
     });
   }
 
-  loadCourseEnrollments() {
-    this.analyticsService.getCourseEnrollments(this.selectedPeriod).subscribe({
-      next: (data) => {
+  getCourseEnrollments(): void {
+    this.analyticsService.getEnrollmentStats().subscribe({
+      next: (data: CourseEnrollment[]) => {
         this.courseEnrollments = data;
       },
-      error: (error) => console.error('Error loading course enrollments:', error)
+      error: (error: any) => {
+        console.error('Error fetching course enrollments:', error);
+      }
     });
   }
 
-  loadCourseCompletionRates() {
-    this.analyticsService.getCourseCompletionRates().subscribe({
-      next: (data) => {
-        this.courseCompletionRates = data;
+  getCourseCompletionRates(): void {
+    this.analyticsService.getCompletionRates().subscribe({
+      next: (data: CompletionRate[]) => {
+        this.completionRates = data;
       },
-      error: (error) => console.error('Error loading course completion rates:', error)
+      error: (error: any) => {
+        console.error('Error fetching course completion rates:', error);
+      }
     });
   }
 
-  loadUserEngagement() {
-    this.analyticsService.getUserEngagement(this.selectedPeriod).subscribe({
-      next: (data) => {
-        this.userEngagement = data;
+  getCourseEngagement(): void {
+    this.analyticsService.getCourseEngagement().subscribe({
+      next: (data: CourseEngagement[]) => {
+        this.courseEngagement = data;
       },
-      error: (error) => console.error('Error loading user engagement:', error)
+      error: (error: any) => {
+        console.error('Error fetching course engagement:', error);
+      }
     });
   }
 
-  loadRevenueStats() {
-    this.analyticsService.getRevenueStats(this.selectedPeriod).subscribe({
-      next: (data) => {
+  getRevenueStats(): void {
+    this.analyticsService.getRevenueStats().subscribe({
+      next: (data: RevenueStats) => {
         this.revenueStats = data;
       },
-      error: (error) => console.error('Error loading revenue stats:', error)
+      error: (error: any) => {
+        console.error('Error fetching revenue stats:', error);
+      }
     });
-  }
-
-  onPeriodChange() {
-    this.loadAllAnalytics();
   }
 }

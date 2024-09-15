@@ -1,27 +1,20 @@
 <div class="course-catalog">
-  <h2>Available Courses</h2>
-  <mat-form-field>
-    <input matInput [(ngModel)]="searchTerm" (input)="searchCourses()" placeholder="Search courses">
-  </mat-form-field>
-  <mat-spinner *ngIf="isLoading"></mat-spinner>
-  <p *ngIf="error" class="error-message">{{ error }}</p>
-  <div *ngIf="!isLoading && !error" class="course-list">
-    <mat-card *ngFor="let course of pagedCourses" class="course-card">
-      <mat-card-header>
-        <mat-card-title>{{ course.title }}</mat-card-title>
-        <mat-card-subtitle>{{ course.instructor }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p>{{ course.description }}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <a mat-button [routerLink]="['/course', course.id]">View Details</a>
-      </mat-card-actions>
-    </mat-card>
+  <h2>{{ "COURSES.CATALOG" | translate }}</h2>
+  <div class="categories">
+    <button
+      *ngFor="let category of categories"
+      (click)="selectCategory(category)"
+    >
+      {{ category }}
+    </button>
   </div>
-  <mat-paginator [length]="filteredCourses.length"
-                 [pageSize]="pageSize"
-                 [pageSizeOptions]="pageSizeOptions"
-                 (page)="onPageChange($event)">
-  </mat-paginator>
+  <div class="courses">
+    <div *ngFor="let course of filteredCourses">
+      <h3>{{ course.title }}</h3>
+      <p>{{ course.description }}</p>
+      <a [routerLink]="['/courses', course._id]">{{
+        "COURSES.VIEW_DETAILS" | translate
+      }}</a>
+    </div>
+  </div>
 </div>

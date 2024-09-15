@@ -1,0 +1,11 @@
+<div class="course-card">
+  <img [src]="optimizedImageUrl" [alt]="course.title" loading="lazy" />
+  <h3>{{ course.title }}</h3>
+  <p>{{ course.description }}</p>
+  <p>
+    {{ "COURSES.ENROLLED_STUDENTS" | translate }}: {{ course.enrolledCount }}
+  </p>
+  <a [routerLink]="['/courses', course._id]">{{
+    "COURSES.VIEW_DETAILS" | translate
+  }}</a>
+</div>

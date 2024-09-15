@@ -32,3 +32,30 @@ input, button {
 .error {
   color: red;
 }
+
+.course-catalog-container {
+  padding: 20px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.course-card {
+  margin-bottom: 20px;
+}
+
+mat-card-content p {
+  margin-bottom: 5px;
+}
+
+mat-chip-list {
+  margin-top: 10px;
+}
+
+mat-paginator {
+  margin-top: 20px;
+}

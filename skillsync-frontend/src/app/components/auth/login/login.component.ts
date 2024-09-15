@@ -13,12 +13,13 @@ export class LoginComponent implements OnInit {
   twoFactorForm!: FormGroup;
   isLoading = false;
   showTwoFactorForm = false;
+  errorMessage: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({

@@ -1,58 +1,89 @@
 import { Component, OnInit } from '@angular/core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CourseService } from '../../services/course.service';
+import { Course } from '../../models/course.model';
 
 @Component({
   selector: 'app-course-catalog',
-  template: `
-    <div class="course-catalog">
-      <h2>{{ 'COURSES.CATALOG' | translate }}</h2>
-      <div class="categories">
-        <button *ngFor="let category of categories" (click)="selectCategory(category)">
-          {{ category }}
-        </button>
-      </div>
-      <div class="courses">
-        <div *ngFor="let course of filteredCourses">
-          <h3>{{ course.title }}</h3>
-          <p>{{ course.description }}</p>
-          <a [routerLink]="['/courses', course._id]">{{ 'COURSES.VIEW_DETAILS' | translate }}</a>
-        </div>
-      </div>
-    </div>
-  `
+  templateUrl: './course-catalog.component.html',
+  styleUrls: ['./course-catalog.component.css']
 })
 export class CourseCatalogComponent implements OnInit {
-  categories: string[] = [];
-  allCourses: any[] = [];
-  filteredCourses: any[] = [];
+  searchTerm: string = '';
+  levelFilter: string = '';
+  durationFilter: number | null = null;
+  tagFilter: string[] = [];
+  filteredCourses: Course[] = [];
+  isLoading: boolean = false;
+  totalCourses: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 1;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  levels: string[] = ['Beginner', 'Intermediate', 'Advanced'];
+  chipList: any;
 
-  constructor(private courseService: CourseService) {}
+  constructor(private courseService: CourseService) { }
 
-  ngOnInit() {
-    this.loadCategories();
+  ngOnInit(): void {
     this.loadCourses();
   }
 
-  loadCategories() {
-    // Implement this when you have a method to fetch categories
-    this.categories = ['All', 'Programming', 'Design', 'Business'];
-  }
-
-  loadCourses() {
-    this.courseService.getCourses().subscribe(
-      (data: any) => {
-        this.allCourses = data.courses;
-        this.filteredCourses = this.allCourses;
+  loadCourses(): void {
+    this.isLoading = true;
+    this.courseService.getCourses(this.currentPage, this.pageSize).subscribe(
+      (response) => {
+        this.filteredCourses = response.courses;
+        this.totalCourses = response.totalItems;
+        this.isLoading = false;
       },
-      error => console.error('Error fetching courses:', error)
+      (error) => {
+        console.error('Error loading courses:', error);
+        this.isLoading = false;
+      }
     );
   }
 
-  selectCategory(category: string) {
-    if (category === 'All') {
-      this.filteredCourses = this.allCourses;
-    } else {
-      this.filteredCourses = this.allCourses.filter(course => course.category === category);
-    }
+  onSearchChange(): void {
+    // Implement search logic
+    this.loadCourses();
+  }
+
+  onLevelFilterChange(): void {
+    // Implement level filter logic
+    this.loadCourses();
+  }
+
+  onDurationFilterChange(): void {
+    // Implement duration filter logic
+    this.loadCourses();
+  }
+
+  removeTagFilter(tag: string): void {
+    // Implement tag removal logic
+    this.loadCourses();
+  }
+
+  addTagFilter(event: any): void {
+    // Implement tag addition logic
+    this.loadCourses();
+  }
+
+  toggleWishlist(course: Course): void {
+    // Implement wishlist toggle logic
+  }
+
+  onRatingChange(courseId: string, event: any): void {
+    const rating = event.value;
+    // Implement rating change logic
+  }
+
+  onPageChange(event: any): void {
+    this.currentPage = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadCourses();
+  }
+
+  enrollCourse(courseId: string): void {
+    // Implement course enrollment logic
   }
 }

@@ -28,7 +28,7 @@ export class ForumTopicsComponent implements OnInit {
   loadTopics() {
     this.isLoading = true;
     this.forumService.getForumTopics(this.courseId).subscribe({
-      next: (topics) => {
+      next: (topics: any) => {
         this.topics = topics;
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -43,7 +43,7 @@ export class ForumTopicsComponent implements OnInit {
   createTopic(title: string, content: string) {
     const newTopic = { title, content };
     this.forumService.createForumTopic(this.courseId, newTopic).subscribe({
-      next: (createdTopic) => {
+      next: (createdTopic: any) => {
         this.topics.unshift(createdTopic);
         this.cdr.markForCheck();
       }

@@ -17,6 +17,10 @@
       </mat-error>
     </mat-form-field>
 
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
     <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || isLoading">
       <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
       <span *ngIf="!isLoading">{{ 'AUTH.LOGIN.SUBMIT' | translate }}</span>
@@ -30,24 +34,6 @@
     {{ 'AUTH.LOGIN.NO_ACCOUNT' | translate }}
     <a routerLink="/register">{{ 'AUTH.LOGIN.SIGN_UP' | translate }}</a>
   </p>
-</div>
-
-<div *ngIf="showTwoFactorForm" aria-live="polite">
-  <form [formGroup]="twoFactorForm" (ngSubmit)="verifyTwoFactor()">
-    <mat-form-field appearance="fill">
-      <mat-label for="twoFactorCode">{{ 'LOGIN.VERIFICATION_CODE' | translate }}</mat-label>
-      <input matInput id="twoFactorCode" formControlName="code" required autocomplete="one-time-code">
-      <mat-error *ngIf="twoFactorForm.get('code')?.hasError('required')">{{ 'LOGIN.VERIFICATION_CODE_REQUIRED' | translate }}</mat-error>
-      <mat-error *ngIf="twoFactorForm.get('code')?.hasError('minlength') || twoFactorForm.get('code')?.hasError('maxlength')">
-        {{ 'LOGIN.VERIFICATION_CODE_LENGTH' | translate }}
-      </mat-error>
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" type="submit" [disabled]="twoFactorForm.invalid || isLoading">
-      <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
-      <span *ngIf="!isLoading">{{ 'LOGIN.VERIFY' | translate }}</span>
-    </button>
-  </form>
 </div>
 
 <div class="social-login">

@@ -1,77 +1,77 @@
 <div class="admin-dashboard">
-  <h1>{{ 'ADMIN.DASHBOARD_TITLE' | translate }}</h1>
-  
+  <h1>Admin Dashboard</h1>
+
   <mat-form-field>
-    <mat-label>{{ 'ADMIN.SELECT_PERIOD' | translate }}</mat-label>
+    <mat-label>Select Period</mat-label>
     <mat-select [(ngModel)]="selectedPeriod" (selectionChange)="onPeriodChange()">
-      <mat-option value="week">{{ 'ADMIN.WEEK' | translate }}</mat-option>
-      <mat-option value="month">{{ 'ADMIN.MONTH' | translate }}</mat-option>
-      <mat-option value="year">{{ 'ADMIN.YEAR' | translate }}</mat-option>
+      <mat-option value="week">Last Week</mat-option>
+      <mat-option value="month">Last Month</mat-option>
+      <mat-option value="year">Last Year</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+  <div *ngIf="isLoading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
 
-  <div *ngIf="!isLoading" class="analytics-grid">
+  <div *ngIf="!isLoading" class="dashboard-content">
     <mat-card>
       <mat-card-header>
-        <mat-card-title>{{ 'ADMIN.OVERVIEW' | translate }}</mat-card-title>
+        <mat-card-title>Overview</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <p>{{ 'ADMIN.TOTAL_USERS' | translate }}: {{ overviewStats?.totalUsers }}</p>
-        <p>{{ 'ADMIN.TOTAL_COURSES' | translate }}: {{ overviewStats?.totalCourses }}</p>
-        <p>{{ 'ADMIN.ACTIVE_USERS' | translate }}: {{ overviewStats?.activeUsers }}</p>
-        <p>{{ 'ADMIN.TOTAL_REVENUE' | translate }}: {{ overviewStats?.totalRevenue | currency }}</p>
+        <p>Total Users: {{ overviewStats?.totalUsers }}</p>
+        <p>Total Courses: {{ overviewStats?.totalCourses }}</p>
+        <p>Total Revenue: {{ overviewStats?.totalRevenue | currency }}</p>
+        <p>Active Users: {{ overviewStats?.activeUsers }}</p>
       </mat-card-content>
     </mat-card>
 
     <mat-card>
       <mat-card-header>
-        <mat-card-title>{{ 'ADMIN.USER_GROWTH' | translate }}</mat-card-title>
+        <mat-card-title>User Growth</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <!-- Add a chart or graph here to display user growth -->
+        <!-- Add a chart or table for user growth data -->
       </mat-card-content>
     </mat-card>
 
     <mat-card>
       <mat-card-header>
-        <mat-card-title>{{ 'ADMIN.COURSE_ENROLLMENTS' | translate }}</mat-card-title>
+        <mat-card-title>Course Enrollments</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <!-- Add a chart or graph here to display course enrollments -->
+        <!-- Add a chart or table for course enrollment data -->
       </mat-card-content>
     </mat-card>
 
     <mat-card>
       <mat-card-header>
-        <mat-card-title>{{ 'ADMIN.COURSE_COMPLETION_RATES' | translate }}</mat-card-title>
+        <mat-card-title>Completion Rates</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <!-- Add a chart or graph here to display course completion rates -->
+        <!-- Add a chart or table for completion rate data -->
       </mat-card-content>
     </mat-card>
 
     <mat-card>
       <mat-card-header>
-        <mat-card-title>{{ 'ADMIN.USER_ENGAGEMENT' | translate }}</mat-card-title>
+        <mat-card-title>Course Engagement</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <!-- Add a chart or graph here to display user engagement -->
+        <!-- Add a chart or table for course engagement data -->
       </mat-card-content>
     </mat-card>
 
     <mat-card>
       <mat-card-header>
-        <mat-card-title>{{ 'ADMIN.REVENUE_STATS' | translate }}</mat-card-title>
+        <mat-card-title>Revenue Stats</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <!-- Add a chart or graph here to display revenue stats -->
+        <!-- Add a chart or table for revenue stats data -->
       </mat-card-content>
     </mat-card>
   </div>
 
-  <button mat-raised-button color="primary" (click)="loadAllAnalytics()">
-    {{ 'ADMIN.REFRESH_DATA' | translate }}
-  </button>
+  <button mat-raised-button color="primary" (click)="loadAllAnalytics()">Refresh Data</button>
 </div>

@@ -2,12 +2,16 @@
   <span>{{ 'APP.NAME' | translate }}</span>
   <span class="spacer"></span>
   <button mat-button routerLink="/courses">{{ 'NAV.COURSES' | translate }}</button>
-  <button mat-button routerLink="/recommendations" *ngIf="authService.isLoggedIn()">{{ 'NAV.RECOMMENDATIONS' | translate }}</button>
-  <button mat-button routerLink="/dashboard" *ngIf="authService.isLoggedIn()">{{ 'NAV.DASHBOARD' | translate }}</button>
-  <button mat-button routerLink="/profile" *ngIf="authService.isLoggedIn()">{{ 'NAV.PROFILE' | translate }}</button>
-  <button mat-button routerLink="/two-factor-settings" *ngIf="authService.isLoggedIn()">{{ 'NAV.TWO_FACTOR_SETTINGS' | translate }}</button>
+  <ng-container *ngIf="authService.isLoggedIn()">
+    <button mat-button routerLink="/recommendations">{{ 'NAV.RECOMMENDATIONS' | translate }}</button>
+    <button mat-button routerLink="/dashboard">{{ 'NAV.DASHBOARD' | translate }}</button>
+    <button mat-button routerLink="/profile">{{ 'NAV.PROFILE' | translate }}</button>
+    <button mat-button routerLink="/two-factor-settings">{{ 'NAV.TWO_FACTOR_SETTINGS' | translate }}</button>
+  </ng-container>
   <button mat-button routerLink="/admin" *ngIf="authService.isAdmin()">{{ 'NAV.ADMIN' | translate }}</button>
-  <button mat-button routerLink="/login" *ngIf="!authService.isLoggedIn()">{{ 'NAV.LOGIN' | translate }}</button>
-  <button mat-button routerLink="/register" *ngIf="!authService.isLoggedIn()">{{ 'NAV.REGISTER' | translate }}</button>
+  <ng-container *ngIf="!authService.isLoggedIn()">
+    <button mat-button routerLink="/login">{{ 'NAV.LOGIN' | translate }}</button>
+    <button mat-button routerLink="/register">{{ 'NAV.REGISTER' | translate }}</button>
+  </ng-container>
   <button mat-button (click)="authService.logout()" *ngIf="authService.isLoggedIn()">{{ 'NAV.LOGOUT' | translate }}</button>
 </mat-toolbar>

@@ -17,7 +17,7 @@ export class CourseRecommendationsComponent implements OnInit {
   constructor(
     private courseService: CourseService,
     private errorHandler: ErrorHandlingService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadCategories();

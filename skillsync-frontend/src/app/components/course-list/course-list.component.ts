@@ -39,14 +39,14 @@ import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
   `]
 })
 export class CourseListComponent implements OnInit {
-  @ViewChild(CdkVirtualScrollViewport) viewport: CdkVirtualScrollViewport;
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
   courses: any[] = [];
   enrolledCourseIds: string[] = [];
 
   constructor(
     private courseService: CourseService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadCourses();
@@ -54,7 +54,7 @@ export class CourseListComponent implements OnInit {
   }
 
   loadCourses() {
-    this.courseService.getCourses().subscribe(
+    this.courseService.getCourses(1, 20).subscribe(
       (data: any) => this.courses = data.courses,
       error => console.error('Error fetching courses:', error)
     );

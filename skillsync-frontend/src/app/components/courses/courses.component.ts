@@ -13,18 +13,18 @@ export class CoursesComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 1;
   pageSize: number = 10;
-
+  searchParams: { [key: string]: string | number | undefined } = {};
   constructor(
     private courseService: CourseService,
     private errorHandler: ErrorHandlingService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCourses();
   }
 
   loadCourses() {
-    this.courseService.getCourses(this.currentPage, this.pageSize, this.searchQuery).subscribe(
+    this.courseService.getCourses(this.currentPage, this.pageSize, { searchTerm: this.searchQuery }).subscribe(
       (response: any) => {
         this.courses = response.courses;
         this.totalPages = response.totalPages;

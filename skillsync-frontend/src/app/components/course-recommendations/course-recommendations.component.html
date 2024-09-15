@@ -1,24 +1,36 @@
 <div class="course-recommendations">
-  <h2>{{ 'COURSES.RECOMMENDATIONS' | translate }}</h2>
+  <h2>{{ "COURSES.RECOMMENDATIONS" | translate }}</h2>
   <div class="recommendation-filters">
     <mat-form-field>
-      <mat-label>{{ 'COURSES.CATEGORY' | translate }}</mat-label>
-      <mat-select [(ngModel)]="selectedCategory" (selectionChange)="updateRecommendations()">
+      <mat-label>{{ "COURSES.CATEGORY" | translate }}</mat-label>
+      <mat-select
+        [(ngModel)]="selectedCategory"
+        (selectionChange)="updateRecommendations()"
+      >
         <mat-option *ngFor="let category of categories" [value]="category">
           {{ category }}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field>
-      <mat-label>{{ 'COURSES.DIFFICULTY' | translate }}</mat-label>
-      <mat-select [(ngModel)]="selectedDifficulty" (selectionChange)="updateRecommendations()">
-        <mat-option *ngFor="let difficulty of difficulties" [value]="difficulty">
+      <mat-label>{{ "COURSES.DIFFICULTY" | translate }}</mat-label>
+      <mat-select
+        [(ngModel)]="selectedDifficulty"
+        (selectionChange)="updateRecommendations()"
+      >
+        <mat-option
+          *ngFor="let difficulty of difficulties"
+          [value]="difficulty"
+        >
           {{ difficulty }}
         </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
   <div class="recommended-courses">
-    <app-course-card *ngFor="let course of recommendedCourses" [course]="course"></app-course-card>
+    <app-course-card
+      *ngFor="let course of recommendedCourses"
+      [course]="course"
+    ></app-course-card>
   </div>
 </div>

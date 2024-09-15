@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { OverviewStats, UserGrowth, CourseEnrollment, CompletionRate, CourseEngagement, RevenueStats } from '../models/analytics.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,48 +10,29 @@ import { environment } from '../../environments/environment';
 export class AnalyticsService {
   private apiUrl = `${environment.apiUrl}/analytics`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  trackUserActivity(activity: string) {
-    return this.http.post(`${this.apiUrl}/track`, { activity });
+  getOverallStats(): Observable<OverviewStats> {
+    return this.http.get<OverviewStats>(`${this.apiUrl}/overall-stats`);
   }
 
-  getCourseEngagement(courseId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/course-engagement/${courseId}`);
+  getUserGrowthStats(): Observable<UserGrowth[]> {
+    return this.http.get<UserGrowth[]>(`${this.apiUrl}/user-growth`);
   }
 
-  getCompletionRates(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/completion-rates`);
+  getEnrollmentStats(): Observable<CourseEnrollment[]> {
+    return this.http.get<CourseEnrollment[]>(`${this.apiUrl}/enrollment-stats`);
   }
 
-  getUserBehaviorAnalytics(userId?: string): Observable<any> {
-    const url = userId 
-      ? `${this.apiUrl}/user-behavior/${userId}` 
-      : `${this.apiUrl}/aggregated-behavior`;
-    return this.http.get<any>(url);
+  getCompletionRates(): Observable<CompletionRate[]> {
+    return this.http.get<CompletionRate[]>(`${this.apiUrl}/completion-rates`);
   }
 
-  getCoursePerformanceMetrics(courseId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/course-performance/${courseId}`);
+  getCourseEngagement(): Observable<CourseEngagement[]> {
+    return this.http.get<CourseEngagement[]>(`${this.apiUrl}/course-engagement`);
   }
 
-  generateCustomReport(params: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/custom-report`, params);
-  }
-
-  trackUserBehavior(event: string, metadata: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/track-behavior`, { event, metadata });
-  }
-
-  getCoursePerformanceMetrics(courseId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/course-performance/${courseId}`);
-  }
-
-  generateCustomReport(params: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/custom-report`, params);
-  }
-
-  trackUserBehavior(event: string, metadata: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/track-behavior`, { event, metadata });
+  getRevenueStats(): Observable<RevenueStats> {
+    return this.http.get<RevenueStats>(`${this.apiUrl}/revenue-stats`);
   }
 }

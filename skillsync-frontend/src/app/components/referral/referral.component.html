@@ -1,0 +1,15 @@
+<div class="referral-system">
+  <h2>{{ 'REFERRAL.TITLE' | translate }}</h2>
+  <button (click)="generateReferralCode()">{{ 'REFERRAL.GENERATE_CODE' | translate }}</button>
+  <p *ngIf="referralCode">{{ 'REFERRAL.YOUR_CODE' | translate }}: {{ referralCode }}</p>
+  <div>
+    <h3>{{ 'REFERRAL.APPLY_CODE' | translate }}</h3>
+    <input [(ngModel)]="codeToApply" placeholder="{{ 'REFERRAL.ENTER_CODE' | translate }}">
+    <button (click)="applyReferralCode()">{{ 'REFERRAL.APPLY' | translate }}</button>
+  </div>
+  <div *ngIf="referralStats">
+    <h3>{{ 'REFERRAL.YOUR_STATS' | translate }}</h3>
+    <p>{{ 'REFERRAL.TOTAL_REFERRALS' | translate }}: {{ referralStats.totalReferrals }}</p>
+    <p>{{ 'REFERRAL.SUCCESSFUL_REFERRALS' | translate }}: {{ referralStats.successfulReferrals }}</p>
+  </div>
+</div>

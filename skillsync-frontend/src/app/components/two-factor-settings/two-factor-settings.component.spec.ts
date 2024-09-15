@@ -5,7 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { TwoFactorSettingsComponent } from './two-factor-settings.component';
 import { AuthService } from '../../services/auth.service';
-import { MatModules } from '../../modules/mat-modules';
+import { MatModules } from '../../modules/shared/mat-modules';
 
 describe('TwoFactorSettingsComponent', () => {
   let component: TwoFactorSettingsComponent;
@@ -16,7 +16,7 @@ describe('TwoFactorSettingsComponent', () => {
     const spy = jasmine.createSpyObj('AuthService', ['getUserProfile', 'enableTwoFactor', 'verifyTwoFactorSetup', 'disableTwoFactor']);
 
     await TestBed.configureTestingModule({
-      declarations: [ TwoFactorSettingsComponent ],
+      declarations: [TwoFactorSettingsComponent],
       imports: [
         ReactiveFormsModule,
         MatSnackBarModule,

@@ -1,0 +1,27 @@
+<div class="course-details" *ngIf="course">
+  <h2>{{ course.title }}</h2>
+  <p>{{ course.description }}</p>
+  <div class="course-rating">
+    <h3>
+      {{ "COURSES.AVERAGE_RATING" | translate }}:
+      {{ course.averageRating | number : "1.1-1" }}/5
+    </h3>
+    <p>{{ "COURSES.TOTAL_REVIEWS" | translate }}: {{ course.totalReviews }}</p>
+  </div>
+  <h3>{{ "COURSES.LESSONS" | translate }}</h3>
+  <ul>
+    <li *ngFor="let lesson of course.lessons">
+      {{ lesson.title }}
+    </li>
+  </ul>
+  <button (click)="enrollInCourse()" *ngIf="!isEnrolled">
+    {{ "COURSES.ENROLL" | translate }}
+  </button>
+  <app-course-reviews [courseId]="course._id"></app-course-reviews>
+  <app-course-feedback [courseId]="course._id"></app-course-feedback>
+  <app-course-forum [courseId]="course._id"></app-course-forum>
+  <app-social-share
+    [courseId]="course._id"
+    [courseTitle]="course.title"
+  ></app-social-share>
+</div>

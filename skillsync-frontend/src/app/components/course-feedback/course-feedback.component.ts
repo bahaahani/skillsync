@@ -5,52 +5,36 @@ import { ErrorHandlingService } from '../../services/error-handling.service';
 
 @Component({
   selector: 'app-course-feedback',
-  template: `
-    <div class="course-feedback">
-      <h3>{{ 'COURSES.FEEDBACK' | translate }}</h3>
-      <form [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()">
-        <mat-form-field>
-          <textarea matInput formControlName="content" placeholder="{{ 'COURSES.WRITE_FEEDBACK' | translate }}"></textarea>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-select formControlName="rating" placeholder="{{ 'COURSES.SELECT_RATING' | translate }}">
-            <mat-option *ngFor="let rating of [1,2,3,4,5]" [value]="rating">
-              {{rating}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-raised-button color="primary" type="submit" [disabled]="feedbackForm.invalid">
-          {{ 'COURSES.SUBMIT_FEEDBACK' | translate }}
-        </button>
-      </form>
-    </div>
-  `
+  templateUrl: './course-feedback.component.html',
+  styleUrls: ['./course-feedback.component.css']
 })
 export class CourseFeedbackComponent implements OnInit {
-  @Input() courseId: string;
+  @Input() courseId!: string;
   feedbackForm: FormGroup;
 
   constructor(
+    private formBuilder: FormBuilder,
     private courseService: CourseService,
-    private fb: FormBuilder,
     private errorHandler: ErrorHandlingService
   ) {
-    this.feedbackForm = this.fb.group({
-      content: ['', Validators.required],
-      rating: ['', Validators.required]
+    this.feedbackForm = this.formBuilder.group({
+      rating: ['', Validators.required],
+      feedback: ['', Validators.required]
     });
   }
 
-  ngOnInit() {}
+  ngOnInit(): void { }
 
-  submitFeedback() {
+  submitFeedback(): void {
     if (this.feedbackForm.valid) {
       this.courseService.addCourseFeedback(this.courseId, this.feedbackForm.value).subscribe(
         () => {
-          this.errorHandler.showSuccessMessage('COURSES.FEEDBACK_SUBMITTED');
           this.feedbackForm.reset();
+          // Show success message
         },
-        error => this.errorHandler.handleError(error, 'COURSES.FEEDBACK_SUBMIT_ERROR')
+        (error: any) => {
+          this.errorHandler.handleError(error, 'Error submitting feedback');
+        }
       );
     }
   }

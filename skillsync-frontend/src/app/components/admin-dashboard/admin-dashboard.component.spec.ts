@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AdminDashboardComponent } from './admin-dashboard.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MatModules } from '../../modules/mat-modules';
+import { MatModules } from '../../modules/shared/mat-modules';
 import { ApiService } from '../../services/api.service';
 import { of, throwError } from 'rxjs';
 
@@ -14,7 +14,7 @@ describe('AdminDashboardComponent', () => {
     const spy = jasmine.createSpyObj('ApiService', ['getAnalytics']);
 
     await TestBed.configureTestingModule({
-      declarations: [ AdminDashboardComponent ],
+      declarations: [AdminDashboardComponent],
       imports: [
         TranslateModule.forRoot(),
         MatModules

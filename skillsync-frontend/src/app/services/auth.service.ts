@@ -18,14 +18,13 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl = `${environment.apiUrl}/auth`;
+  private readonly apiUrl = `${environment.apiUrl}`;
   private tokenSubject = new BehaviorSubject<string | null>(this.getStoredToken());
   private currentUserSubject = new BehaviorSubject<any>(this.getStoredUser());
   private userRoleSubject = new BehaviorSubject<string | null>(null);
-  private refreshTokenTimeout: any;
 
   constructor(private http: HttpClient, private socialAuthService: SocialAuthService) {
-    this.checkTokenExpiration();
+    this.checkTokenValidity();
   }
 
   // Public methods
@@ -37,29 +36,17 @@ export class AuthService {
           this.handleSuccessfulAuth(response);
         }
       }),
-      catchError((error: HttpErrorResponse) => {
-        if (error.error && error.error.message === 'Invalid credentials') {
-          return throwError(() => new Error('ERRORS.INVALID_CREDENTIALS'));
-        }
-        return throwError(() => error);
-      })
+      catchError(this.handleLoginError)
     );
   }
 
-  logout2(): void {
+  logout(): void {
     this.clearAuthData();
-    this.stopRefreshTokenTimer();
+    // Optionally, you might want to redirect the user to the login page here
+    console.log('User logged out');
   }
 
-  refreshToken(): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/refresh-token`, {}).pipe(
-      tap(response => this.handleSuccessfulAuth(response)),
-      catchError(error => {
-        this.logout();
-        return throwError(() => error);
-      })
-    );
-  }
+  // Remove refreshToken method
 
   getToken(): string | null {
     return this.tokenSubject.value;
@@ -158,10 +145,6 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/auth/resend-verification`, { email });
   }
 
-  refreshCsrfToken(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/auth/csrf-token`, { withCredentials: true });
-  }
-
   socialLogin(provider: string): Observable<any> {
     return from(this.socialAuthService.signIn(provider)).pipe(
       switchMap((socialUser: SocialUser) => {
@@ -180,15 +163,11 @@ export class AuthService {
       tap((response: AuthResponse) => this.setSession(response))
     );
   }
-  
+
   facebookLogin(): Observable<AuthResponse> {
     return this.http.get<AuthResponse>(`${this.apiUrl}/facebook`).pipe(
       tap((response: AuthResponse) => this.setSession(response))
     );
-  }
-  logout() {
-    localStorage.removeItem('id_token');
-    localStorage.removeItem('expires_at');
   }
 
   isLoggedIn() {
@@ -199,16 +178,15 @@ export class AuthService {
     return !this.isLoggedIn();
   }
 
-  getExpiration() {
-    const expiration = localStorage.getItem('expires_at');
-    return expiration ? JSON.parse(expiration) : 0;
+  getExpiration(): number {
+    const expiration = sessionStorage.getItem('tokenExpiration');
+    return expiration ? parseInt(expiration, 10) : 0;
   }
 
   // Private methods
 
   private handleSuccessfulAuth(authResult: AuthResponse): void {
     this.setSession(authResult);
-    this.refreshCsrfToken().subscribe();
   }
 
   private setSession(authResult: AuthResponse): void {
@@ -218,41 +196,24 @@ export class AuthService {
     this.storeUserRole(authResult.role);
     this.tokenSubject.next(authResult.token);
     this.userRoleSubject.next(authResult.role);
-    this.startRefreshTokenTimer();
   }
 
-  private startRefreshTokenTimer(): void {
-    const expires = this.getTokenExpiration();
-    const timeout = expires.getTime() - Date.now() - (60 * 1000); // Refresh 1 minute before expiry
-    this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
-  }
-
-  private stopRefreshTokenTimer(): void {
-    clearTimeout(this.refreshTokenTimeout);
-  }
-
-  private getTokenExpiration(): Date {
-    const expiration = sessionStorage.getItem('tokenExpiration');
-    const expiresAt = expiration ? parseInt(expiration, 10) : 0;
-    return new Date(expiresAt);
-  }
-
-  private checkTokenExpiration(): void {
-    const expires = this.getTokenExpiration();
-    if (new Date() > expires) {
+  private checkTokenValidity(): void {
+    const expires = this.getExpiration();
+    if (new Date().getTime() > expires) {
       this.logout();
-    } else {
-      this.startRefreshTokenTimer();
     }
   }
 
   private handleLoginError(error: HttpErrorResponse) {
     if (error.status === 429) {
-      return throwError(() => new Error('RATE_LIMIT_EXCEEDED'));
+      return throwError(() => new Error('ERRORS.RATE_LIMIT_EXCEEDED'));
     } else if (error.status === 401) {
-      return throwError(() => new Error('INVALID_CREDENTIALS'));
+      return throwError(() => new Error('ERRORS.INVALID_CREDENTIALS'));
+    } else if (error.status === 400) {
+      return throwError(() => new Error('ERRORS.BAD_REQUEST'));
     }
-    return throwError(() => new Error('UNKNOWN_ERROR'));
+    return throwError(() => new Error('ERRORS.UNKNOWN'));
   }
 
   private clearAuthData(): void {

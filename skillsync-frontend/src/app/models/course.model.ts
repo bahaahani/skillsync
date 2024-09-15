@@ -1,5 +1,3 @@
-import { Lesson } from '../services/course.service';
-
 export interface Lesson {
   _id: string;
   title: string;
@@ -20,12 +18,13 @@ export interface CourseReview {
 }
 
 export interface Course {
-  _id: string;
+  _id: string; // Use _id instead of id if that's what your backend returns
   title: string;
   description: string;
   instructor: string;
-  duration: number;
+  enrolledCount: number;
   level: string;
+  duration: number;
   tags: string[];
   isEnrolled: boolean;
   rating: number;

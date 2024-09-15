@@ -2,7 +2,7 @@
   <h3>Reviews for {{ course.title }}</h3>
 
   <div class="review-summary">
-    <p>Average Rating: {{ course.rating | number:'1.1-1' }}/5</p>
+    <p>Average Rating: {{ course.rating | number : "1.1-1" }}/5</p>
     <!-- Add rating distribution here -->
   </div>
 
@@ -14,7 +14,9 @@
   </mat-form-field>
 
   <div *ngFor="let review of reviews" class="review">
-    <p><strong>{{ review.username }}</strong> - {{ review.rating }}/5</p>
+    <p>
+      <strong>{{ review.username }}</strong> - {{ review.rating }}/5
+    </p>
     <p>{{ review.content }}</p>
     <p class="review-date">{{ review.createdAt | date }}</p>
     <ng-container *ngIf="canEditReview(review)">
@@ -33,7 +35,11 @@
   <div *ngIf="course.isEnrolled" class="add-review">
     <h4>Add a Review</h4>
     <mat-form-field>
-      <textarea matInput [(ngModel)]="newReviewContent" placeholder="Write your review"></textarea>
+      <textarea
+        matInput
+        [(ngModel)]="newReviewContent"
+        placeholder="Write your review"
+      ></textarea>
     </mat-form-field>
     <app-course-rating
       [rating]="newReviewRating"

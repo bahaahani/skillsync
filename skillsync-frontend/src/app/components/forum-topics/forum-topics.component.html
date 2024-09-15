@@ -1,24 +1,26 @@
 <div class="forum-topics">
-  <h2>{{ 'FORUM.TOPICS' | translate }}</h2>
+  <h2>{{ "FORUM.TOPICS" | translate }}</h2>
 
   <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
 
   <div *ngIf="!isLoading">
     <mat-card>
       <mat-card-header>
-        <mat-card-title>{{ 'FORUM.CREATE_TOPIC' | translate }}</mat-card-title>
+        <mat-card-title>{{ "FORUM.CREATE_TOPIC" | translate }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <form (ngSubmit)="createTopic(titleInput.value, contentInput.value)">
           <mat-form-field appearance="fill">
-            <mat-label>{{ 'FORUM.TOPIC_TITLE' | translate }}</mat-label>
-            <input matInput #titleInput required>
+            <mat-label>{{ "FORUM.TOPIC_TITLE" | translate }}</mat-label>
+            <input matInput #titleInput required />
           </mat-form-field>
           <mat-form-field appearance="fill">
-            <mat-label>{{ 'FORUM.TOPIC_CONTENT' | translate }}</mat-label>
+            <mat-label>{{ "FORUM.TOPIC_CONTENT" | translate }}</mat-label>
             <textarea matInput #contentInput required></textarea>
           </mat-form-field>
-          <button mat-raised-button color="primary" type="submit">{{ 'FORUM.SUBMIT' | translate }}</button>
+          <button mat-raised-button color="primary" type="submit">
+            {{ "FORUM.SUBMIT" | translate }}
+          </button>
         </form>
       </mat-card-content>
     </mat-card>
@@ -27,7 +29,11 @@
       <mat-list-item *ngFor="let topic of topics">
         <h3 matLine>{{ topic.title }}</h3>
         <p matLine>{{ topic.author }} - {{ topic.createdAt | date }}</p>
-        <a mat-button [routerLink]="['/courses', courseId, 'forum', topic.id]">{{ 'FORUM.VIEW_TOPIC' | translate }}</a>
+        <a
+          mat-button
+          [routerLink]="['/courses', courseId, 'forum', topic.id]"
+          >{{ "FORUM.VIEW_TOPIC" | translate }}</a
+        >
       </mat-list-item>
     </mat-list>
   </div>

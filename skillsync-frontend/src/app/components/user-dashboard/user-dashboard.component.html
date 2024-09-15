@@ -1,0 +1,48 @@
+<div class="user-dashboard">
+  <h2>{{ "DASHBOARD.TITLE" | translate }}</h2>
+
+  <section class="overall-progress">
+    <h3>{{ "DASHBOARD.OVERALL_PROGRESS" | translate }}</h3>
+    <mat-progress-bar
+      mode="determinate"
+      [value]="overallProgress"
+    ></mat-progress-bar>
+    <p>{{ overallProgress }}% {{ "DASHBOARD.COMPLETE" | translate }}</p>
+  </section>
+
+  <section class="enrolled-courses">
+    <h3>{{ "DASHBOARD.ENROLLED_COURSES" | translate }}</h3>
+    <div *ngFor="let course of enrolledCourses" class="course-progress-card">
+      <h4>{{ course.title }}</h4>
+      <mat-progress-bar
+        mode="determinate"
+        [value]="course.progress"
+      ></mat-progress-bar>
+      <p>{{ course.progress }}% {{ "DASHBOARD.COMPLETE" | translate }}</p>
+      <a [routerLink]="['/courses', course._id]">{{
+        "COURSES.CONTINUE" | translate
+      }}</a>
+    </div>
+  </section>
+
+  <section class="upcoming-deadlines">
+    <h3>{{ "DASHBOARD.UPCOMING_DEADLINES" | translate }}</h3>
+    <ul>
+      <li *ngFor="let deadline of upcomingDeadlines">
+        <span>{{ deadline.courseName }}</span>
+        <span>{{ deadline.taskName }}</span>
+        <span>{{ deadline.date | date }}</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="recent-activities">
+    <h3>{{ "DASHBOARD.RECENT_ACTIVITIES" | translate }}</h3>
+    <ul>
+      <li *ngFor="let activity of recentActivities">
+        {{ activity.description }}
+        <span>{{ activity.date | date }}</span>
+      </li>
+    </ul>
+  </section>
+</div>
