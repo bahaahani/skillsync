@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-loading-indicator',
-  standalone: true,
-  imports: [CommonModule],
   template: `
-    <div *ngIf="loadingService.loading$ | async" class="loading-overlay">
-      <div class="loading-spinner"></div>
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="loading-spinner">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
     </div>
   `,
   styles: [`
@@ -19,25 +18,29 @@ import { LoadingService } from '../../services/loading.service';
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
     }
+    
     .loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 3px solid #fff;
-      border-top: 3px solid #007bff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  `]
+  `],
+  standalone: false
 })
-export class LoadingIndicatorComponent {
-  constructor(public loadingService: LoadingService) {}
+export class LoadingIndicatorComponent implements OnInit {
+  isLoading = false;
+
+  constructor(private loadingService: LoadingService) {}
+
+  ngOnInit(): void {
+    this.loadingService.isLoading$.subscribe(isLoading => {
+      this.isLoading = isLoading;
+    });
+  }
 }

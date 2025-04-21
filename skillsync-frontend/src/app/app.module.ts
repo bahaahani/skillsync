@@ -22,6 +22,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,9 +33,18 @@ import { CourseDetailsComponent } from './course-details/course-details.componen
 import { CourseRatingComponent } from './components/course-rating/course-rating.component';
 import { CourseReviewComponent } from './components/course-review/course-review.component';
 import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { LoadingIndicatorComponent } from './components/loading-indicator/loading-indicator.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+
+// Service providers
+import { AuthService } from './services/auth.service';
+import { ApiService } from './services/api.service';
+import { LoadingService } from './services/loading.service';
+import { ErrorHandlerService } from './services/error-handler.service';
 
 @NgModule({
   declarations: [
@@ -42,16 +54,22 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     CourseRatingComponent,
     CourseReviewComponent,
     LoginComponent,
+    RegisterComponent,
     DashboardComponent,
     UserProfileComponent,
+    UnauthorizedComponent,
+    LoadingIndicatorComponent,
   ],
   imports: [
+    // Core modules
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    
+    // Material modules
     MatToolbarModule,
     MatInputModule,
     MatSelectModule,
@@ -69,9 +87,19 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     MatFormFieldModule,
     MatListModule,
     MatCheckboxModule,
+    MatTabsModule,
+    MatMenuModule,
+    MatDividerModule,
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    // HTTP Interceptors
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    
+    // Core services
+    AuthService,
+    ApiService,
+    LoadingService,
+    ErrorHandlerService
   ],
   bootstrap: [AppComponent]
 })

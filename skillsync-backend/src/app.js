@@ -21,6 +21,8 @@ import courseRecommendationRoutes from "./routes/courseRecommendations.js";
 import courseFeedbackRoutes from "./routes/courseFeedback.js";
 import instructorDashboardRoutes from "./routes/instructorDashboard.js";
 import apiV1Routes from "./routes/api.js";
+import cookieParser from "cookie-parser";
+
 // Load environment variables
 dotenv.config();
 
@@ -28,10 +30,16 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: "http://localhost:4200", // or your Angular app's URL
+  origin: process.env.CORS_ORIGIN || "http://localhost:4200",
   optionsSuccessStatus: 200,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
 app.use(cors(corsOptions));
+
+// Use cookie-parser to parse cookies in requests
+app.use(cookieParser());
 
 // Use Helmet to set security headers
 app.use(helmet());
